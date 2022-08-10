@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+//import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.epst.beans.FileUploadForm;
 import org.epst.beans.Magasin;
 import org.epst.models.ModelMagasin;
@@ -31,7 +31,7 @@ import javax.ws.rs.core.Response;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 @Path("/magasin")
-@RegisterRestClient
+//@RegisterRestClient
 public class MagasinControlleur {
 
     private static final ObjectMapper mapper = new ObjectMapper();
