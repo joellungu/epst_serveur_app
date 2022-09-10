@@ -9,10 +9,9 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 @Accessors(chain=true)
-//@AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor // <--- THIS is it
+@NoArgsConstructor
 @ToString
 public class Plainte {
 

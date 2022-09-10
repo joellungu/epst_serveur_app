@@ -42,5 +42,4 @@ public class Magasin {//PanacheEntityBase
 
     public String extention;
 
-
 }
