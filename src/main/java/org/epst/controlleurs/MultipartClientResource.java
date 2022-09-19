@@ -15,12 +15,12 @@ import org.epst.models.ModelPlainte;
 
 @Path("/client")
 public class MultipartClientResource {
-    /*
-        @Inject
+
+        //@Inject
         //@RestClient
-        MultipartService service;
-        ModelPlainte modelPlainte = new ModelPlainte();
-        ModelMagasin modelMagasin = new ModelMagasin();
+        //MultipartService service;
+        //ModelPlainte modelPlainte = new ModelPlainte();
+        //ModelMagasin modelMagasin = new ModelMagasin();
 
         @POST
         @Path("/multipart/{id}")
@@ -35,7 +35,7 @@ public class MultipartClientResource {
             int t = modelMagasin.miseaJourMagasin(id, requestBody);
             return "La reponse du serveur: ";//service.sendMultipartData("");
         }
-
+/*
         @POST
         @Path("/multipart1/{piecejointe_id}/{type}")
         @Consumes(MediaType.APPLICATION_OCTET_STREAM)
