@@ -150,7 +150,7 @@ public class PiecejointeControlleur {
                                                 .put("Name", "Pierre Museghe")))
                                 .put(Emailv31.Message.SUBJECT, "Violence basé sur le genre")
                                 .put(Emailv31.Message.TEXTPART, "Contenu:\n"+message)
-                                .put(Emailv31.Message.HTMLPART, "<h3>Voici le lien du fichier<br><h4>\""+message+"\"</h4><br><a href=\"http://192.168.1.67:8080/piecejointe/"+from+"\">Lire la piece jointe</a>!</h3>")));
+                                .put(Emailv31.Message.HTMLPART, "<h3>Voici le lien du fichier<br><h4>\""+message+"\"</h4><br><a href=\"https://epst.herokuapp.com/piecejointe/"+from+"\">Lire la piece jointe</a>!</h3>")));
         response = client.post(request);
         System.out.println(response.getStatus());
         System.out.println(response.getData());
