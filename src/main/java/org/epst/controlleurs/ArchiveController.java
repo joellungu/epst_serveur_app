@@ -44,7 +44,7 @@ public class ArchiveController {
         //System.out.println("taille: "+listWithoutDuplicates.size());
 
         l.forEach((e)->{
-            if(f.add(e.getHostIdt())){
+            if(f.add(e.getFromt()+e.getHostIdt())){
                 listWithoutDuplicates.add(e);
             };
             //System.out.println("matricule: "+e.getMatriculet());
