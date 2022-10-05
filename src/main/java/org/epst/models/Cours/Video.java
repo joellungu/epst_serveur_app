@@ -5,8 +5,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import javax.persistence.Entity;
 import java.io.InputStream;
 
-@Entity
-public class Video extends PanacheEntity {
+//@Entity
+public class Video {
 
     String classe;
     String matiere;

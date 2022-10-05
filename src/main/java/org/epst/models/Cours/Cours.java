@@ -5,8 +5,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import javax.persistence.Entity;
 import java.util.HashMap;
 
-@Entity
-public class Cours extends PanacheEntity {
+//@Entity
+public class Cours {
 
     String classe;
     HashMap matiere;

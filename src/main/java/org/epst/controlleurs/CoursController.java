@@ -15,6 +15,7 @@ import java.io.InputStream;
 @Path("coure")
 public class CoursController {
 
+    /*
     @Path("ajouter")
     @POST
     @Transactional
@@ -24,6 +25,8 @@ public class CoursController {
         cours.persist();
         return Response.ok(Cours.listAll()).build();
     }
+    */
+    /*
     @Path("all")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -31,8 +34,9 @@ public class CoursController {
     public Response all() {
         return Response.ok(Cours.listAll()).build();
     }
+    */
 
-
+/*
     @Path("update")
     @PUT
     @Transactional
@@ -46,7 +50,7 @@ public class CoursController {
         c.setClasse(cours.getClasse());
         c.setMatiere(c.getMatiere());
         return Response.ok(c).build();
-    }
+    }*/
 
     @Path("ajoutervideo")
     @POST
@@ -55,7 +59,7 @@ public class CoursController {
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     public void ajouterVideo(Video video) {
         //
-        video.persist();
+        //video.persist();
         //
     }
 
