@@ -301,7 +301,7 @@ public class ChatEndpoint {
                     s.getAsyncRemote().sendText(obj.writeValueAsString(message));
                     System.out.println("Cool c'est bon!");
                     //
-                    //messageBeanRepository.saveData(message);
+                    messageBeanRepository.saveData(message);
                 } catch (JsonProcessingException e) {
                     //
                     e.printStackTrace();

@@ -92,6 +92,18 @@
       <artifactId>mailjet-client</artifactId>
       <version>4.2.0</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.jdbi/jdbi3-core -->
+    <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-core</artifactId>
+      <version>3.34.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.jdbi/jdbi3-sqlobject -->
+    <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-sqlobject</artifactId>
+      <version>3.34.0</version>
+    </dependency>
 
 
   </dependencies>
