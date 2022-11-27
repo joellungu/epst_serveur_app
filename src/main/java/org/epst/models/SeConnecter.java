@@ -9,11 +9,12 @@ import java.sql.ResultSet;
 public class SeConnecter {
 
     public static Jdbi jdbi = Jdbi.create
-            //("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
-
+            ("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
+    /*
                 ("jdbc:postgresql://ec2-44-209-57-4.compute-1.amazonaws.com:5432/ddivp7ga07bltc",
                 "elywutaxvrrkea",
                 "4308f845fd0dd585b8a6ca2ac78b0d77e8da3d3918f2e7a86c8cd86d73e979e2");
+    */
 
     public Connection con;
     //

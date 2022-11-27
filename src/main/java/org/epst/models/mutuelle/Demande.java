@@ -15,23 +15,35 @@ public class Demande {
     String notes;
     int valider;
     String jour;
-    String ext;
+    String ext1;
+    String ext2;
+    String province;
+    String district;
+    byte[] piecejointe;
     byte[] carte;
 
-    public String getExt() {
-        return ext;
+    public String getProvince() {
+        return province;
     }
 
-    public void setExt(String ext) {
-        this.ext = ext;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
-    public String getJour() {
-        return jour;
+    public String getDistrict() {
+        return district;
     }
 
-    public void setJour(String jour) {
-        this.jour = jour;
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNom() {
@@ -98,12 +110,44 @@ public class Demande {
         this.notes = notes;
     }
 
-    public Long getId() {
-        return id;
+    public int getValider() {
+        return valider;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setValider(int valider) {
+        this.valider = valider;
+    }
+
+    public String getJour() {
+        return jour;
+    }
+
+    public void setJour(String jour) {
+        this.jour = jour;
+    }
+
+    public String getExt1() {
+        return ext1;
+    }
+
+    public void setExt1(String ext1) {
+        this.ext1 = ext1;
+    }
+
+    public String getExt2() {
+        return ext2;
+    }
+
+    public void setExt2(String ext2) {
+        this.ext2 = ext2;
+    }
+
+    public byte[] getPiecejointe() {
+        return piecejointe;
+    }
+
+    public void setPiecejointe(byte[] piecejointe) {
+        this.piecejointe = piecejointe;
     }
 
     public byte[] getCarte() {
@@ -112,13 +156,5 @@ public class Demande {
 
     public void setCarte(byte[] carte) {
         this.carte = carte;
-    }
-
-    public int getValider() {
-        return valider;
-    }
-
-    public void setValider(int valider) {
-        this.valider = valider;
     }
 }

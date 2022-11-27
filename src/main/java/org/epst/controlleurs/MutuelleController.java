@@ -29,6 +29,7 @@ public class MutuelleController {
 
         //
         Demande d = new Demande();
+        d.setId((Long)hashMap.get("id"));
         d.setBeneficiaire(""+hashMap.get("beneficiaire"));
         d.setDirection(""+hashMap.get("direction"));
         d.setMatricule(""+hashMap.get("matricule"));
@@ -36,22 +37,38 @@ public class MutuelleController {
         d.setNotes(""+hashMap.get("notes"));
         d.setPostnom(""+hashMap.get("postnom"));
         d.setPrenom(""+hashMap.get("prenom"));
-        d.setExt(""+hashMap.get("ext"));
+        d.setExt1(""+hashMap.get("ext1"));
+        d.setExt2(""+hashMap.get("ext2"));
+        d.setProvince(""+hashMap.get("province"));
+        d.setDistrict(""+hashMap.get("district"));
         d.setValider(0);
         d.setJour(LocalDate.now().toString());
         d.setServices(""+hashMap.get("services"));
         //
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
+        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+        DataOutputStream out1 = new DataOutputStream(baos1);
 
         for (Object element : (ArrayList) hashMap.get("carte")) {
             System.out.print(element);
-            out.writeByte((int) element);
+            out1.writeByte((int) element);
         }
-        byte[] bytes = baos.toByteArray();
+        byte[] bytes = baos1.toByteArray();
         //
         d.setCarte(bytes);
+        //---------------------------------
         //
+        ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+        DataOutputStream out2 = new DataOutputStream(baos2);
+
+        for (Object element : (ArrayList) hashMap.get("piecejointe")) {
+            System.out.print(element);
+            out2.writeByte((int) element);
+        }
+        byte[] bytes2 = baos2.toByteArray();
+        //
+        d.setPiecejointe(bytes2);
+        //---------------------------------
+
         demandeMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
@@ -62,9 +79,19 @@ public class MutuelleController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public List<Demande> noterMa(){
+    public List<Demande> getAll(@QueryParam("province") String province, @QueryParam("district") String district){
         //
-        return demandeMetier.getAll();
+        return demandeMetier.getAll(province, district);
+        //return Response.status(Response.Status.CREATED).entity().build();
+    }
+
+    @Path("all/demandebymatricule")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public List<Demande> getAll(@QueryParam("matricule") String matricule){
+        //
+        return demandeMetier.getAllByMatricule(matricule);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -85,6 +112,15 @@ public class MutuelleController {
     public byte[] getCarte(@PathParam("id") Long id){
         //
         return demandeMetier.getCarte(id);
+        //return Response.status(Response.Status.CREATED).entity().build();
+    }
+    @Path("piecejointe/{id}")
+    @GET
+    //@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public byte[] getPiecejointe(@PathParam("id") Long id){
+        //
+        return demandeMetier.getPiecejointe(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 

@@ -14,17 +14,22 @@ import java.util.Random;
 public class DemandeMetier {
     Jdbi jdbi = SeConnecter.jdbi;
     public void saveDemande(Demande demande){
-        demande.setId(getId());
+        //demande.setId(getId());
         jdbi.installPlugin(new SqlObjectPlugin());
         try(Handle handle = jdbi.open()){
             DemandeDao v = handle.attach(DemandeDao.class);
             //
-            v.createTable();
+            try{
+                v.createTable();
+            }catch (Exception ex){
+
+            }
             v.insertDemande(demande);
             //
         }
     }
-    public List<Demande> getAll(){
+    public List<Demande> getAll(String province, String district){
+        System.out.println("la valeur: "+province+" :-----: "+district);
         jdbi.installPlugin(new SqlObjectPlugin());
         try(Handle handle = jdbi.open()){
             DemandeDao v = handle.attach(DemandeDao.class);
@@ -34,9 +39,25 @@ public class DemandeMetier {
                 v.miseAjour();
             }catch (Exception ex){
                 System.out.println("Erreur du à: "+ex);
-            }
-            return v.listeDeDemande();
+            }//listeDeDemandeByMatricule
+            return v.listeDeDemande(province, district);//province, district
+            //http://localhost:8080/mutuelle/all/demande?province=Kinshasa&district=KINSHASA-MONT%20AMBA
+        }
+    }
+    public List<Demande> getAllByMatricule(String matricule){
+        System.out.println("la valeur: "+matricule+" :-----: "+matricule);
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try(Handle handle = jdbi.open()){
+            DemandeDao v = handle.attach(DemandeDao.class);
             //
+            v.createTable();
+            try{
+                v.miseAjour();
+            }catch (Exception ex){
+                System.out.println("Erreur du à: "+ex);
+            }//
+            return v.listeDeDemandeByMatricule(matricule);//province, district
+            //http://localhost:8080/mutuelle/all/demande?province=Kinshasa&district=KINSHASA-MONT%20AMBA
         }
     }
 
@@ -46,12 +67,27 @@ public class DemandeMetier {
             DemandeDao v = handle.attach(DemandeDao.class);
             //
             v.createTable();
-            v.miseAjour();
+            try{
+                v.miseAjour();
+            }catch (Exception ex){
+                System.out.println("Erreur du à: "+ex);
+            }//
             return v.listeDeDemande(id);
             //
         }
     }
-    public byte[] getCarte(Long id){
+    public byte[] getPiecejointe(Long id){//
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try(Handle handle = jdbi.open()){
+            DemandeDao v = handle.attach(DemandeDao.class);
+            //
+            v.createTable();
+            //v.miseAjour();
+            return v.getPiecejointe(id);
+            //
+        }
+    }
+    public byte[] getCarte(Long id){//getPiecejointe
         jdbi.installPlugin(new SqlObjectPlugin());
         try(Handle handle = jdbi.open()){
             DemandeDao v = handle.attach(DemandeDao.class);
