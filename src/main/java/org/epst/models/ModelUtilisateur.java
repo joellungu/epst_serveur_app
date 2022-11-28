@@ -49,7 +49,9 @@ public class ModelUtilisateur {
                     résultats.getString(9),
                     résultats.getString(10),
                     résultats.getString(11),
-                    résultats.getString(12)
+                    résultats.getString(12),
+                        résultats.getString(13),
+                        résultats.getString(14)
                 );
                 //
                 System.out.println();
@@ -74,6 +76,7 @@ public class ModelUtilisateur {
             boolean encore = résultats.next();
 
             while (encore) {
+                System.out.println("Valeur: "+résultats.getString(13));
                 utilisateur = new Utilisateur(
                     résultats.getLong("id"),
                     résultats.getString(2),
@@ -86,7 +89,9 @@ public class ModelUtilisateur {
                     résultats.getString(9),
                     résultats.getString(10),
                     résultats.getString(11),
-                    résultats.getString(12)
+                    résultats.getString(12),
+                    résultats.getString(13),
+                    résultats.getString(14)
                 );
                 //
                 System.out.println();
@@ -94,6 +99,7 @@ public class ModelUtilisateur {
             }
             //
         } catch (SQLException e) {
+            System.out.println("Erreur du à: "+e);
             //traitement de l'exception
         };
         return utilisateur;
@@ -138,7 +144,9 @@ public class ModelUtilisateur {
                         résultats.getString(9),
                         résultats.getString(10),
                         résultats.getString(11),
-                        résultats.getString(12)
+                        résultats.getString(12),
+                            résultats.getString(13),
+                            résultats.getString(14)
                     )
                 );
 
@@ -164,8 +172,8 @@ public class ModelUtilisateur {
 
         //
         try{
-            String sql = "INSERT INTO agent_epst (id,nom,postnom,prenom,numero,email, adresse,role,matricule,id_statut, date_de_naissance, mdp) "+
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO agent_epst (id,nom,postnom,prenom,numero,email, adresse,role,matricule,id_statut, date_de_naissance, mdp, province, district) "+
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
  
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setLong(1, getId());
@@ -180,8 +188,9 @@ public class ModelUtilisateur {
             statement.setString(10, utilisateur.getId_statut());
             statement.setString(11, utilisateur.getDate_de_naissance());
             statement.setString(12, utilisateur.getMdp());
-            
-            
+            statement.setString(13, utilisateur.getProvince());
+            statement.setString(14, utilisateur.getDistrict());
+            //
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("A new user was inserted successfully!");
@@ -238,7 +247,7 @@ public class ModelUtilisateur {
         utilisateur.getId_statut()+":__:id_statut\n"
                 );
         try{
-            String sql = "UPDATE agent_epst SET nom = ?, postnom = ?, prenom = ?, numero = ?, email = ?, adresse = ?, role = ?, matricule = ?, id_statut = ?, date_de_naissance = ? mdp = ?  WHERE id = ?";
+            String sql = "UPDATE agent_epst SET nom = ?, postnom = ?, prenom = ?, numero = ?, email = ?, adresse = ?, role = ?, matricule = ?, id_statut = ?, date_de_naissance = ?, mdp = ?, province = ?, district = ?  WHERE id = ?";
             //,,,,, ,,,, 
             PreparedStatement statement = con.prepareStatement(sql);
 
@@ -257,6 +266,8 @@ public class ModelUtilisateur {
             statement.setString(11, utilisateur.getMdp());
             //
             statement.setLong(12, utilisateur.getId());
+            statement.setString(13, utilisateur.getProvince());
+            statement.setString(14, utilisateur.getDistrict());
 
             t = statement.executeUpdate();
 

@@ -28,6 +28,7 @@ public interface DemandeDao {
             "ext2 varchar,"+
             "province varchar,"+
             "district varchar,"+
+            "cenome varchar," +
             "piecejointe bytea," +
             "carte bytea" +
             ")")
@@ -39,10 +40,13 @@ public interface DemandeDao {
 
     @SqlUpdate("UPDATE DEMANDES SET valider = ? where id = ?")
     void setStatus(int status, Long id);
+    @SqlUpdate("UPDATE DEMANDES SET valider = ?, cenome = ? where id = ?")
+    void setExpirer(int status, String cemone, Long id);
+
     //
     @SingleValue
-    @SqlQuery("SELECT valider FROM DEMANDES where matricule = ?")
-    int getStatus(String matricule);
+    @SqlQuery("SELECT valider FROM DEMANDES where id = ?")
+    int getStatus(Long id);
     //getStatus
 
     @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM DEMANDES where valider = 0 and province = ? and district = ?")

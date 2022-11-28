@@ -29,7 +29,7 @@ public class MutuelleController {
 
         //
         Demande d = new Demande();
-        d.setId((Long)hashMap.get("id"));
+        d.setId(Long.parseLong(""+hashMap.get("id")));
         d.setBeneficiaire(""+hashMap.get("beneficiaire"));
         d.setDirection(""+hashMap.get("direction"));
         d.setMatricule(""+hashMap.get("matricule"));
@@ -133,13 +133,23 @@ public class MutuelleController {
         demandeMetier.setStatus(status,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
+    @Path("saturer/{id}/{cenome}/{status}")
+    @GET
+    //@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public void setExpirer(@PathParam("id") Long id, @PathParam("cenome") String cenome, @PathParam("status") int status){
+        //
+        demandeMetier.setExpirer(status,cenome,id);
+        //return Response.status(Response.Status.CREATED).entity().build();
+    }
+
     @Path("statusdem")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public int getStatus(@QueryParam("matricule") String matricule){
+    public int getStatus(@QueryParam("id") Long id){
         //
-        return demandeMetier.getStatus(matricule);
+        return demandeMetier.getStatus(id);
         //
         //return Response.status(Response.Status.CREATED).entity().build();
     }

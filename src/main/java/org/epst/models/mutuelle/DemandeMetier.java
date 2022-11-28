@@ -99,7 +99,7 @@ public class DemandeMetier {
         }
     }
 
-    public void setStatus(int status, Long id) {
+    public void setStatus(int status, Long id) {//setExpirer
         jdbi.installPlugin(new SqlObjectPlugin());
         try(Handle handle = jdbi.open()){
             DemandeDao v = handle.attach(DemandeDao.class);
@@ -110,15 +110,26 @@ public class DemandeMetier {
             //
         }
     }
-
-    public int getStatus(String matricule) {
+    public void setExpirer(int status, String cenome, Long id) {//
         jdbi.installPlugin(new SqlObjectPlugin());
         try(Handle handle = jdbi.open()){
             DemandeDao v = handle.attach(DemandeDao.class);
             //
             v.createTable();
             //v.miseAjour();
-            return v.getStatus(matricule);
+            v.setExpirer(status,cenome,id);
+            //
+        }
+    }
+
+    public int getStatus(Long id) {
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try(Handle handle = jdbi.open()){
+            DemandeDao v = handle.attach(DemandeDao.class);
+            //
+            v.createTable();
+            //v.miseAjour();
+            return v.getStatus(id);
             //getStatus
         }
     }

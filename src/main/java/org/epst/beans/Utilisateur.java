@@ -40,7 +40,9 @@ public class Utilisateur {
              String matricule,
              String id_statut,
              String date_de_naissance,
-             String mdp
+             String mdp,
+             String province,
+             String district
             
         ){
         this.adresse = adresse;
@@ -55,6 +57,8 @@ public class Utilisateur {
         this.role = role;
         this.prenom = prenom;
         this.mdp = mdp;
+        this.province = province;
+        this.district = district;
     }
 
     public Long id;
@@ -80,4 +84,7 @@ public class Utilisateur {
     public String id_statut;
 
     public String mdp;
+
+    public String province;
+    public String district;
 }
