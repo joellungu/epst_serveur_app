@@ -68,7 +68,7 @@ public interface DemandeDao {
     @SqlQuery("SELECT piecejointe FROM DEMANDES where id = ?")
     byte[] getPiecejointe(Long id);
 
-    @SqlUpdate("ALTER TABLE DEMANDES ADD ext1 varchar;")
-    public void miseAjour();
+    //@SqlUpdate("ALTER TABLE DEMANDES ADD ext1 varchar;")
+    //public void miseAjour();
 
 }
