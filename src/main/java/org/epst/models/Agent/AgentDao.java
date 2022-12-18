@@ -1,42 +1,36 @@
-package org.epst.models.mutuelle;
+package org.epst.models.Agent;
 
+import org.epst.models.mutuelle.Demande;
 import org.jdbi.v3.sqlobject.SingleValue;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import java.io.InputStream;
-import java.sql.Blob;
 import java.util.List;
 
-public interface DemandeDao {
-
-    @SqlUpdate("CREATE TABLE IF NOT EXISTS DEMANDE  (" +
+public interface AgentDao {
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS AGENT  (" +
             "id bigint PRIMARY KEY," +
             "nom varchar," +
             "postnom varchar," +
             "prenom varchar," +
-            "matricule varchar," +
-            "direction varchar," +
-            "services varchar," +
-            "beneficiaire varchar," +
-            "notes text," +
-            "valider INTEGER," +
-            "jour varchar," +
-            "ext1 varchar,"+
-            "ext2 varchar,"+
+            "numero varchar," +
+            "email varchar," +
+            "adresse varchar," +
+            "role INTEGER," +
+            "matricule text," +
+            "idstatut INTEGER," +
+            "datenaissance varchar," +
+            "mdp varchar,"+
             "province varchar,"+
-            "district varchar,"+
-            "cenome varchar," +
-            "piecejointe bytea," +
-            "carte bytea" +
+            "district varchar"+
             ")")
     void createTable();
 
     @SqlUpdate("INSERT INTO DEMANDES (id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district,carte,piecejointe) values " +
             "(:id,:nom,:postnom,:prenom,:matricule,:direction,:services,:beneficiaire,:notes,:valider,:jour,:ext1,:ext2,:province,:district,:carte,:piecejointe)")
-    void insertDemande(@BindBean Demande demande);
+    void insertAgent(@BindBean Agent agent);
 
     @SqlUpdate("UPDATE DEMANDES SET valider = ? where id = ?")
     void setStatus(int status, Long id);
@@ -59,15 +53,5 @@ public interface DemandeDao {
     @SqlQuery("SELECT * FROM DEMANDES where id = ?")
     @RegisterBeanMapper(Demande.class)
     List<Demande> listeDeDemande(Long id);
-
-    @SingleValue
-    @SqlQuery("SELECT carte FROM DEMANDES where id = ?")
-    byte[] getCarte(Long id);
-    @SingleValue
-    @SqlQuery("SELECT piecejointe FROM DEMANDES where id = ?")
-    byte[] getPiecejointe(Long id);
-
-    //@SqlUpdate("ALTER TABLE DEMANDES ADD ext1 varchar;")
-    //public void miseAjour();
 
 }

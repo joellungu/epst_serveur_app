@@ -25,13 +25,18 @@ public class DemandeIdentification {
     String provinceEcole;
     String provinceEducationnel;
     String option;
+    int typeIdentificationcode;
     String typeIdentification;
     int valider;
-
+    public int getTypeIdentificationcode() {
+        return typeIdentificationcode;
+    }
+    public void setTypeIdentificationcode(int typeIdentificationcode) {
+        this.typeIdentificationcode = typeIdentificationcode;
+    }
     public int getValider() {
         return valider;
     }
-
     public void setValider(int valider) {
         this.valider = valider;
     }

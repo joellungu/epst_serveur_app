@@ -1,5 +1,10 @@
 package org.epst.controlleurs;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 
@@ -10,14 +15,19 @@ import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import com.mailjet.client.resource.Emailv31;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.epst.beans.Piecejointe;
 import org.epst.beans.Plainte;
 import org.epst.models.ModelPlainte;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.epst.models.palmares.Palmares;
+import org.epst.models.palmares.PalmaresMetier;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,6 +42,8 @@ public class PiecejointeControlleur {
     
     private static final ObjectMapper mapper = new ObjectMapper();
     ModelPlainte modelPlainte = new ModelPlainte();
+    @Inject
+    PalmaresMetier palmaresMetier;
     //
     
     @Path("/all/{piecejointe_id}")
@@ -129,6 +141,29 @@ public class PiecejointeControlleur {
         return Response.status(Response.Status.CREATED).entity(json).build();
     }
 
+    @Path("palmares/")
+    @POST()
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response savetPlainte(byte[] piecejointe) {
+        //
+        Thread th = new Thread() {
+            public void run() {
+                String s = new String(piecejointe, StandardCharsets.UTF_8);
+                try {
+                    analyse(s);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("piecejointe: "+piecejointe.length+"// type ");
+            }
+        };
+        //
+        th.start();
+        //
+        return Response.status(Response.Status.CREATED).entity("Ok").build();
+    }
+
     public void send(String from, String message) throws MailjetException, MailjetSocketTimeoutException {
         MailjetClient client;
         MailjetRequest request;
@@ -161,4 +196,54 @@ public class PiecejointeControlleur {
         long random63BitLong = random.nextLong();
         return random63BitLong;
     }
+    //
+    public void analyse(String e) throws IOException {
+        //Reader in = new FileReader(fileLocation);
+        int c = 0;
+        StringReader srd = new StringReader(e);
+        Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(srd);
+        for (CSVRecord record : records) {
+            String col1 = record.get(1);
+            String col2 = record.get(2);
+            String col3 = record.get(3);
+            String col4 = record.get(4);
+            String col5 = record.get(5);
+            String col6 = record.get(6);
+            String col7 = record.get(7);
+            String col8 = record.get(8);
+            String col9 = record.get(9);
+            String col10 = record.get(10);
+            String col11 = record.get(11);
+            String col12 = record.get(12);
+            String col13 = record.get(13);
+            String col14 = record.get(14);
+            String col15 = "2021-2022";
+            //String col16 = record.get(15);
+            Palmares p = new Palmares();
+            p.setNomprovince(col1);
+            p.setCodeprovince(col2);
+            p.setNomcentre(col3);
+            p.setCodecentre(Integer.parseInt(col4));
+            p.setOption(col5);
+            p.setCodeoption(Integer.parseInt(col6));
+            p.setNomecole(col7);
+            p.setCodeecole(Integer.parseInt(col8));
+            p.setOrdreecole(Integer.parseInt(col9));
+            p.setCodegestion(Integer.parseInt(col10));
+            p.setCodecandidat(col11);
+            p.setNomcandidat(col12);
+            p.setSexe(col13);
+            p.setNote(col14);
+            p.setAnneescolaire(col15);
+            //
+            palmaresMetier.saveDemande(p);
+            //
+            System.out.println("col1: "+record.toString()+"");
+            System.out.println("conte: "+c+"");
+            c++;
+            //System.out.println("col1: "+col1+" -- "+col2+" -- "+col3+" -- "+col4+" -- "+col5+" -- "+col6+" -- "+col7
+              //      +" -- "+col8+" -- "+col9+" -- "+col10+" -- "+col11+" -- "+col12+" -- "+col13+" -- "+col14+" -- "+col15+" -- ");
+        }
+    }
+
 }

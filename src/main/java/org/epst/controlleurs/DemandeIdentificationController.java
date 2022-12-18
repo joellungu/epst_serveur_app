@@ -88,7 +88,8 @@ public class DemandeIdentificationController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public List<DemandeIdentification> getAll(@QueryParam("province") String province, @QueryParam("district") String district,
-                                              @QueryParam("valider") int valider){
+                                              @QueryParam("valider") int valider,
+                                              @QueryParam("type") int type){
         //
         return demandeIdentificationMetier.getAll(province, district, valider);
         //return Response.status(Response.Status.CREATED).entity().build();

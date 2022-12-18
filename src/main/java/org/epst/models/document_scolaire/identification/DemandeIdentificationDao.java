@@ -31,12 +31,13 @@ public interface DemandeIdentificationDao {
             "provinceEducationnel varchar," +
             "option varchar," +
             "valider INTEGER," +
+            "typeIdentificationcode INTEGER," +
             "typeIdentification varchar" +
             ")")
     void createTable();
 
-    @SqlUpdate("INSERT INTO DEMANDEIDENTIFICATION (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,typeIdentification) values " +
-            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:typeIdentification)")
+    @SqlUpdate("INSERT INTO DEMANDEIDENTIFICATION (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,valider,typeIdentificationcode,typeIdentification) values " +
+            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:valider,:typeIdentificationcode,:typeIdentification)")
     void insertDemande(@BindBean DemandeIdentification demandeIdentification);
 
     @SqlUpdate("UPDATE DEMANDEIDENTIFICATION SET valider = ? where id = ?")
