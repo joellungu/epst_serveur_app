@@ -28,7 +28,7 @@ public class ModelUtilisateur {
     //
     public Utilisateur getUtilisateur(int id){
         Utilisateur utilisateur = new Utilisateur();
-        String requete = "SELECT * FROM agent_epst where id = "+id;
+        String requete = "SELECT * FROM agent where id = "+id;
         //
         try {
             Statement stmt = con.createStatement();
@@ -67,7 +67,7 @@ public class ModelUtilisateur {
     public Utilisateur getUtilisateur(String matricule, String mdp){
         Utilisateur utilisateur = new Utilisateur();
         System.out.println("matricule = '"+matricule+"' and mdp = '"+mdp+"'");
-        String requete = "SELECT * FROM agent_epst where matricule = '"+matricule+"' and mdp = '"+mdp+"'";
+        String requete = "SELECT * FROM agent where matricule = '"+matricule+"' and mdp = '"+mdp+"'";
         //
         try {
             Statement stmt = con.createStatement();
@@ -108,7 +108,7 @@ public class ModelUtilisateur {
     
     public List<Utilisateur> getAllUtilisateur(){
         List<Utilisateur> liste = new LinkedList<>();
-        String requete = "SELECT * FROM agent_epst";
+        String requete = "SELECT * FROM agent";
 
         try {
             Statement stmt = con.createStatement();
@@ -172,7 +172,7 @@ public class ModelUtilisateur {
 
         //
         try{
-            String sql = "INSERT INTO agent_epst (id,nom,postnom,prenom,numero,email, adresse,role,matricule,id_statut, date_de_naissance, mdp, province, district) "+
+            String sql = "INSERT INTO agent (id,nom,postnom,prenom,numero,email, adresse,role,matricule,id_statut, date_de_naissance, mdp, province, district) "+
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
  
             PreparedStatement statement = con.prepareStatement(sql);
@@ -213,7 +213,7 @@ public class ModelUtilisateur {
         System.out.println("______________________________: "+id);
         //
         try{
-            String sql = "DELETE FROM agent_epst WHERE id = ?";
+            String sql = "DELETE FROM agent WHERE id = ?";
  
             PreparedStatement statement = con.prepareStatement(sql);
             //statement.setInt(1, utilisateur.getId());
@@ -247,7 +247,7 @@ public class ModelUtilisateur {
         utilisateur.getId_statut()+":__:id_statut\n"
                 );
         try{
-            String sql = "UPDATE agent_epst SET nom = ?, postnom = ?, prenom = ?, numero = ?, email = ?, adresse = ?, role = ?, matricule = ?, id_statut = ?, date_de_naissance = ?, mdp = ?, province = ?, district = ?  WHERE id = ?";
+            String sql = "UPDATE agent SET nom = ?, postnom = ?, prenom = ?, numero = ?, email = ?, adresse = ?, role = ?, matricule = ?, id_statut = ?, date_de_naissance = ?, mdp = ?, province = ?, district = ?  WHERE id = ?";
             //,,,,, ,,,, 
             PreparedStatement statement = con.prepareStatement(sql);
 

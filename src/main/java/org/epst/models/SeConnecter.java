@@ -9,12 +9,12 @@ import java.sql.ResultSet;
 public class SeConnecter {
 
     public static Jdbi jdbi = Jdbi.create
-            ("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
-/*
-                ("jdbc:postgresql://ec2-44-209-57-4.compute-1.amazonaws.com:5432/ddivp7ga07bltc",
-                "elywutaxvrrkea",
-                "4308f845fd0dd585b8a6ca2ac78b0d77e8da3d3918f2e7a86c8cd86d73e979e2");
-*/
+            //("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
+
+                ("jdbc:postgresql://bqlujt3tbffdu10fdgql-postgresql.services.clever-cloud.com:5434/bqlujt3tbffdu10fdgql",
+                "uuypo0h3cqqun990xnbu",
+                "bP1lkHFA26CrKH4RU9r1");
+
     public Connection con;
     //
     //ResultSet résultats = null;
