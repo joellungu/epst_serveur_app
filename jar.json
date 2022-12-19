@@ -1,0 +1,9 @@
+{
+  "build": {
+    "type": "maven",
+    "goal": "package"
+  },
+  "deploy": {
+    "jarName": "target/code-with-quarkus-1.0.0-SNAPSHOT.jar"
+  }
+}
