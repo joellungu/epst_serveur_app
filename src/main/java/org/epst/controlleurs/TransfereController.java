@@ -1,36 +1,32 @@
 package org.epst.controlleurs;
 
-import org.epst.models.document_scolaire.identification.DemandeIdentification;
-import org.epst.models.document_scolaire.identification.DemandeIdentificationMetier;
-import org.epst.models.mutuelle.Demande;
-import org.epst.models.mutuelle.DemandeMetier;
+import org.epst.models.document_scolaire.documents.Document;
+import org.epst.models.document_scolaire.documents.DocumentMetier;
+import org.epst.models.document_scolaire.transfere.Transfere;
+import org.epst.models.document_scolaire.transfere.TransfereMetier;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Path("identification")
-public class DemandeIdentificationController {
+@Path("transfere")
+public class TransfereController {
 
     @Inject
-    DemandeIdentificationMetier demandeIdentificationMetier;
+    TransfereMetier transfereMetier;
 
     @Path("enregistrement")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveDemande(DemandeIdentification d) throws IOException {
+    public Response saveDemande(Transfere d) throws IOException {
         //System.out.println("La demande: "+hashMap.get("nom"));
         //
-
+        System.out.println(d.getDateNaissance());
         /*
         DemandeIdentification d = new DemandeIdentification();
         d.setId(Long.parseLong(""+hashMap.get("id")));
@@ -77,7 +73,7 @@ public class DemandeIdentificationController {
         //d.setPiecejointe(bytes2);
         //---------------------------------
         */
-        demandeIdentificationMetier.saveDemande(d);
+        transfereMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
         return Response.status(Response.Status.CREATED).entity(d).build();
@@ -87,19 +83,10 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public List<DemandeIdentification> getAll(@QueryParam("province") String province, @QueryParam("district") String district,
-                                              @QueryParam("valider") int valider,
-                                              @QueryParam("role") int role){
-        /*
-        "Inspecteur exetat",8
-    "Inspecteur tenassop",9
-    "Inspecteur tenafepe",10
-    "Inspecteur examen professionnel",12
-    "Agent sernie",11
-         */
-        int code = role == 8 ? 0 : role == 9 ? 1 : role == 10 ? 2 : role == 11 ? 3 : 4;
+    public List<Transfere> getAll(@QueryParam("province") String province, @QueryParam("district") String district,
+                                 @QueryParam("valider") int valider){
         //
-        return demandeIdentificationMetier.getAll(province, district, valider, code);
+        return transfereMetier.getAll(province, district, valider);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -107,9 +94,9 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public List<DemandeIdentification> getAll(@QueryParam("matricule") String matricule){
+    public List<Transfere> getAll(@QueryParam("matricule") String matricule){
         //
-        return demandeIdentificationMetier.getAllByMatricule(matricule);
+        return transfereMetier.getAllByMatricule(matricule);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -117,9 +104,9 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<DemandeIdentification> getOne(@PathParam("id") Long id){
+    public List<Transfere> getOne(@PathParam("id") Long id){
         //
-        return demandeIdentificationMetier.getOne(id);
+        return transfereMetier.getOne(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -129,17 +116,18 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
-        return demandeIdentificationMetier.getPiecejointe(id);
+        return transfereMetier.getPiecejointe(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
     @Path("update/{id}/{status}")
-    @GET
+    @POST
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public void setStatus(@PathParam("id") Long id,@PathParam("status") int status){
+    public void setStatus(@PathParam("id") Long id,@PathParam("status") int status, String raison){
         //
-        demandeIdentificationMetier.setStatus(status,id);
+        System.out.println("la raison: "+raison);
+        transfereMetier.setStatus(status,id,raison);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
     @Path("saturer/{id}/{cenome}/{status}")
@@ -148,7 +136,7 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public void setExpirer(@PathParam("id") Long id, @PathParam("cenome") String cenome, @PathParam("status") int status){
         //
-        demandeIdentificationMetier.setExpirer(status,cenome,id);
+        transfereMetier.setExpirer(status,cenome,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -156,9 +144,11 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public DemandeIdentification getStatus(@QueryParam("id") Long id){
+    public Transfere getStatus(@QueryParam("id") Long id){
         //
-        return demandeIdentificationMetier.getStatus(id);
+        System.out.println(id);
+        //
+        return transfereMetier.getStatus(id);
         //getAll
         //return Response.status(Response.Status.CREATED).entity().build();
     }

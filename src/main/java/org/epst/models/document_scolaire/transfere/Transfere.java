@@ -1,11 +1,10 @@
-package org.epst.models.document_scolaire.identification;
+package org.epst.models.document_scolaire.transfere;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
-public class DemandeIdentification {
+public class Transfere {
     Long id;
     String nom;
     String postnom;
@@ -18,17 +17,18 @@ public class DemandeIdentification {
     String nompere;
     String nommere;
     String adresse;
+    String option_avant;
+    String option_apres;
     String provinceOrigine;
+    String ecoleProvenance;
+    String ecoleProvenanceProv;
+    String ecoleProvenanceDistric;
+    String ecoleDestination;
+    String ecoleDestinationProv;
+    String ecoleDestinationDistric;
     byte[] photo;
     String ext1;
-    String ecole;
-    String provinceEcole;
-    String provinceEducationnel;
-    String option;
-    String annee;
     String datedemande;
-    int typeIdentificationcode;
-    String typeIdentification;
     String raison;
     int valider;
 
@@ -46,27 +46,6 @@ public class DemandeIdentification {
 
     public void setRaison(String raison) {
         this.raison = raison;
-    }
-
-    public String getAnnee() {
-        return annee;
-    }
-
-    public void setAnnee(String annee) {
-        this.annee = annee;
-    }
-
-    public int getTypeIdentificationcode() {
-        return typeIdentificationcode;
-    }
-    public void setTypeIdentificationcode(int typeIdentificationcode) {
-        this.typeIdentificationcode = typeIdentificationcode;
-    }
-    public int getValider() {
-        return valider;
-    }
-    public void setValider(int valider) {
-        this.valider = valider;
     }
 
     public Long getId() {
@@ -157,12 +136,76 @@ public class DemandeIdentification {
         this.adresse = adresse;
     }
 
+    public String getOption_avant() {
+        return option_avant;
+    }
+
+    public void setOption_avant(String option_avant) {
+        this.option_avant = option_avant;
+    }
+
+    public String getOption_apres() {
+        return option_apres;
+    }
+
+    public void setOption_apres(String option_apres) {
+        this.option_apres = option_apres;
+    }
+
     public String getProvinceOrigine() {
         return provinceOrigine;
     }
 
     public void setProvinceOrigine(String provinceOrigine) {
         this.provinceOrigine = provinceOrigine;
+    }
+
+    public String getEcoleProvenance() {
+        return ecoleProvenance;
+    }
+
+    public void setEcoleProvenance(String ecoleProvenance) {
+        this.ecoleProvenance = ecoleProvenance;
+    }
+
+    public String getEcoleProvenanceProv() {
+        return ecoleProvenanceProv;
+    }
+
+    public void setEcoleProvenanceProv(String ecoleProvenanceProv) {
+        this.ecoleProvenanceProv = ecoleProvenanceProv;
+    }
+
+    public String getEcoleProvenanceDistric() {
+        return ecoleProvenanceDistric;
+    }
+
+    public void setEcoleProvenanceDistric(String ecoleProvenanceDistric) {
+        this.ecoleProvenanceDistric = ecoleProvenanceDistric;
+    }
+
+    public String getEcoleDestination() {
+        return ecoleDestination;
+    }
+
+    public void setEcoleDestination(String ecoleDestination) {
+        this.ecoleDestination = ecoleDestination;
+    }
+
+    public String getEcoleDestinationProv() {
+        return ecoleDestinationProv;
+    }
+
+    public void setEcoleDestinationProv(String ecoleDestinationProv) {
+        this.ecoleDestinationProv = ecoleDestinationProv;
+    }
+
+    public String getEcoleDestinationDistric() {
+        return ecoleDestinationDistric;
+    }
+
+    public void setEcoleDestinationDistric(String ecoleDestinationDistric) {
+        this.ecoleDestinationDistric = ecoleDestinationDistric;
     }
 
     public byte[] getPhoto() {
@@ -181,43 +224,11 @@ public class DemandeIdentification {
         this.ext1 = ext1;
     }
 
-    public String getEcole() {
-        return ecole;
+    public int getValider() {
+        return valider;
     }
 
-    public void setEcole(String ecole) {
-        this.ecole = ecole;
-    }
-
-    public String getProvinceEcole() {
-        return provinceEcole;
-    }
-
-    public void setProvinceEcole(String provinceEcole) {
-        this.provinceEcole = provinceEcole;
-    }
-
-    public String getProvinceEducationnel() {
-        return provinceEducationnel;
-    }
-
-    public void setProvinceEducationnel(String provinceEducationnel) {
-        this.provinceEducationnel = provinceEducationnel;
-    }
-
-    public String getOption() {
-        return option;
-    }
-
-    public void setOption(String option) {
-        this.option = option;
-    }
-
-    public String getTypeIdentification() {
-        return typeIdentification;
-    }
-
-    public void setTypeIdentification(String typeIdentification) {
-        this.typeIdentification = typeIdentification;
+    public void setValider(int valider) {
+        this.valider = valider;
     }
 }

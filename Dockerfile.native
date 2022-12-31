@@ -1,0 +1,2 @@
+EXPOSE 80
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=80"]

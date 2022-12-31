@@ -1,33 +1,29 @@
 package org.epst.controlleurs;
 
+import org.epst.models.document_scolaire.documents.Document;
+import org.epst.models.document_scolaire.documents.DocumentMetier;
 import org.epst.models.document_scolaire.identification.DemandeIdentification;
 import org.epst.models.document_scolaire.identification.DemandeIdentificationMetier;
-import org.epst.models.mutuelle.Demande;
-import org.epst.models.mutuelle.DemandeMetier;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.lang.annotation.Documented;
 import java.util.List;
 
-@Path("identification")
-public class DemandeIdentificationController {
+@Path("documentscolaire")
+public class DocumentScolaireController {
 
     @Inject
-    DemandeIdentificationMetier demandeIdentificationMetier;
+    DocumentMetier documentMetier;
 
     @Path("enregistrement")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveDemande(DemandeIdentification d) throws IOException {
+    public Response saveDemande(Document d) throws IOException {
         //System.out.println("La demande: "+hashMap.get("nom"));
         //
 
@@ -77,7 +73,7 @@ public class DemandeIdentificationController {
         //d.setPiecejointe(bytes2);
         //---------------------------------
         */
-        demandeIdentificationMetier.saveDemande(d);
+        documentMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
         return Response.status(Response.Status.CREATED).entity(d).build();
@@ -87,19 +83,11 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public List<DemandeIdentification> getAll(@QueryParam("province") String province, @QueryParam("district") String district,
-                                              @QueryParam("valider") int valider,
-                                              @QueryParam("role") int role){
-        /*
-        "Inspecteur exetat",8
-    "Inspecteur tenassop",9
-    "Inspecteur tenafepe",10
-    "Inspecteur examen professionnel",12
-    "Agent sernie",11
-         */
-        int code = role == 8 ? 0 : role == 9 ? 1 : role == 10 ? 2 : role == 11 ? 3 : 4;
+    public List<Document> getAll(@QueryParam("province") String province, @QueryParam("district") String district,
+                                 @QueryParam("valider") int valider,
+                                 @QueryParam("type") int type){
         //
-        return demandeIdentificationMetier.getAll(province, district, valider, code);
+        return documentMetier.getAll(province, district, valider);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -107,9 +95,9 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public List<DemandeIdentification> getAll(@QueryParam("matricule") String matricule){
+    public List<Document> getAll(@QueryParam("matricule") String matricule){
         //
-        return demandeIdentificationMetier.getAllByMatricule(matricule);
+        return documentMetier.getAllByMatricule(matricule);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -117,9 +105,9 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<DemandeIdentification> getOne(@PathParam("id") Long id){
+    public List<Document> getOne(@PathParam("id") Long id){
         //
-        return demandeIdentificationMetier.getOne(id);
+        return documentMetier.getOne(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -129,7 +117,7 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
-        return demandeIdentificationMetier.getPiecejointe(id);
+        return documentMetier.getPiecejointe(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -139,7 +127,7 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public void setStatus(@PathParam("id") Long id,@PathParam("status") int status){
         //
-        demandeIdentificationMetier.setStatus(status,id);
+        documentMetier.setStatus(status,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
     @Path("saturer/{id}/{cenome}/{status}")
@@ -148,7 +136,7 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public void setExpirer(@PathParam("id") Long id, @PathParam("cenome") String cenome, @PathParam("status") int status){
         //
-        demandeIdentificationMetier.setExpirer(status,cenome,id);
+        documentMetier.setExpirer(status,cenome,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -156,9 +144,9 @@ public class DemandeIdentificationController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public DemandeIdentification getStatus(@QueryParam("id") Long id){
+    public Document getStatus(@QueryParam("id") Long id){
         //
-        return demandeIdentificationMetier.getStatus(id);
+        return documentMetier.getStatus(id);
         //getAll
         //return Response.status(Response.Status.CREATED).entity().build();
     }

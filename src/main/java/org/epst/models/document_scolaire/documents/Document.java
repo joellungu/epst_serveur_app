@@ -1,11 +1,10 @@
-package org.epst.models.document_scolaire.identification;
+package org.epst.models.document_scolaire.documents;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
-public class DemandeIdentification {
+public class Document {
     Long id;
     String nom;
     String postnom;
@@ -27,8 +26,8 @@ public class DemandeIdentification {
     String option;
     String annee;
     String datedemande;
-    int typeIdentificationcode;
-    String typeIdentification;
+    int documenrDemandecode;
+    String documenrDemande;
     String raison;
     int valider;
 
@@ -46,27 +45,6 @@ public class DemandeIdentification {
 
     public void setRaison(String raison) {
         this.raison = raison;
-    }
-
-    public String getAnnee() {
-        return annee;
-    }
-
-    public void setAnnee(String annee) {
-        this.annee = annee;
-    }
-
-    public int getTypeIdentificationcode() {
-        return typeIdentificationcode;
-    }
-    public void setTypeIdentificationcode(int typeIdentificationcode) {
-        this.typeIdentificationcode = typeIdentificationcode;
-    }
-    public int getValider() {
-        return valider;
-    }
-    public void setValider(int valider) {
-        this.valider = valider;
     }
 
     public Long getId() {
@@ -213,11 +191,35 @@ public class DemandeIdentification {
         this.option = option;
     }
 
-    public String getTypeIdentification() {
-        return typeIdentification;
+    public String getAnnee() {
+        return annee;
     }
 
-    public void setTypeIdentification(String typeIdentification) {
-        this.typeIdentification = typeIdentification;
+    public void setAnnee(String annee) {
+        this.annee = annee;
+    }
+
+    public int getDocumenrDemandecode() {
+        return documenrDemandecode;
+    }
+
+    public void setDocumenrDemandecode(int documenrDemandecode) {
+        this.documenrDemandecode = documenrDemandecode;
+    }
+
+    public String getDocumenrDemande() {
+        return documenrDemande;
+    }
+
+    public void setDocumenrDemande(String documenrDemande) {
+        this.documenrDemande = documenrDemande;
+    }
+
+    public int getValider() {
+        return valider;
+    }
+
+    public void setValider(int valider) {
+        this.valider = valider;
     }
 }

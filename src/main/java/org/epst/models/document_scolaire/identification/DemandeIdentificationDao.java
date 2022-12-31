@@ -30,14 +30,17 @@ public interface DemandeIdentificationDao {
             "provinceEcole varchar,"+
             "provinceEducationnel varchar," +
             "option varchar," +
+            "annee varchar," +
+            "datedemande varchar," +
             "valider INTEGER," +
             "typeIdentificationcode INTEGER," +
+            "raison text," +
             "typeIdentification varchar" +
             ")")
     void createTable();
 
-    @SqlUpdate("INSERT INTO DEMANDEIDENTIFICATION (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,valider,typeIdentificationcode,typeIdentification) values " +
-            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:valider,:typeIdentificationcode,:typeIdentification)")
+    @SqlUpdate("INSERT INTO DEMANDEIDENTIFICATION (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,annee,valider,typeIdentificationcode,typeIdentification) values " +
+            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:annee,:valider,:typeIdentificationcode,:typeIdentification)")
     void insertDemande(@BindBean DemandeIdentification demandeIdentification);
 
     @SqlUpdate("UPDATE DEMANDEIDENTIFICATION SET valider = ? where id = ?")
@@ -47,13 +50,13 @@ public interface DemandeIdentificationDao {
 
     //
     @SingleValue
-    @SqlQuery("SELECT valider FROM DEMANDEIDENTIFICATION where id = ?")
-    int getStatus(Long id);
+    @SqlQuery("SELECT valider,raison FROM DEMANDEIDENTIFICATION where id = ?")
+    DemandeIdentification getStatus(Long id);
     //getStatus
 
-    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,typeIdentification FROM DEMANDEIDENTIFICATION where valider = ? and provinceEcole = ? and provinceEducationnel = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,typeIdentification FROM DEMANDEIDENTIFICATION where valider = ? and provinceEcole = ? and provinceEducationnel = ? and typeIdentificationcode = ?")
     @RegisterBeanMapper(DemandeIdentification.class)//
-    List<DemandeIdentification> listeDeDemande(int valider, String province, String district);//
+    List<DemandeIdentification> listeDeDemande(int valider, String province, String district, int code);//
     @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM DEMANDEIDENTIFICATION where matricule = ?")
     @RegisterBeanMapper(Demande.class)//
     List<DemandeIdentification> listeDeDemandeByMatricule(String matricule);//
