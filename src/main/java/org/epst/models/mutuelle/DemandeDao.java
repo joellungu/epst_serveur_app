@@ -34,37 +34,37 @@ public interface DemandeDao {
             ")")
     void createTable();
 
-    @SqlUpdate("INSERT INTO DEMANDES (id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district,carte,piecejointe) values " +
+    @SqlUpdate("INSERT INTO DEMANDE (id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district,carte,piecejointe) values " +
             "(:id,:nom,:postnom,:prenom,:matricule,:direction,:services,:beneficiaire,:notes,:valider,:jour,:ext1,:ext2,:province,:district,:carte,:piecejointe)")
     void insertDemande(@BindBean Demande demande);
 
-    @SqlUpdate("UPDATE DEMANDES SET valider = ? where id = ?")
+    @SqlUpdate("UPDATE DEMANDE SET valider = ? where id = ?")
     void setStatus(int status, Long id);
-    @SqlUpdate("UPDATE DEMANDES SET valider = ?, cenome = ? where id = ?")
+    @SqlUpdate("UPDATE DEMANDE SET valider = ?, cenome = ? where id = ?")
     void setExpirer(int status, String cemone, Long id);
 
     //
     @SingleValue
-    @SqlQuery("SELECT valider FROM DEMANDES where id = ?")
+    @SqlQuery("SELECT valider FROM DEMANDE where id = ?")
     int getStatus(Long id);
     //getStatus
 
-    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM DEMANDES where valider = 0 and province = ? and district = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM DEMANDE where valider = 0 and province = ? and district = ?")
     @RegisterBeanMapper(Demande.class)//
     List<Demande> listeDeDemande(String province, String district);//
-    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM DEMANDES where matricule = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM DEMANDE where matricule = ?")
     @RegisterBeanMapper(Demande.class)//
     List<Demande> listeDeDemandeByMatricule(String matricule);//
 
-    @SqlQuery("SELECT * FROM DEMANDES where id = ?")
+    @SqlQuery("SELECT * FROM DEMANDE where id = ?")
     @RegisterBeanMapper(Demande.class)
     List<Demande> listeDeDemande(Long id);
 
     @SingleValue
-    @SqlQuery("SELECT carte FROM DEMANDES where id = ?")
+    @SqlQuery("SELECT carte FROM DEMANDE where id = ?")
     byte[] getCarte(Long id);
     @SingleValue
-    @SqlQuery("SELECT piecejointe FROM DEMANDES where id = ?")
+    @SqlQuery("SELECT piecejointe FROM DEMANDE where id = ?")
     byte[] getPiecejointe(Long id);
 
     //@SqlUpdate("ALTER TABLE DEMANDES ADD ext1 varchar;")

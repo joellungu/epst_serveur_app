@@ -13,7 +13,7 @@ import java.util.Random;
 @ApplicationScoped
 public class DemandeMetier {
     Jdbi jdbi = SeConnecter.jdbi;
-    public void saveDemande(Demande demande){
+    public String saveDemande(Demande demande){
         //demande.setId(getId());
         jdbi.installPlugin(new SqlObjectPlugin());
         try(Handle handle = jdbi.open()){
@@ -21,10 +21,12 @@ public class DemandeMetier {
             //
             try{
                 v.createTable();
+                v.insertDemande(demande);
+                return "Validé";
             }catch (Exception ex){
-
+                return ex.getMessage();
             }
-            v.insertDemande(demande);
+
             //
         }
     }

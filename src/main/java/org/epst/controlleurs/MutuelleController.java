@@ -69,10 +69,10 @@ public class MutuelleController {
         d.setPiecejointe(bytes2);
         //---------------------------------
 
-        demandeMetier.saveDemande(d);
+        String v = demandeMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
-        return Response.status(Response.Status.CREATED).entity("ok").build();
+        return Response.status(Response.Status.CREATED).entity(v).build();
     }
 
     @Path("all/demande")
