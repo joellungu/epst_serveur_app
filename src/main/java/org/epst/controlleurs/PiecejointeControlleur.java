@@ -181,7 +181,7 @@ public class PiecejointeControlleur {
                                         .put("Name", "Pierre Museghe"))
                                 .put(Emailv31.Message.TO, new JSONArray()
                                         .put(new JSONObject()
-                                                .put("Email", "mmuseghe@gmail.com")
+                                                .put("Email", "numeriquedgc@gmail.com")
                                                 .put("Name", "Pierre Museghe")))
                                 .put(Emailv31.Message.SUBJECT, "Violence basé sur le genre")
                                 .put(Emailv31.Message.TEXTPART, "Contenu:\n"+message)

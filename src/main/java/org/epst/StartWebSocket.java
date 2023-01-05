@@ -13,10 +13,10 @@ import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
-@ServerEndpoint("/start-websocket/{name}")
-@ApplicationScoped
+//@ServerEndpoint("/start-websocket/{name}")
+//@ApplicationScoped
 public class StartWebSocket {
-
+/*
     @OnOpen
     public void onOpen(Session session, @PathParam("name") String name) {
         System.out.println("onOpen> " + name);
@@ -36,4 +36,6 @@ public class StartWebSocket {
     public void onMessage(String message, @PathParam("name") String name) {
         System.out.println("onMessage> " + name + ": " + message);
     }
+
+*/
 }
