@@ -64,7 +64,6 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -112,7 +111,30 @@
     </dependency>
   </dependencies>
   <build>
-    <plugins>
+    <plugins><plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-resources-plugin</artifactId>
+      <version>3.2.0</version>
+      <executions>
+        <execution>
+          <id>copy-data</id>
+          <!-- here the phase you need -->
+          <phase>package</phase>
+          <goals>
+            <goal>copy-resources</goal>
+          </goals>
+          <configuration>
+            <outputDirectory>${basedir}/target/quarkus-app/data</outputDirectory>
+            <resources>
+              <resource>
+                <directory>${basedir}/.platform/nginx/conf.d</directory>
+                <filtering>false</filtering>
+              </resource>
+            </resources>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
