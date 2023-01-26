@@ -31,6 +31,15 @@ public class Transfere {
     String datedemande;
     String raison;
     int valider;
+    String reference;
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
     public String getDatedemande() {
         return datedemande;

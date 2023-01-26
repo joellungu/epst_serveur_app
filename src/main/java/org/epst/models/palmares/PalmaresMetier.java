@@ -29,8 +29,9 @@ public class PalmaresMetier {
             //
         }
     }
-    public List<Palmares> getAll(String ecole, String codeoption, String annee){
-        System.out.println("la valeur: "+ecole+" :-----: "+codeoption+" :-----: "+annee);
+    public List<Palmares> getAll(String nomprovince, String nomecole, String codeoption, String annee){
+        System.out.println(nomecole+" :-----: "+codeoption+" :-----: "+annee);
+        System.out.println(nomecole.length());
         jdbi.installPlugin(new SqlObjectPlugin());
         try(Handle handle = jdbi.open()){
             PalmaresDao v = handle.attach(PalmaresDao.class);
@@ -42,7 +43,25 @@ public class PalmaresMetier {
             }catch (Exception ex){
                 System.out.println("Erreur du à: "+ex);
             }//listeDeDemandeByMatricule
-            return v.listeAll(ecole, codeoption, annee);//province, district
+            return v.listeAll(nomprovince,nomecole, codeoption, annee);//province, district
+            //http://localhost:8080/mutuelle/all/demande?province=Kinshasa&district=KINSHASA-MONT%20AMBA
+        }
+    }
+
+    public Palmares getPalmare(String anneescolaire, String codecandidat){
+        System.out.println(anneescolaire+" :-----: "+codecandidat+" :-----: ");
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try(Handle handle = jdbi.open()){
+            PalmaresDao v = handle.attach(PalmaresDao.class);
+            //
+
+            try{
+                v.createTable();
+                //v.miseAjour();
+            }catch (Exception ex){
+                System.out.println("Erreur du à: "+ex);
+            }//listeDeDemandeByMatricule
+            return v.getPalmare(anneescolaire,codecandidat);//province, district
             //http://localhost:8080/mutuelle/all/demande?province=Kinshasa&district=KINSHASA-MONT%20AMBA
         }
     }

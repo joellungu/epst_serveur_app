@@ -35,12 +35,13 @@ public interface DemandeIdentificationDao {
             "valider INTEGER," +
             "typeIdentificationcode INTEGER," +
             "raison text," +
+            "reference varchar,"+
             "typeIdentification varchar" +
             ")")
     void createTable();
 
-    @SqlUpdate("INSERT INTO DEMANDEIDENTIFICATION (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,annee,valider,typeIdentificationcode,typeIdentification) values " +
-            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:annee,:valider,:typeIdentificationcode,:typeIdentification)")
+    @SqlUpdate("INSERT INTO DEMANDEIDENTIFICATION (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,annee,valider,typeIdentificationcode,reference,typeIdentification) values " +
+            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:annee,:valider,:typeIdentificationcode,:reference,:typeIdentification)")
     void insertDemande(@BindBean DemandeIdentification demandeIdentification);
 
     @SqlUpdate("UPDATE DEMANDEIDENTIFICATION SET valider = ? where id = ?")
@@ -54,10 +55,10 @@ public interface DemandeIdentificationDao {
     DemandeIdentification getStatus(Long id);
     //getStatus
 
-    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,typeIdentification FROM DEMANDEIDENTIFICATION where valider = ? and provinceEcole = ? and provinceEducationnel = ? and typeIdentificationcode = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,annee,reference,datedemande,typeIdentification FROM DEMANDEIDENTIFICATION where valider = ? and provinceEcole = ? and provinceEducationnel = ? and typeIdentificationcode = ?")
     @RegisterBeanMapper(DemandeIdentification.class)//
     List<DemandeIdentification> listeDeDemande(int valider, String province, String district, int code);//
-    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM DEMANDEIDENTIFICATION where matricule = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,reference,district FROM DEMANDEIDENTIFICATION where matricule = ?")
     @RegisterBeanMapper(Demande.class)//
     List<DemandeIdentification> listeDeDemandeByMatricule(String matricule);//
 

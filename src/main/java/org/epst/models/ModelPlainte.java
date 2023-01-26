@@ -367,9 +367,8 @@ public class ModelPlainte {
     public byte[] getPieceJointe(Long id){
         int t = 0;
         byte[] piece = new byte[0];
-
+        //
         //int piecejointe_id = 0;
-
         //
         try{
             //piecejointe_id = getId();

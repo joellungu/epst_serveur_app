@@ -4,11 +4,11 @@ public class Palmares {
     String nomprovince ;
     String codeprovince ;
     String nomcentre ;
-    int codecentre ;
+    String codecentre ;
     String option ;
-    int codeoption ;
+    String codeoption ;
     String nomecole ;
-    int codeecole ;
+    String codeecole ;
     int ordreecole ;
     int codegestion ;
     String codecandidat ;
@@ -41,11 +41,11 @@ public class Palmares {
         this.nomcentre = nomcentre;
     }
 
-    public int getCodecentre() {
+    public String getCodecentre() {
         return codecentre;
     }
 
-    public void setCodecentre(int codecentre) {
+    public void setCodecentre(String codecentre) {
         this.codecentre = codecentre;
     }
 
@@ -57,11 +57,11 @@ public class Palmares {
         this.option = option;
     }
 
-    public int getCodeoption() {
+    public String getCodeoption() {
         return codeoption;
     }
 
-    public void setCodeoption(int codeoption) {
+    public void setCodeoption(String codeoption) {
         this.codeoption = codeoption;
     }
 
@@ -73,11 +73,11 @@ public class Palmares {
         this.nomecole = nomecole;
     }
 
-    public int getCodeecole() {
+    public String getCodeecole() {
         return codeecole;
     }
 
-    public void setCodeecole(int codeecole) {
+    public void setCodeecole(String codeecole) {
         this.codeecole = codeecole;
     }
 

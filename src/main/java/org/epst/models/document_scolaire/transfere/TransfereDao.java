@@ -35,7 +35,8 @@ public interface TransfereDao {
             "ecoleDestinationDistric varchar," +
             "photo bytea,"+
             "ext1 varchar," +
-            "datedemande varchar,"+
+            "datedemande varchar," +
+            "reference varchar,"+
             "raison text," +
             "valider INTEGER" +
             ")")
@@ -43,10 +44,10 @@ public interface TransfereDao {
 
     @SqlUpdate("INSERT INTO TRANSFERES (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,option_avant,option_apres," +
             "ecoleProvenance,ecoleProvenanceProv,ecoleProvenanceDistric,ecoleDestination,ecoleDestinationProv,ecoleDestinationDistric," +
-            "photo,ext1,datedemande,valider) values " +
+            "photo,ext1,datedemande,reference,valider) values " +
             "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:option_avant,:option_apres," +
             ":ecoleProvenance,:ecoleProvenanceProv,:ecoleProvenanceDistric,:ecoleDestination,:ecoleDestinationProv,:ecoleDestinationDistric," +
-            ":photo,:ext1,:datedemande,:valider)")
+            ":photo,:ext1,:datedemande,:reference,:valider)")
     void insertDemande(@BindBean Transfere transfere);
 
     @SqlUpdate("UPDATE TRANSFERES SET valider = ?, raison = ? where id = ?")
@@ -63,10 +64,10 @@ public interface TransfereDao {
 
     @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,option_avant,option_apres," +
             "ecoleProvenance,ecoleProvenanceProv,ecoleProvenanceDistric,ecoleDestination,ecoleDestinationProv,ecoleDestinationDistric," +
-            "datedemande,valider FROM TRANSFERES where valider = ? and ecoleDestinationProv = ? and ecoleDestinationDistric = ?")
+            "datedemande,reference,valider FROM TRANSFERES where valider = ? and ecoleDestinationProv = ? and ecoleDestinationDistric = ?")
     @RegisterBeanMapper(Transfere.class)//
     List<Transfere> listeDeDemande(int valider, String province, String district);//
-    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,district FROM TRANSFERES where matricule = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,matricule,direction,services,beneficiaire,notes,valider,jour,ext1,ext2,province,reference,district FROM TRANSFERES where matricule = ?")
     @RegisterBeanMapper(Transfere.class)//
     List<Transfere> listeDeDemandeByMatricule(String matricule);//
 

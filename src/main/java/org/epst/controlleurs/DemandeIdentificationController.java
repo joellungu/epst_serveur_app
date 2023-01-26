@@ -28,7 +28,7 @@ public class DemandeIdentificationController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveDemande(DemandeIdentification d) throws IOException {
-        //System.out.println("La demande: "+hashMap.get("nom"));
+        System.out.println("La demande: "+d.getAdresse());
         //
 
         /*

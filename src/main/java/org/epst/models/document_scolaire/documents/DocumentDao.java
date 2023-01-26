@@ -36,12 +36,13 @@ public interface DocumentDao {
             "valider INTEGER," +
             "documenrDemandecode INTEGER," +
             "raison text," +
+            "reference varchar,"+
             "documenrDemande varchar" +
             ")")
     void createTable();
 
-    @SqlUpdate("INSERT INTO DOCUMENT (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,valider,documenrDemandecode,documenrDemande) values " +
-            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:annee,:datedemande,:valider,:documenrDemandecode,:documenrDemande)")
+    @SqlUpdate("INSERT INTO DOCUMENT (id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,photo,ext1,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,valider,documenrDemandecode,reference,documenrDemande) values " +
+            "(:id,:nom,:postnom,:prenom,:sexe,:lieuNaissance,:dateNaissance,:telephone,:nompere,:nommere,:adresse,:provinceOrigine,:photo,:ext1,:ecole,:provinceEcole,:provinceEducationnel,:option,:annee,:datedemande,:valider,:documenrDemandecode,:reference,:documenrDemande)")
     void insertDemande(@BindBean Document document);
 
     @SqlUpdate("UPDATE DOCUMENT SET valider = ? where id = ?")
@@ -55,10 +56,10 @@ public interface DocumentDao {
     Document getStatus(Long id);
     //getStatus
 
-    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,valider,documenrDemandecode,documenrDemande FROM DOCUMENT where valider = ? and provinceEcole = ? and provinceEducationnel = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,valider,documenrDemandecode,reference,documenrDemande FROM DOCUMENT where valider = ? and provinceEcole = ? and provinceEducationnel = ?")
     @RegisterBeanMapper(Document.class)//
     List<Document> listeDeDemande(int valider, String province, String district);//
-    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,valider,documenrDemandecode,documenrDemande FROM DOCUMENT where matricule = ?")
+    @SqlQuery("SELECT id,nom,postnom,prenom,sexe,lieuNaissance,dateNaissance,telephone,nompere,nommere,adresse,provinceOrigine,ecole,provinceEcole,provinceEducationnel,option,annee,datedemande,valider,documenrDemandecode,reference,documenrDemande FROM DOCUMENT where matricule = ?")
     @RegisterBeanMapper(Document.class)//
     List<Document> listeDeDemandeByMatricule(String matricule);//
 

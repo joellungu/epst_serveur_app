@@ -15,9 +15,9 @@ public interface PalmaresDao {
             "nomcentre varchar," +
             "codecentre INTEGER," +
             "option varchar," +
-            "codeoption INTEGER," +
+            "codeoption varchar," +
             "nomecole varchar," +
-            "codeecole INTEGER," +
+            "codeecole varchar," +
             "ordreecole INTEGER," +
             "codegestion INTEGER," +
             "codecandidat varchar," +
@@ -32,8 +32,12 @@ public interface PalmaresDao {
             "(:nomprovince,:codeprovince,:nomcentre,:codecentre,:option,:codeoption,:nomecole,:codeecole,:ordreecole,:codegestion,:codecandidat,:nomcandidat,:sexe,:note,:anneescolaire)")
     void insertPalmare(@BindBean Palmares palmares);
 
-    @SqlQuery("SELECT * FROM PALMARES where nomecole = ? AND codeoption = ? AND anneescolaire = ?")
+    @SqlQuery("SELECT * FROM PALMARES where nomprovince = ? AND nomecole = ? AND codeoption = ? AND anneescolaire = ?")
     @RegisterBeanMapper(Palmares.class)//
-    List<Palmares> listeAll(String nomecole, String codeoption, String anneescolaire);//
+    List<Palmares> listeAll(String nomprovince, String nomecole, String codeoption, String anneescolaire);//
+
+    @SqlQuery("SELECT * FROM PALMARES where anneescolaire = ? AND codecandidat = ?")
+    @RegisterBeanMapper(Palmares.class)//
+    Palmares getPalmare(String anneescolaire, String codecandidat);//
 
 }

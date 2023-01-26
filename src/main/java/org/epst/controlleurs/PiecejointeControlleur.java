@@ -223,11 +223,11 @@ public class PiecejointeControlleur {
             p.setNomprovince(col1);
             p.setCodeprovince(col2);
             p.setNomcentre(col3);
-            p.setCodecentre(Integer.parseInt(col4));
+            p.setCodecentre(col4);
             p.setOption(col5);
-            p.setCodeoption(Integer.parseInt(col6));
+            p.setCodeoption(col6);
             p.setNomecole(col7);
-            p.setCodeecole(Integer.parseInt(col8));
+            p.setCodeecole(col8);
             p.setOrdreecole(Integer.parseInt(col9));
             p.setCodegestion(Integer.parseInt(col10));
             p.setCodecandidat(col11);

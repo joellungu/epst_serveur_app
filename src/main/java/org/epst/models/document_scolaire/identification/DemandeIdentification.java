@@ -3,6 +3,7 @@ package org.epst.models.document_scolaire.identification;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 public class DemandeIdentification {
@@ -13,7 +14,7 @@ public class DemandeIdentification {
     String sexe;
     String lieuNaissance;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    LocalDate dateNaissance;
+    Timestamp dateNaissance;
     String telephone;
     String nompere;
     String nommere;
@@ -31,6 +32,15 @@ public class DemandeIdentification {
     String typeIdentification;
     String raison;
     int valider;
+    String reference;
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
     public String getDatedemande() {
         return datedemande;
@@ -117,11 +127,11 @@ public class DemandeIdentification {
         this.lieuNaissance = lieuNaissance;
     }
 
-    public LocalDate getDateNaissance() {
+    public Timestamp getDateNaissance() {
         return dateNaissance;
     }
 
-    public void setDateNaissance(LocalDate dateNaissance) {
+    public void setDateNaissance(Timestamp dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
 

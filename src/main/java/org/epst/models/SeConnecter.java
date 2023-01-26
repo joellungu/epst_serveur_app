@@ -9,11 +9,11 @@ import java.sql.ResultSet;
 public class SeConnecter {
 
     public static Jdbi jdbi = Jdbi.create
-            //("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
+            ("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
 
-                ("jdbc:postgresql://bqlujt3tbffdu10fdgql-postgresql.services.clever-cloud.com:5434/bqlujt3tbffdu10fdgql",
-                "uuypo0h3cqqun990xnbu",
-                "bP1lkHFA26CrKH4RU9r1");
+                //("jdbc:postgresql://bqlujt3tbffdu10fdgql-postgresql.services.clever-cloud.com:5434/bqlujt3tbffdu10fdgql",
+                //"uuypo0h3cqqun990xnbu",
+                //"bP1lkHFA26CrKH4RU9r1");
 
     public Connection con;
     //
@@ -24,10 +24,10 @@ public class SeConnecter {
         try{
             //String dbUrl = System.getenv("JDBC_DATABASE_URL");
             //con = DriverManager.getConnection(dbUrl);
-            //con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
-            con = DriverManager.getConnection("jdbc:postgresql://bqlujt3tbffdu10fdgql-postgresql.services.clever-cloud.com:5434/bqlujt3tbffdu10fdgql",
-                    "uuypo0h3cqqun990xnbu",
-                    "bP1lkHFA26CrKH4RU9r1");
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
+            //con = DriverManager.getConnection("jdbc:postgresql://bqlujt3tbffdu10fdgql-postgresql.services.clever-cloud.com:5434/bqlujt3tbffdu10fdgql",
+            //        "uuypo0h3cqqun990xnbu",
+            //        "bP1lkHFA26CrKH4RU9r1");
             //con = DriverManager.getConnection(
             //        "jdbc:postgres:/p894773326902-f1azl0@gcp-sa-cloud-sql.iam.gserviceaccount.com",
             //"dgc-epst",
