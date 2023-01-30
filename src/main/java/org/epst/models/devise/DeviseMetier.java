@@ -31,7 +31,7 @@ public class DeviseMetier {
         }
     }
 
-    public double conversion(int montant, Long id, Boolean de) {
+    public double conversion(Double montant, Long id, Boolean de) {
         try(Handle handle = jdbi.open()){
             DeviseDao v = handle.attach(DeviseDao.class);
             //

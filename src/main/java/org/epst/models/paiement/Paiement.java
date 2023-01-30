@@ -10,7 +10,7 @@ public class Paiement {
     public String phone;
     public String reference;
     public int valider;
-    public int amount;
+    public Double amount;
     public String currency;
 
     public int getValider() {
@@ -85,11 +85,11 @@ public class Paiement {
         this.reference = reference;
     }
 
-    public int getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

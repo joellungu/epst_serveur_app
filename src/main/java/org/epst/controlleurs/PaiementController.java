@@ -66,7 +66,7 @@ public class PaiementController {
         }
     }
 
-    public String lancer(String devise, String telephone, int m, String reference) {
+    public String lancer(String devise, String telephone, Double m, String reference) {
         System.out.println("la devise: $"+devise+"lE MONTANT: $"+m);
         String dev = devise == "USD" ? "USD":"CDF";
         double montant = deviseMetier.conversion(m,1L, devise=="USD");
@@ -108,7 +108,7 @@ public class PaiementController {
     Timer timer;
 
     public void AnnoyingBeep() {
-        String reponse = lancer("","",1,"");
+        String reponse = lancer("","",1.0,"");
         System.out.println(reponse);
         //reponse = "{"+reponse+"}";
         System.out.println("{"+reponse+"}");
@@ -164,6 +164,11 @@ public class PaiementController {
     @Produces(MediaType.APPLICATION_JSON)
     public String lancerPaiment(Paiement paiement) {
         //
+        System.out.println("Le montant: "+paiement.getAmount());
+        System.out.println("Le devise: "+paiement.getCurrency());
+        System.out.println("Le phone: "+paiement.getPhone());
+        System.out.println("Le montant: ");
+
         paiementMetier.savePaiement(paiement);
         //AnnoyingBeep();
         //
