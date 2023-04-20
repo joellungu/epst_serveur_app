@@ -1,5 +1,6 @@
 package org.epst.controlleurs;
 
+import java.util.HashMap;
 import java.util.List;
 import org.epst.beans.Utilisateur;
 import org.epst.models.Agent.Agent;
@@ -37,12 +38,17 @@ public class AgentControlleur {
     @Path("/login/{matricule}/{mdp}")
     @GET()
     @Produces(MediaType.APPLICATION_JSON)
-    public Utilisateur getAgent(@PathParam("matricule") String matricule, @PathParam("mdp") String mdp) {
-        Utilisateur u = modelUtilisateur.getUtilisateur(matricule, mdp);
-        //Todo todo = new Todo();
-        //todo.setSummary(id);
-        //todo.setDescription("Application JSON Todo Description");
-        return u;
+    public Response getAgent(@PathParam("matricule") String matricule,
+                                @PathParam("mdp") String mdp){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("matricule",matricule);
+        params.put("mdp",mdp);
+
+        Agent utilisater = Agent.find("matricule =:matricule and mdp =:mdp ",params).firstResult();
+        if(utilisater == null){
+            return Response.serverError().build();
+        }
+        return Response.ok(utilisater).build();
     }
 
     @Path("/{id}")
