@@ -1,7 +1,12 @@
 package org.epst.models.magasin;
 
-public class Magasin {
-    Long id;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Entity;
+
+@Entity
+public class Magasin extends PanacheEntity {
+    //Long id;
     String libelle;
     String description;
     byte[] piecejointe;

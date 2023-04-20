@@ -1,8 +1,13 @@
 package org.epst.models.Agent;
 
-public class Agent {
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-    Long id;
+import javax.persistence.Entity;
+
+@Entity
+public class Agent extends PanacheEntity {
+
+    //Long id;
     String nom;
     String postnom;
     String prenom;

@@ -1,6 +1,11 @@
 package org.epst.models.paiement;
 
-public class Paiement {
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Entity;
+
+@Entity
+public class Paiement extends PanacheEntity {
     public String nom;
     public String postnom;
     public String prenom;

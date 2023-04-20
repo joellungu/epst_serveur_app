@@ -1,11 +1,14 @@
 package org.epst.models.document_scolaire.documents;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
+import javax.persistence.Entity;
 import java.time.LocalDate;
 
-public class Document {
-    Long id;
+@Entity
+public class Document extends PanacheEntity {
+    //Long id;
     String nom;
     String postnom;
     String prenom;

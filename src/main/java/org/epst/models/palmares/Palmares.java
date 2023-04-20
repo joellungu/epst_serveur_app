@@ -1,6 +1,11 @@
 package org.epst.models.palmares;
 
-public class Palmares {
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Entity;
+
+@Entity
+public class Palmares extends PanacheEntity {
     String nomprovince ;
     String codeprovince ;
     String nomcentre ;

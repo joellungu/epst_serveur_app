@@ -1,13 +1,16 @@
 package org.epst.models.document_scolaire.identification;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
+import javax.persistence.Entity;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-public class DemandeIdentification {
-    Long id;
+@Entity
+public class DemandeIdentification extends PanacheEntity {
+    //Long id;
     String nom;
     String postnom;
     String prenom;

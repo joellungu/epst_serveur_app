@@ -1,8 +1,12 @@
 package org.epst.models.document_scolaire;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Entity;
 import java.sql.Date;
 
-public class DemandeDiplome {
+@Entity
+public class DemandeDiplome extends PanacheEntity {
     Long id;
     String nom;
     String postnom;

@@ -1,11 +1,14 @@
 package org.epst.models.document_scolaire.transfere;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
+import javax.persistence.Entity;
 import java.time.LocalDate;
 
-public class Transfere {
-    Long id;
+@Entity
+public class Transfere extends PanacheEntity {
+    //Long id;
     String nom;
     String postnom;
     String prenom;
