@@ -194,7 +194,7 @@ public class ModelMagasin {
             //
             Long id_ = getId();
             try{
-                String sql = "INSERT INTO magasin (id, libelle, description, piecejointe, date_mise_en_ligne, types, extention) "+
+                String sql = "INSERT INTO magasin (id, libelle, description, piecejointe, date_mise_en_ligne, type, extention) "+
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
                 PreparedStatement statement = con.prepareStatement(sql);
