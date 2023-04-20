@@ -8,8 +8,8 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 //import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.epst.beans.FileUploadForm;
-import org.epst.beans.Magasin;
 import org.epst.models.ModelMagasin;
+import org.epst.models.magasin.Magasin;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 
@@ -43,7 +43,7 @@ public class MagasinControlleur {
     @Consumes(MediaType.APPLICATION_JSON)
     public Magasin getMagasint(@PathParam("id") Long id) {
         System.out.println("le id: "+id);
-        Magasin u = modelMagasin.getMagasin(id);
+        Magasin u = Magasin.findById(id);
         //Todo todo = new Todo();
         //todo.setSummary(id);
         //todo.setDescription("Application JSON Todo Description");
@@ -57,7 +57,7 @@ public class MagasinControlleur {
     public List<Magasin> getAllMagasints(@PathParam("type") String type) {
         System.out.println("Element type: "+type);
         //
-        List<Magasin> listeU = modelMagasin.getAllMagasin(type);
+        List<Magasin> listeU = Magasin.list("type",type);
         //
         //listeU.forEach((u)->{
         //  System.out
@@ -81,6 +81,8 @@ public class MagasinControlleur {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response savetMagasint(Magasin magasin) {
+        magasin.persist();
+        /*
         Long t = modelMagasin.saveMagasin(magasin);
         System.out.println("votre element: "+
         magasin.getDate()+":\n__:"+
@@ -102,8 +104,9 @@ public class MagasinControlleur {
         //
         //ObjectNode json = mapper.createObjectNode();
         ///json.put("save", "ok");
+        */
         
-        return Response.status(Response.Status.CREATED).entity(json).build();
+        return Response.ok().build();
     }
 
     @POST
@@ -124,13 +127,13 @@ public class MagasinControlleur {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateMagasint(Magasin Magasin) {
 
-        int t = modelMagasin.miseaJourMagasin(Magasin);
+        //int t = modelMagasin.miseaJourMagasin(Magasin);
         //System.out.println(Magasin.adresse);
         
         ObjectNode json = mapper.createObjectNode();
         //
-        json.put("mettre à jour", t);
-        return Response.status(Response.Status.CREATED).entity(json).build();
+        //json.put("mettre à jour", t);
+        return Response.ok().build();
     }
 
     @Path("/{id}")
