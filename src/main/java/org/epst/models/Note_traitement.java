@@ -9,7 +9,6 @@ import javax.persistence.Lob;
 public class Note_traitement extends PanacheEntity {
     public String nom_admin;
     public String reference;
-
     @Lob
     public String note;
 }

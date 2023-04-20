@@ -8,6 +8,7 @@ import org.epst.models.ModelUtilisateur;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,16 +25,6 @@ public class AgentControlleur {
     
     private static final ObjectMapper mapper = new ObjectMapper();
     ModelUtilisateur modelUtilisateur = new ModelUtilisateur();
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response hello() {
-
-        // create a JSON string
-        ObjectNode json = mapper.createObjectNode();
-        json.put("EPST APP", "Server");
-        return Response.status(Response.Status.OK).entity(json).build();
-    }
 
     @Path("/login/{matricule}/{mdp}")
     @GET()
@@ -54,12 +45,12 @@ public class AgentControlleur {
     @Path("/{id}")
     @GET()
     @Produces(MediaType.APPLICATION_JSON)
-    public Utilisateur getAgent(@PathParam("id") int id) {
-        Utilisateur u = modelUtilisateur.getUtilisateur(id);
+    public Agent getAgent(@PathParam("id") int id) {
+        Agent agent = Agent.findById(id);
         //Todo todo = new Todo();
         //todo.setSummary(id);
         //todo.setDescription("Application JSON Todo Description");
-        return u;
+        return agent;
     }
     
     @Path("/all")
@@ -87,55 +78,53 @@ public class AgentControlleur {
     @POST()
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response savetAgent(Utilisateur utilisateur) {
-        String t = modelUtilisateur.saveUtilisateur(utilisateur);
-        System.out.println("votre element: "+
-        utilisateur.getAdresse()+":\n__:"+
-            utilisateur.getDate_de_naissance()+":\n__:"+
-            utilisateur.getEmail()+":\n__:"+
-            utilisateur.getNom()+":\n__:"+
-            utilisateur.getNumero()+":\n__:"+
-            utilisateur.getPostnom()+":\n__:"+
-            utilisateur.getPrenom()+":\n__:"+
-            utilisateur.getRole()+":\n__:"+
-            utilisateur.getMatricule()+":\n__:"+
-            utilisateur.getId_statut()
-        );
+    @Transactional
+    public Response savetAgent(Agent agent) {
         //
-
+        agent.persist();
+        //
         ObjectNode json = mapper.createObjectNode();
         //
-        json.put("status", "votre element: "+
-        utilisateur.getAdresse()+":\n__:"+
-            utilisateur.getDate_de_naissance()+":\n__:"+
-            utilisateur.getEmail()+":\n__:"+
-            utilisateur.getNom()+":\n__:"+
-            utilisateur.getNumero()+":\n__:"+
-            utilisateur.getPostnom()+":\n__:"+
-            utilisateur.getPrenom()+":\n__:"+
-            utilisateur.getRole()+":\n__:"+
-            utilisateur.getMatricule()+":\n__:"+
-            utilisateur.getId_statut());
-        json.put("save", t);
+        json.put("status", "votre element: ");
         
         return Response.status(Response.Status.CREATED).entity(json).build();
     }
 
     @PUT()
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateAgent(Utilisateur utilisateur) {
+    @Transactional
+    public Response updateAgent(Agent agent) {
 
-        int t = modelUtilisateur.miseaJourUtilisateur(utilisateur);
-        System.out.println(utilisateur.adresse);
-        
+        Agent agent1 = Agent.findById(agent.id);
+        if(agent1 == null){
+            return Response.serverError().build();
+        }
+
+        //
+        agent1.nom = agent.nom;
+        agent1.postnom = agent.postnom;
+        agent1.prenom = agent.prenom;
+        agent1.numero = agent.numero;
+        agent1.email = agent.email;
+        agent1.adresse = agent.adresse;
+        agent1.role = agent.role;
+        agent1.matricule = agent.matricule;
+        agent1.id_statut = agent.id_statut;
+        agent1.date_de_naissance = agent.date_de_naissance;
+        agent1.mdp = agent.mdp;
+        agent1.province = agent.province;
+        agent1.district = agent.district;
+        //agent1.nom = agent.nom;
+        //
         ObjectNode json = mapper.createObjectNode();
         //
-        json.put("mettre à jour", t);
+        json.put("mettre à jour", "coll");
         return Response.status(Response.Status.CREATED).entity(json).build();
     }
 
     @Path("/{id}")
     @DELETE()
+    @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAgent(@PathParam("id") int id) {
         int t = modelUtilisateur.supprimerUtilisateur(id);

@@ -9,32 +9,32 @@ import java.time.LocalDate;
 @Entity
 public class Transfere extends PanacheEntity {
     //Long id;
-    String nom;
-    String postnom;
-    String prenom;
-    String sexe;
-    String lieuNaissance;
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String sexe;
+    public String lieuNaissance;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    LocalDate dateNaissance;
-    String telephone;
-    String nompere;
-    String nommere;
-    String adresse;
-    String option_avant;
-    String option_apres;
-    String provinceOrigine;
-    String ecoleProvenance;
-    String ecoleProvenanceProv;
-    String ecoleProvenanceDistric;
-    String ecoleDestination;
-    String ecoleDestinationProv;
-    String ecoleDestinationDistric;
-    byte[] photo;
-    String ext1;
-    String datedemande;
-    String raison;
-    int valider;
-    String reference;
+    public LocalDate dateNaissance;
+    public String telephone;
+    public String nompere;
+    public String nommere;
+    public String adresse;
+    public String option_avant;
+    public String option_apres;
+    public String provinceOrigine;
+    public String ecoleProvenance;
+    public String ecoleProvenanceProv;
+    public String ecoleProvenanceDistric;
+    public String ecoleDestination;
+    public String ecoleDestinationProv;
+    public String ecoleDestinationDistric;
+    public byte[] photo;
+    public String ext1;
+    public String datedemande;
+    public String raison;
+    public int valider;
+    public String reference;
 
     public String getReference() {
         return reference;

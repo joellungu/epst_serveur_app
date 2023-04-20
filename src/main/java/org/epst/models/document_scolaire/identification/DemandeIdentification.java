@@ -11,31 +11,31 @@ import java.time.LocalDate;
 @Entity
 public class DemandeIdentification extends PanacheEntity {
     //Long id;
-    String nom;
-    String postnom;
-    String prenom;
-    String sexe;
-    String lieuNaissance;
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String sexe;
+    public String lieuNaissance;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Timestamp dateNaissance;
-    String telephone;
-    String nompere;
-    String nommere;
-    String adresse;
-    String provinceOrigine;
-    byte[] photo;
-    String ext1;
-    String ecole;
-    String provinceEcole;
-    String provinceEducationnel;
-    String option;
-    String annee;
-    String datedemande;
-    int typeIdentificationcode;
-    String typeIdentification;
-    String raison;
-    int valider;
-    String reference;
+    public Timestamp dateNaissance;
+    public String telephone;
+    public String nompere;
+    public String nommere;
+    public String adresse;
+    public String provinceOrigine;
+    public byte[] photo;
+    public String ext1;
+    public String ecole;
+    public String provinceEcole;
+    public String provinceEducationnel;
+    public String option;
+    public String annee;
+    public String datedemande;
+    public int typeIdentificationcode;
+    public String typeIdentification;
+    public String raison;
+    public int valider;
+    public String reference;
 
     public String getReference() {
         return reference;

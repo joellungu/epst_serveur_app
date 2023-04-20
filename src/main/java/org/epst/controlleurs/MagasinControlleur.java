@@ -91,10 +91,10 @@ public class MagasinControlleur {
         magasin.getLibelle()+":\n__:"
         );
         //
-        
+        */
         ObjectNode json = mapper.createObjectNode();
         
-        json.put("status", t);
+        json.put("status", 1);
         //Random random = new Random();
         //long random63BitLong = random.nextLong();
         //
@@ -104,7 +104,7 @@ public class MagasinControlleur {
         //
         //ObjectNode json = mapper.createObjectNode();
         ///json.put("save", "ok");
-        */
+
         
         return Response.ok().build();
     }

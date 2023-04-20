@@ -1,11 +1,13 @@
 package org.epst.controlleurs;
 
+import org.epst.models.document_scolaire.documents.Document;
 import org.epst.models.document_scolaire.identification.DemandeIdentification;
 import org.epst.models.document_scolaire.identification.DemandeIdentificationMetier;
 import org.epst.models.mutuelle.Demande;
 import org.epst.models.mutuelle.DemandeMetier;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,10 +29,11 @@ public class DemandeIdentificationController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response saveDemande(DemandeIdentification d) throws IOException {
         System.out.println("La demande: "+d.getAdresse());
         //
-
+        d.persist();
         /*
         DemandeIdentification d = new DemandeIdentification();
         d.setId(Long.parseLong(""+hashMap.get("id")));
@@ -99,7 +102,14 @@ public class DemandeIdentificationController {
          */
         int code = role == 8 ? 0 : role == 9 ? 1 : role == 10 ? 2 : role == 11 ? 3 : 4;
         //
-        return demandeIdentificationMetier.getAll(province, district, valider, code);
+        HashMap params = new HashMap();
+        params.put("provinceEcole",province);//Transfere
+        params.put("provinceEducationnel",district);//Transfere
+        params.put("valider",valider);//Transfere
+        params.put("typeIdentificationcode",code);
+        //
+        return DemandeIdentification.list("provinceEcole =:provinceEcole and provinceEducationnel =:provinceEducationnel and valider =:valider",params);
+        //return demandeIdentificationMetier.getAll(province, district, valider, code);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -109,7 +119,7 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public List<DemandeIdentification> getAll(@QueryParam("matricule") String matricule){
         //
-        return demandeIdentificationMetier.getAllByMatricule(matricule);
+        return DemandeIdentification.list("matricule",matricule);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -119,7 +129,7 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<DemandeIdentification> getOne(@PathParam("id") Long id){
         //
-        return demandeIdentificationMetier.getOne(id);
+        return DemandeIdentification.findById(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -129,7 +139,8 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
-        return demandeIdentificationMetier.getPiecejointe(id);
+        DemandeIdentification demandeIdentification = DemandeIdentification.findById(id);
+        return demandeIdentification.getPhoto();
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -137,9 +148,15 @@ public class DemandeIdentificationController {
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Transactional
     public void setStatus(@PathParam("id") Long id,@PathParam("status") int status){
         //
-        demandeIdentificationMetier.setStatus(status,id);
+        DemandeIdentification demandeIdentification = DemandeIdentification.findById(id);
+        if(demandeIdentification == null){
+            return;
+        }
+        demandeIdentification.valider = status;
+        //demandeIdentificationMetier.setStatus(status,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
     @Path("saturer/{id}/{cenome}/{status}")
@@ -158,7 +175,7 @@ public class DemandeIdentificationController {
     @Produces(MediaType.APPLICATION_JSON)
     public DemandeIdentification getStatus(@QueryParam("id") Long id){
         //
-        return demandeIdentificationMetier.getStatus(id);
+        return DemandeIdentification.findById(id);
         //getAll
         //return Response.status(Response.Status.CREATED).entity().build();
     }

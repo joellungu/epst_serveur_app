@@ -8,19 +8,19 @@ import javax.persistence.Entity;
 public class Agent extends PanacheEntity {
 
     //Long id;
-    String nom;
-    String postnom;
-    String prenom;
-    String numero;
-    String email;
-    String adresse;
-    int role;
-    String matricule;
-    String id_statut;
-    String date_de_naissance;
-    String mdp;
-    String province;
-    String district;
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String numero;
+    public String email;
+    public String adresse;
+    public int role;
+    public String matricule;
+    public String id_statut;
+    public String date_de_naissance;
+    public String mdp;
+    public String province;
+    public String district;
 
     public Long getId() {
         return id;

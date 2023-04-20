@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.epst.beans.NoteTraitementBean;
 import org.epst.models.ModelNoteTraitement;
+import org.epst.models.Note_traitement;
 
 @Path("/note")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -26,16 +27,11 @@ public class NoteControlleur {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response noterMa(NoteTraitementBean noteTraitementBean){
-        System.out.println("Le id: "+noteTraitementBean.getId());
-        System.out.println("Le nom: "+noteTraitementBean.getNomIdmin());
-        System.out.println("Le ref: "+noteTraitementBean.getReference());
-        System.out.println("Le note: "+noteTraitementBean.getNote());
-        //
-        ModelNoteTraitement modelNoteTraitement = new ModelNoteTraitement();
-        Long v = modelNoteTraitement.saveNote(noteTraitementBean);
+    @Transactional
+    public Response noterMa(Note_traitement noteTraitement){
+        noteTraitement.persist();
         ObjectNode json = mapper.createObjectNode();
-        json.put("status", v);
+        json.put("status", 1);
         return Response.status(Response.Status.CREATED).entity("ok").build();
     }
 

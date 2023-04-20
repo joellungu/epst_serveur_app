@@ -4,36 +4,39 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import java.time.LocalDate;
 
 @Entity
 public class Document extends PanacheEntity {
     //Long id;
-    String nom;
-    String postnom;
-    String prenom;
-    String sexe;
-    String lieuNaissance;
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String sexe;
+    public String lieuNaissance;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    LocalDate dateNaissance;
-    String telephone;
-    String nompere;
-    String nommere;
-    String adresse;
-    String provinceOrigine;
-    byte[] photo;
-    String ext1;
-    String ecole;
-    String provinceEcole;
-    String provinceEducationnel;
-    String option;
-    String annee;
-    String datedemande;
-    int documenrDemandecode;
-    String documenrDemande;
-    String raison;
-    int valider;
-    String reference;
+    public LocalDate dateNaissance;
+    public String telephone;
+    public String nompere;
+    public String nommere;
+    public String adresse;
+    public String provinceOrigine;
+    public byte[] photo;
+    public String ext1;
+    public String ecole;
+    public String provinceEcole;
+    public String provinceEducationnel;
+    public String option;
+    public String annee;
+    public String datedemande;
+    public int documenrDemandecode;
+    public String documenrDemande;
+
+    @Lob
+    public String raison;
+    public int valider;
+    public String reference;
 
     public String getReference() {
         return reference;

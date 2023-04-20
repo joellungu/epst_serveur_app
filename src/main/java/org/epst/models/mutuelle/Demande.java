@@ -9,22 +9,22 @@ import java.io.ByteArrayOutputStream;
 @Entity
 public class Demande extends PanacheEntity {
     //Long id;
-    String nom;
-    String postnom;
-    String prenom;
-    String matricule;
-    String direction;
-    String services;
-    String beneficiaire;
-    String notes;
-    int valider;
-    String jour;
-    String ext1;
-    String ext2;
-    String province;
-    String district;
-    byte[] piecejointe;
-    byte[] carte;
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String matricule;
+    public String direction;
+    public String services;
+    public String beneficiaire;
+    public String notes;
+    public int valider;
+    public String jour;
+    public String ext1;
+    public String ext2;
+    public String province;
+    public String district;
+    public byte[] piecejointe;
+    public byte[] carte;
 
     public String getProvince() {
         return province;

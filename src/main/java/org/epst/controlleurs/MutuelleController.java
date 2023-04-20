@@ -1,8 +1,10 @@
 package org.epst.controlleurs;
 
+import org.epst.models.document_scolaire.transfere.Transfere;
 import org.epst.models.mutuelle.Demande;
 import org.epst.models.mutuelle.DemandeMetier;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,11 +25,12 @@ public class MutuelleController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveDemande(HashMap hashMap) throws IOException {
-        System.out.println("La demande: "+hashMap.get("nom"));
+    @Transactional
+    public Response saveDemande(Demande demande) throws IOException {
+        //System.out.println("La demande: "+hashMap.get("nom"));
         //
-
-        //
+        demande.persist();
+        /*
         Demande d = new Demande();
         d.setId(Long.parseLong(""+hashMap.get("id")));
         d.setBeneficiaire(""+hashMap.get("beneficiaire"));
@@ -68,11 +71,11 @@ public class MutuelleController {
         //
         d.setPiecejointe(bytes2);
         //---------------------------------
-
-        String v = demandeMetier.saveDemande(d);
+*/
+        //String v = demandeMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
-        return Response.status(Response.Status.CREATED).entity(v).build();
+        return Response.status(Response.Status.CREATED).entity("Demande éffectué").build();
     }
 
     @Path("all/demande")
@@ -81,7 +84,13 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public List<Demande> getAll(@QueryParam("province") String province, @QueryParam("district") String district){
         //
-        return demandeMetier.getAll(province, district);
+
+        HashMap params = new HashMap();
+        params.put("province",province);//Transfere
+        params.put("district",district);//Transfere
+        //
+        return Demande.list("province =:province and district =:district",params);
+        //return demandeMetier.getAll(province, district);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -91,7 +100,8 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public List<Demande> getAll(@QueryParam("matricule") String matricule){
         //
-        return demandeMetier.getAllByMatricule(matricule);
+        return Demande.list("matricule",matricule);
+        //return demandeMetier.getAllByMatricule(matricule);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -101,7 +111,7 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Demande> getOne(@PathParam("id") Long id){
         //
-        return demandeMetier.getOne(id);
+        return Demande.findById(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -111,7 +121,8 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getCarte(@PathParam("id") Long id){
         //
-        return demandeMetier.getCarte(id);
+        Demande demande = Demande.findById(id);
+        return demande.getCarte();
         //return Response.status(Response.Status.CREATED).entity().build();
     }
     @Path("piecejointe/{id}")
@@ -120,7 +131,9 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
-        return demandeMetier.getPiecejointe(id);
+        Demande demande = Demande.findById(id);
+        return demande.getPiecejointe();
+        //return demandeMetier.getPiecejointe(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -128,15 +141,22 @@ public class MutuelleController {
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Transactional
     public void setStatus(@PathParam("id") Long id,@PathParam("status") int status){
         //
-        demandeMetier.setStatus(status,id);
+        Demande demande = Demande.findById(id);
+        if(demande == null){
+            return;
+        }
+        demande.valider = status;
+        //demandeMetier.setStatus(status,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
     @Path("saturer/{id}/{cenome}/{status}")
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+
     public void setExpirer(@PathParam("id") Long id, @PathParam("cenome") String cenome, @PathParam("status") int status){
         //
         demandeMetier.setExpirer(status,cenome,id);
@@ -149,7 +169,8 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_JSON)
     public int getStatus(@QueryParam("id") Long id){
         //
-        return demandeMetier.getStatus(id);
+        Demande demande = Demande.findById(id);
+        return demande.valider;
         //
         //return Response.status(Response.Status.CREATED).entity().build();
     }

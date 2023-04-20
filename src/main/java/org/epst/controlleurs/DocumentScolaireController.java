@@ -4,13 +4,16 @@ import org.epst.models.document_scolaire.documents.Document;
 import org.epst.models.document_scolaire.documents.DocumentMetier;
 import org.epst.models.document_scolaire.identification.DemandeIdentification;
 import org.epst.models.document_scolaire.identification.DemandeIdentificationMetier;
+import org.epst.models.mutuelle.Demande;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.annotation.Documented;
+import java.util.HashMap;
 import java.util.List;
 
 @Path("documentscolaire")
@@ -23,10 +26,11 @@ public class DocumentScolaireController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response saveDemande(Document d) throws IOException {
         //System.out.println("La demande: "+hashMap.get("nom"));
         //
-
+        d.persist();
         /*
         DemandeIdentification d = new DemandeIdentification();
         d.setId(Long.parseLong(""+hashMap.get("id")));
@@ -73,7 +77,7 @@ public class DocumentScolaireController {
         //d.setPiecejointe(bytes2);
         //---------------------------------
         */
-        documentMetier.saveDemande(d);
+        //documentMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
         return Response.status(Response.Status.CREATED).entity(d).build();
@@ -87,7 +91,13 @@ public class DocumentScolaireController {
                                  @QueryParam("valider") int valider,
                                  @QueryParam("type") int type){
         //
-        return documentMetier.getAll(province, district, valider);
+        HashMap params = new HashMap();
+        params.put("provinceEcole",province);//Transfere
+        params.put("provinceEducationnel",district);//Transfere
+        params.put("valider",valider);//Transfere
+        //
+        return Document.list("provinceEcole =:provinceEcole and provinceEducationnel =:provinceEducationnel and valider =:valider",params);
+        //return documentMetier.getAll(province, district, valider);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -97,7 +107,7 @@ public class DocumentScolaireController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public List<Document> getAll(@QueryParam("matricule") String matricule){
         //
-        return documentMetier.getAllByMatricule(matricule);
+        return Document.list("matricule",matricule);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -107,7 +117,7 @@ public class DocumentScolaireController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Document> getOne(@PathParam("id") Long id){
         //
-        return documentMetier.getOne(id);
+        return Demande.findById(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -117,7 +127,8 @@ public class DocumentScolaireController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
-        return documentMetier.getPiecejointe(id);
+        Demande demande = Demande.findById(id);
+        return demande.getPiecejointe();
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -125,9 +136,15 @@ public class DocumentScolaireController {
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Transactional
     public void setStatus(@PathParam("id") Long id,@PathParam("status") int status){
         //
-        documentMetier.setStatus(status,id);
+        Document document = Document.findById(id);
+        if(document == null){
+            return;
+        }
+        document.valider = status;
+        //documentMetier.setStatus(status,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
     @Path("saturer/{id}/{cenome}/{status}")
@@ -146,7 +163,7 @@ public class DocumentScolaireController {
     @Produces(MediaType.APPLICATION_JSON)
     public Document getStatus(@QueryParam("id") Long id){
         //
-        return documentMetier.getStatus(id);
+        return Document.findById(id);
         //getAll
         //return Response.status(Response.Status.CREATED).entity().build();
     }
