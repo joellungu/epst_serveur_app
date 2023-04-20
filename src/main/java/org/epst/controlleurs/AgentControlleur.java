@@ -2,6 +2,7 @@ package org.epst.controlleurs;
 
 import java.util.List;
 import org.epst.beans.Utilisateur;
+import org.epst.models.Agent.Agent;
 import org.epst.models.ModelUtilisateur;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -58,13 +59,13 @@ public class AgentControlleur {
     @Path("/all")
     @GET()
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Utilisateur> getAllAgents() {
-        //
+    public List<Agent> getAllAgents() {
+        /*
         List<Utilisateur> listeU = modelUtilisateur.getAllUtilisateur();
         listeU.forEach((u)->{
             System.out.println("Element nom: "+u.nom);
         });
-        //
+        */
         //Todo todo = new Todo();
         //todo.setSummary("Application JSON Todo Summary");
         //todo.setDescription("Application JSON Todo Description");
@@ -72,8 +73,8 @@ public class AgentControlleur {
         //Todo todo2 = new Todo();
         //todo2.setSummary("Application JSON ");
         //todo2.setDescription("Application JSON ");
-
-        return listeU;//Arrays.asList(todo,todo2);
+        List<Agent> agens = Agent.listAll();
+        return agens;//Arrays.asList(todo,todo2);
     }
 
     //@Path("")

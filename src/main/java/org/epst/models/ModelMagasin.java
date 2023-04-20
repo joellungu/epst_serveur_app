@@ -98,7 +98,7 @@ public class ModelMagasin {
     public List<Magasin> getAllMagasin(String type){
         List<Magasin> liste = new LinkedList<>();
         System.out.println("le type vaut: "+type);//piecejointe,
-        String requete = "SELECT id, libelle, description, types, date_mise_en_ligne, extention FROM magasin where types = '"+type+"'";
+        String requete = "SELECT id, libelle, description, types, date_mise_en_ligne, extention FROM magasin where type = '"+type+"'";
 
         try {
             Statement stmt = con.createStatement();
