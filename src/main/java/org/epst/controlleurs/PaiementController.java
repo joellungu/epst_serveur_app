@@ -72,6 +72,7 @@ public class PaiementController {
         double montant = deviseMetier.conversion(m,1L, devise=="USD");
         System.out.println("la devise: $"+devise+"lE MONTANT: $"+montant);
         String urlPost = "http://41.243.7.46:3006/flexpay/api/rest/v1/paymentService";
+        //////////////////http://41.243.7.46:3006/api/rest/v1/paymentService
         String body = "{\n" +
                 "  \"merchant\":\"EPSTAPP\"," +
                 "  \"type\":1," +
