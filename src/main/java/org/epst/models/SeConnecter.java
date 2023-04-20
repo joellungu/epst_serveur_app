@@ -24,10 +24,10 @@ public class SeConnecter {
         try{
             //String dbUrl = System.getenv("JDBC_DATABASE_URL");
             //con = DriverManager.getConnection(dbUrl);
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
-            //con = DriverManager.getConnection("jdbc:postgresql://bqlujt3tbffdu10fdgql-postgresql.services.clever-cloud.com:5434/bqlujt3tbffdu10fdgql",
-            //        "uuypo0h3cqqun990xnbu",
-            //        "bP1lkHFA26CrKH4RU9r1");
+            //con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "joellungu");
+            con = DriverManager.getConnection("jdbc:postgresql://ec2-44-213-151-75.compute-1.amazonaws.com:5432/dcq2u3kdri6tbs",
+                    "bpmwrieagsfpbf",
+                    "c1e6fe26af90811929a1e5d4e760cfe1f1a76cda0e991c6c4e4131a624f96021");
             //con = DriverManager.getConnection(
             //        "jdbc:postgres:/p894773326902-f1azl0@gcp-sa-cloud-sql.iam.gserviceaccount.com",
             //"dgc-epst",
