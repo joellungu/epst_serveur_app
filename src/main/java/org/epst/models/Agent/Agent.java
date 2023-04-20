@@ -16,8 +16,8 @@ public class Agent extends PanacheEntity {
     String adresse;
     int role;
     String matricule;
-    String idstatut;
-    String datenaissance;
+    String id_statut;
+    String date_de_naissance;
     String mdp;
     String province;
     String district;
@@ -95,19 +95,19 @@ public class Agent extends PanacheEntity {
     }
 
     public String getIdstatut() {
-        return idstatut;
+        return id_statut;
     }
 
     public void setIdstatut(String idstatut) {
-        this.idstatut = idstatut;
+        this.id_statut = idstatut;
     }
 
     public String getDatenaissance() {
-        return datenaissance;
+        return date_de_naissance;
     }
 
     public void setDatenaissance(String datenaissance) {
-        this.datenaissance = datenaissance;
+        this.date_de_naissance = datenaissance;
     }
 
     public String getMdp() {
