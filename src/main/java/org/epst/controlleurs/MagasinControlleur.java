@@ -58,6 +58,8 @@ public class MagasinControlleur {
         System.out.println("Element type: "+type);
         //
         List<Magasin> listeU = Magasin.list("type",type);
+        System.out.println("La liste vaut: "+ listeU.size());
+        System.out.println("La liste vaut: "+ listeU.toString());
         //
         //listeU.forEach((u)->{
         //  System.out
@@ -166,20 +168,20 @@ public class MagasinControlleur {
     Response sendMultipartData(byte[] data){//byte[] data, @PathParam("id") Long id
         //
         String fileName = "";//
-		
-		try {
+
+        try {
             System.out.println("Id: ---: ");
-			//writeFile(form.getData(), fileName);
-		} catch (Exception e) {
-			
-			e.printStackTrace();
+            //writeFile(form.getData(), fileName);
+        } catch (Exception e) {
+
+            e.printStackTrace();
             System.out.println(e.getMessage());
-		}
+        }
 
-		System.out.println("Done");
+        System.out.println("Done");
 
-		return Response.status(200)
-		    .entity("uploadFile is called, Uploaded file name : " + fileName).build();
+        return Response.status(200)
+                .entity("uploadFile is called, Uploaded file name : " + fileName).build();
 
         //return null;
     }
