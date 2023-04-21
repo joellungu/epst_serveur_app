@@ -5,7 +5,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import javax.persistence.Entity;
 
 @Entity
-public class Transfere extends PanacheEntity {
+public class TransfereEleve extends PanacheEntity {
     public String nom ;
     public String postnom;
     public String prenom ;
