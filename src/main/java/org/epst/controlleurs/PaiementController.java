@@ -34,37 +34,6 @@ public class PaiementController {
 
     public PaiementController(){}
 
-    public String verif(String reference){
-        String urlPost = "http://41.243.7.46:3006/flexpay/api/rest/v1/paymentService";
-        String body = "{\n" +
-                "  \"merchant\":\"ECOSYS\"," +
-                "  \"type\":1," +
-                "  \"reference\":\"data31\"," +
-                "  \"phone\":\"243815381693\"," +
-                "  \"amount\":500," +
-                "  \"currency\":\"CDF\"," +
-                "  \"callbackUrl\":\"http://dgc-epst.uc.r.appspot.com\"" +
-                "}";
-        var requete = HttpRequest.newBuilder()
-                .uri(URI.create(urlPost))
-                .header("Content-Type","application/json")
-                .header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzMzOTEwMTY5LCJzdWIiOiJlNjFiZTYyNTA2M2NlNGQzOTc3ZTY2ZTI1ODdiZjIwOSJ9.KXwGzLyTGJT4iLnA6rtqPKRLE195j5oFWLbmpOlh2uo")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build();
-        var client = HttpClient.newHttpClient();
-        try {
-            var reponse = client.send(requete, HttpResponse.BodyHandlers.ofString());
-            System.out.println(reponse.statusCode());
-            System.out.println(reponse.body());
-            return reponse.body();
-        } catch (IOException e) {
-            System.out.println(e);
-            return "";
-        } catch (InterruptedException e) {
-            System.out.println(e);
-            return "";
-        }
-    }
 
     public String lancer(String devise, String telephone, Double m, String reference) {
         System.out.println("la devise: $"+devise+"lE MONTANT: $"+m);

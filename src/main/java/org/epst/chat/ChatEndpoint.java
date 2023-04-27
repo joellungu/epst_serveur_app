@@ -14,6 +14,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import javax.inject.Inject;
+import javax.transaction.TransactionManager;
+import javax.transaction.Transactional;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -25,6 +27,7 @@ import javax.websocket.server.ServerEndpoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.epst.beans.MessageBeanRepository;
 
 
@@ -37,7 +40,10 @@ public class ChatEndpoint {
 
     private static Set<String> listeConvAss = new HashSet<>();
     @Inject
-    MessageBeanRepository messageBeanRepository;
+    ManagedExecutor managedExecutor;
+
+    @Inject
+    TransactionManager transactionManager;
 
     private Session session;
     private static Set<ChatEndpoint> chatEndpoints 
@@ -54,13 +60,15 @@ public class ChatEndpoint {
  
         //
         HashMap<String, String> user = new HashMap<>();
-        user.put("clientId", session.getId());
-        user.put("username", username);
-        user.put("role", role);
-        user.put("visible", "oui");
+        user.put("clientId_", session.getId());
+        user.put("username_", username);
+        user.put("role_", role);
+        user.put("visible_", "oui");
         listeUsers.add(user);
-        System.out.println("Votre nom est: ____________________________: "+username);
-        System.out.println("Votre nom est: ____________________________: "+role);
+        System.out.println("Votre role est: ____________________________: "+username);
+        System.out.println("Votre role est: ____________________________: "+role);
+        System.out.println("Votre role est: ____________________________: "+session.getId());
+        System.out.println("Votre role est: ____________________________:");
         
         //
         this.session = session;
@@ -87,17 +95,17 @@ public class ChatEndpoint {
         ObjectMapper obj = new ObjectMapper();
         System.out.println(obj.writeValueAsString(message));
 
-        if(message.getAll()){
+        if(message.getAll_()){
             //La tout le monde sauf les agent du epst
           //listeUsers
           listeUsers.forEach((e)->{
-            e.put("hostId",session.getId());
+            e.put("hostId_",session.getId());
           });
           List<HashMap<String, String>> li = new LinkedList<>();
           for(HashMap<String, String> m : listeUsers){
-            if(!m.get("role").equals("admin") && m.get("visible").equals("oui")){//visible
+            if(!m.get("role_").equals("admin") && m.get("visible_").equals("oui")){//visible
               li.add(m);
-              System.out.println("votre truc: "+m.get("role"));
+              System.out.println("votre truc: "+m.get("role_"));
             }
           }
           //listeUsers.stream()
@@ -108,10 +116,20 @@ public class ChatEndpoint {
           String rep = obj.writeValueAsString(ls);
           session.getAsyncRemote().sendText(rep);
           //
-        }else if(message.getClose()){
+        }else if(message.getClose_()){
             //Fin de la conversation
+            //Ce qu'il y a eut bel et bien une conversation
+            managedExecutor.submit(()->{
+                try{
+                    transactionManager.begin();
+                    message.persist();
+                    transactionManager.commit();
+                }catch (Exception ex){
+                    System.out.println(ex);
+                }
+            });
             sessions.forEach((s)->{
-                if(s.getId().equals(message.getHostId())) {
+                if(s.getId().equals(message.getHostId_())) {
                     listeConvAss.forEach((c)-> {
                         String[] b = c.split(":");
                         if (b[0].equals(session.getId()) || b[1].equals(session.getId())) {
@@ -119,11 +137,12 @@ public class ChatEndpoint {
                                 if (ss.getId().equals(b[0])) {
                                     try {
                                         Message m = new Message();
-                                        m.setContent("Fin de la conversation");
-                                        m.setClose(true);
+                                        m.setContent_("Fin de la conversation");
+                                        m.setClose_(true);
                                         s.getAsyncRemote().sendText(obj.writeValueAsString(m));
                                     } catch (Exception ex) {
-                                        System.out.println("Erreur du: " + ex);
+                                        ss.getAsyncRemote().sendText("Erreur du: " + ex);
+                                        System.out.println("Erreur du::: " + ex);
                                     }
                                 }
                             });
@@ -132,10 +151,11 @@ public class ChatEndpoint {
                                 if (ss.getId().equals(b[1])) {
                                     try {
                                         Message m = new Message();
-                                        m.setContent("Fin de la conversation");
-                                        m.setClose(true);
+                                        m.setContent_("Fin de la conversation");
+                                        m.setClose_(true);
                                         s.getAsyncRemote().sendText(obj.writeValueAsString(m));
                                     } catch (Exception ex) {
+                                        ss.getAsyncRemote().sendText("Erreur du:/// " + ex);
                                         System.out.println("Erreur du: " + ex);
                                     }
                                 }
@@ -149,27 +169,39 @@ public class ChatEndpoint {
             //
             users.remove(users.get(session.getId()));
             //
-            listeUsers.forEach((r)->{if(r.get("clientId").equals(session.getId())){listeUsers.remove(r);}});
+            listeUsers.forEach((r)->{if(r.get("clientId_").equals(session.getId())){listeUsers.remove(r);}});
             //
-        }else if(message.getTo().equals("hote")){//La conversation
+        }else if(message.getTo_().equals("hote")){
+            //La conversation
+            managedExecutor.submit(()->{
+                try{
+                    transactionManager.begin();
+                    message.persist();
+                    transactionManager.commit();
+                }catch (Exception ex){
+                    System.out.println(ex);
+                }
+            });
           sessions.forEach((s)->{
-              System.out.println("Id1: "+s.getId()+" == "+message.getClientId()+" == "+s.getId().equals(message.getClientId()));
-              if(s.getId().equals(message.getClientId())){
+              //J'enregistre la conversation...
+              //
+              System.out.println("Id1: "+s.getId()+" == "+message.getClientId_()+" == "+s.getId().equals(message.getClientId_()));
+              if(s.getId().equals(message.getClientId_())){
               listeUsers.forEach((u)->{//
-                  if(u.get("clientId").equals(message.getClientId())){
-                      u.put("visible", message.getVisible());
+                  if(u.get("clientId_").equals(message.getClientId_())){
+                      u.put("visible_", message.getVisible_());
                       //u.put("clientId", session.getId());
                   }
               });
               try {
                 //
-                listeConvAss.add(message.getHostId()+":"+message.getClientId());
+                listeConvAss.add(message.getHostId_()+":"+message.getClientId_());
                 //__________________________
                 s.getAsyncRemote().sendText(obj.writeValueAsString(message));
                 //
                 System.out.println("Cool c'est bon! 1");
                 //
-                messageBeanRepository.saveData(message);
+                //messageBeanRepository.saveData(message);
               } catch (JsonProcessingException e) {
                 // 
                 e.printStackTrace();
@@ -178,40 +210,35 @@ public class ChatEndpoint {
                 System.out.println("Pas de session pour lui: "+s.getId());
             }
           });
-        }else{//La conversation
+        }else{
+            //La conversation
+            managedExecutor.submit(()->{
+                try{
+                    transactionManager.begin();
+                    message.persist();
+                    transactionManager.commit();
+                }catch (Exception ex){
+                    System.out.println(ex);
+                }
+            });
           sessions.forEach((s)->{
-            if(s.getId().equals(message.getHostId())){
+            if(s.getId().equals(message.getHostId_())){
               listeUsers.forEach((u)->{//
-                if(u.get("clientId").equals(message.getClientId())){
-                  u.put("visible", message.getVisible());
+                if(u.get("clientId_").equals(message.getClientId_())){
+                  u.put("visible_", message.getVisible_());
                   //u.put("clientId", session.getId());
                 }
               });
               try {
-                  /*
-                  MessageBean ms = new MessageBean();
-                  ms.setAll(message.getAll());
-                  ms.setClose(message.getClose());
-                  ms.setClientId(message.getClientId());
-                  ms.setConversation(message.getConversation());
-                  ms.setDate(message.getDate());
-                  ms.setContent(message.getContent());
-                  ms.setMatricule(message.getMatricule());
-                  ms.setFrom(message.getFrom());
-                  ms.setHostId(message.getHostId());
-                  ms.setTo(message.getTo());
-                  ms.setVisible(message.getVisible());
-                  //ms.setTo(message.getAll());
-                  //modelMessage.save(ms);
-                  //__________________________
-                   */
+
                   //
-                  listeConvAss.add(message.getHostId()+":"+message.getClientId());
+                  listeConvAss.add(message.getHostId_()+":"+message.getClientId_());
                   //messageBeanRepository.saveData(message);
                     s.getAsyncRemote().sendText(obj.writeValueAsString(message));
                     System.out.println("Cool c'est bon!");
                     //
-                    messageBeanRepository.saveData(message);
+                  message.persist();
+                    //messageBeanRepository.saveData(message);
               } catch (JsonProcessingException e) {
                 // 
                 e.printStackTrace();
@@ -220,25 +247,32 @@ public class ChatEndpoint {
             }
           });
         }
+
          
-        /*
-          try{
-            s.getAsyncRemote().sendText(obj.writeValueAsString(action));
-            HashMap<String, String> ac = new HashMap<>();
-            action.put("requete", "start");
-            action.put("idSessionHote", session.getId());
-            //action.put("contenu", "Salut comment ?");
-            //session.getAsyncRemote().sendText(obj.writeValueAsString(ac));//Accué de réception
-        */
+/*
+          try {
+              session.getAsyncRemote().sendText(obj.writeValueAsString(message));
+              HashMap<String, String> ac = new HashMap<>();
+              //action.put("requete", "start");
+              //action.put("idSessionHote", session.getId());
+              //action.put("contenu", "Salut comment ?");
+              //session.getAsyncRemote().sendText(obj.writeValueAsString(ac));//Accué de réception
+          }catch (Exception ex){
+              System.out.println(ex);
+          }
+
+ */
     }
 
     @OnClose
+    @Transactional
     public void onClose(Session session) throws IOException, EncodeException {
  
         chatEndpoints.remove(this);
         Message message = new Message();
-        message.setFrom(users.get(session.getId()));
-        message.setContent("Disconnected!");
+        message.setFrom_(users.get(session.getId()));
+        message.setContent_("Disconnected!");
+        message.persist();
         //broadcast(message);
         String[] l_conv = new String[2];
         listeConvAss.forEach((e)->{
@@ -256,7 +290,7 @@ public class ChatEndpoint {
         //
         users.remove(users.get(session.getId()));
         //
-        listeUsers.forEach((r)->{if(r.get("clientId") == session.getId()){listeUsers.remove(r);}});
+        listeUsers.forEach((r)->{if(r.get("clientId_") == session.getId()){listeUsers.remove(r);}});
         //
         sessions.remove(session);
     }
@@ -285,23 +319,24 @@ public class ChatEndpoint {
         sessions.forEach((s)->{
             if(s.getId().equals(session)){
                 listeUsers.forEach((u)->{//
-                    if(u.get("clientId").equals(session)){
-                        u.put("conversation", "false");
+                    if(u.get("clientId_").equals(session)){
+                        u.put("conversation_", "false");
                         listeUsers.remove(u);
                         //u.put("clientId", session.getId());
                     }else{
-                        u.put("conversation", "false");
+                        u.put("conversation_", "false");
                     }
                 });
                 try {
                     ObjectMapper obj = new ObjectMapper();
                     //
                     Message message = new Message();
-                    message.setConversation(false);
+                    message.setConversation_(false);
                     s.getAsyncRemote().sendText(obj.writeValueAsString(message));
                     System.out.println("Cool c'est bon!");
                     //
-                    messageBeanRepository.saveData(message);
+                    //message.persist();
+                    //messageBeanRepository.saveData(message);
                 } catch (JsonProcessingException e) {
                     //
                     e.printStackTrace();

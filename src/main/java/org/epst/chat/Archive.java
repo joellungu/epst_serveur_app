@@ -4,8 +4,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 import javax.persistence.Entity;
 
-@Entity
-public class Archive extends PanacheEntity {
+
+public class Archive {
     public String from;
     public String to;
     public String content;

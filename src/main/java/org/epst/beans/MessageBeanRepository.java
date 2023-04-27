@@ -23,6 +23,7 @@ public class MessageBeanRepository implements PanacheRepository<MessageBean> {
                 System.out.println("Thread Running");
 
                 MessageBean ms = new MessageBean();
+                /*
                 ms.setAllst(message.getAll());
                 ms.setCloset(message.getClose());
                 ms.setClientIdt(message.getClientId());
@@ -36,6 +37,8 @@ public class MessageBeanRepository implements PanacheRepository<MessageBean> {
                 ms.setVisiblet(message.getVisible());
                 ms.setHeuret(message.getHeure());
                 //ms.persist();
+
+                 */
                 modelMessage.save(ms);
                 //
 

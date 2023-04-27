@@ -165,7 +165,8 @@ public class MagasinControlleur {
     @Path("update/{id}")
     @POST()
     @Consumes(MediaType.APPLICATION_OCTET_STREAM) //"multipart/form-data")
-    Response sendMultipartData(byte[] data){//byte[] data, @PathParam("id") Long id
+    public Response sendMultipartData(byte[] data){
+        //byte[] data, @PathParam("id") Long id
         //
         String fileName = "";//
 

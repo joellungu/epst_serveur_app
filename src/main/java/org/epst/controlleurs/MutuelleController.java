@@ -159,7 +159,7 @@ public class MutuelleController {
 
     public void setExpirer(@PathParam("id") Long id, @PathParam("cenome") String cenome, @PathParam("status") int status){
         //
-        demandeMetier.setExpirer(status,cenome,id);
+        //demandeMetier.setExpirer(status,cenome,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 

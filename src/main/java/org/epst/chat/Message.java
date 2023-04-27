@@ -11,18 +11,18 @@ import javax.persistence.Entity;
 @Entity
 public class Message extends PanacheEntity {
 
-    public String from;
-    public String to;
-    public String content;
-    public String hostId;
-    public String clientId;
-    public Boolean close;
-    public Boolean all;
-    public String visible;
-    public Boolean conversation;
-    public String matricule;
-    public String date;
-    public String heure;
+    public String from_;
+    public String to_;
+    public String content_;
+    public String hostId_;
+    public String clientId_;
+    public Boolean close_;
+    public Boolean all_;
+    public String visible_;
+    public Boolean conversation_;
+    public String matricule_;
+    public String date_;
+    public String heure_;
     
     //from,to,content,hostId,clientId,close,all,visible,conversation
 
