@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 //import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,13 +36,13 @@ import javax.ws.rs.core.Response;
 public class PlainteControlleur {
     
     private static final ObjectMapper mapper = new ObjectMapper();
-    ModelPlainte modelPlainte = new ModelPlainte();
+    //ModelPlainte modelPlainte = new ModelPlainte();
     
     @Path("/{id}")
     @GET()
     @Produces(MediaType.APPLICATION_JSON)
     public Plainte getPlainte(@PathParam("id") Long id) {
-        Plainte u = modelPlainte.getPlainte(id);
+        Plainte u = Plainte.findById(id);
         //Todo todo = new Todo();
         //todo.setSummary(id);
         //todo.setDescription("Application JSON Todo Description");
@@ -53,19 +54,8 @@ public class PlainteControlleur {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Plainte> getAllPlaintes(@PathParam("statut") int statut) {
         //
-        System.out.println("Le statut: "+statut);
-        List<Plainte> listeU = modelPlainte.getAllPlainte(statut);
-        //listeU.forEach((u)->{
-        //  System.out.println("Element nom: "+u.nom);
-        //});
-        //
-        //Todo todo = new Todo();
-        //todo.setSummary("Application JSON Todo Summary");
-        //todo.setDescription("Application JSON Todo Description");
-        //
-        //Todo todo2 = new Todo();
-        //todo2.setSummary("Application JSON ");
-        //todo2.setDescription("Application JSON ");
+        System.out.println("Le id_statut: "+statut);
+        List<Plainte> listeU = Plainte.list("id_statut",statut);
 
         return listeU;//Arrays.asList(todo,todo2);
     }
@@ -75,18 +65,7 @@ public class PlainteControlleur {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Plainte> getAllPlaintesR(@PathParam("reference") String reference) {
         //
-        List<Plainte> listeU = modelPlainte.getAllPlainteR(reference);
-        //listeU.forEach((u)->{
-        //  System.out.println("Element nom: "+u.nom);
-        //});
-        //
-        //Todo todo = new Todo();
-        //todo.setSummary("Application JSON Todo Summary");
-        //todo.setDescription("Application JSON Todo Description");
-        //
-        //Todo todo2 = new Todo();
-        //todo2.setSummary("Application JSON ");
-        //todo2.setDescription("Application JSON ");
+        List<Plainte> listeU = Plainte.list("reference",reference);
 
         return listeU;//Arrays.asList(todo,todo2);
     }
@@ -95,16 +74,10 @@ public class PlainteControlleur {
     @POST()
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response savetPlainte(Plainte plainte) {
-        Long t = modelPlainte.savePlainte(plainte);
-        /*
-        if(plainte.getId_tiquet().equals("1")){
+        plainte.persist();
 
-        }else{
-            System.out.println("Autre ethiquette: "+plainte.getId_tiquet());
-            System.out.println("Autre ethiquette: "+plainte.getMessage());
-        }
-        */
         System.out.println("votre element: "+
                 plainte.getTelephone()+":\n__:"+
                 plainte.getDate()+":\n__:"+
@@ -114,23 +87,48 @@ public class PlainteControlleur {
         //
 
         ObjectNode json = mapper.createObjectNode();
-        //
-        //json.put("status", "ok");
-        json.put("save", t);
+        json.put("save", plainte.id);
         
         return Response.status(Response.Status.CREATED).entity(json).build();
     }
 
     @PUT()
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updatePlainte(Plainte Plainte) {
-
-        int t = modelPlainte.miseaJourPlainte(Plainte);
-        //System.out.println(Plainte.adresse);
-        
+    @Transactional
+    public Response updatePlainte(Plainte plainte) {
+        Plainte plainte1 = Plainte.findById(plainte.id);
+        if(plainte1 == null){
+            return Response.serverError().build();
+        }
+        /*
+        String envoyeur,
+        String telephone,
+        String email,
+        String destinateur,
+        String id_tiquet,
+        String message,
+        String id_statut,
+        String piecejointe_id,
+        String reference,
+        String date,
+        String province
+         */
+        //
+        plainte1.envoyeur = plainte.envoyeur;
+        plainte1.telephone = plainte.telephone;
+        plainte1.email = plainte.email;
+        plainte1.destinateur = plainte.destinateur;
+        plainte1.id_tiquet = plainte.id_tiquet;
+        plainte1.message = plainte.message;
+        plainte1.id_statut = plainte.id_statut;
+        plainte1.piecejointe_id = plainte.piecejointe_id;
+        plainte1.reference = plainte.reference;
+        plainte1.date = plainte.date;
+        plainte1.province = plainte.province;
+        //
         ObjectNode json = mapper.createObjectNode();
         //
-        json.put("mettre à jour", t);
+        json.put("mettre à jour", plainte1.id);
         return Response.status(Response.Status.CREATED).entity(json).build();
     }
 
@@ -138,21 +136,8 @@ public class PlainteControlleur {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response noterMa(HashMap<String, String> map){//
-        NoteTraitementBean noteTraitementBean = new NoteTraitementBean();
-        noteTraitementBean.setNote(map.get("note"));
-        noteTraitementBean.setReference(map.get("reference"));
-        noteTraitementBean.setNomIdmin(map.get("nomIdmin"));
-        noteTraitementBean.setId(1L);
-
-        System.out.println("Le note: "+map.get("note"));
-        System.out.println("Le nom: "+map.get("nomIdmin"));
-        System.out.println("Le ref: "+map.get("reference"));
-        /*
-        System.out.println("Le note: "+noteTraitementBean.getNote());
-        */
-        ModelNoteTraitement modelNoteTraitement = new ModelNoteTraitement();
-        Long v = modelNoteTraitement.saveNote(noteTraitementBean);
+    public Response noterMa(NoteTraitementBean noteTraitementBean){//
+        noteTraitementBean.persist();
         ObjectNode json = mapper.createObjectNode();
         json.put("status", "v");
         return Response.status(Response.Status.CREATED).entity("ok").build();

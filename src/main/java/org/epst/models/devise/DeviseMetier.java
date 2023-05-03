@@ -37,10 +37,11 @@ public class DeviseMetier {
             //
             try{
                 Devise d = v.selectDevise(id);
+                double prct = (2 * montant) / 100;
                 if(de){
-                    return montant + 0.2;
+                    return montant + prct;
                 }else{
-                    return (montant + 0.2) * d.montant;
+                    return (montant + prct) * d.montant;
                 }
                 //v.createTable();
             }catch (Exception ex){

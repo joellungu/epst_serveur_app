@@ -245,7 +245,7 @@ public class ModelPlainte {
         return liste;
     }
     //
-    public List<Piecejointe> getAllPiecejointe(Long piecejointe_id){
+    public List<Piecejointe> getAllPiecejointes(Long piecejointe_id){
         List<Piecejointe> liste = new LinkedList<>();
         System.out.println("le type vaut: "+piecejointe_id);
         String requete = "SELECT * FROM piecejointe where piecejointe_id = '"+piecejointe_id+"'";
@@ -327,7 +327,7 @@ public class ModelPlainte {
         return piecejointe_id;
     }
 
-    public int savePiecejointe(Long id, Long piecejointe_id, String type, byte[] piecejointe){
+    public int savePiecejointes(Long id, Long piecejointe_id, String type, byte[] piecejointe){
         int t = 0;
 
         //int piecejointe_id = 0;

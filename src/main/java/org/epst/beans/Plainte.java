@@ -1,11 +1,13 @@
 package org.epst.beans;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Entity;
 import java.util.List;
 
 @Accessors(chain=true)
@@ -13,7 +15,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Plainte {
+@Entity
+public class Plainte extends PanacheEntity {
 
     public Plainte(
         Long id,
