@@ -29,6 +29,7 @@ public class AgentControlleur {
     @Path("/login/{matricule}/{mdp}")
     @GET()
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response getAgent(@PathParam("matricule") String matricule,
                                 @PathParam("mdp") String mdp){
         HashMap<String, Object> params = new HashMap<>();
