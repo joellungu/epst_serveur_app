@@ -19,7 +19,7 @@ import java.util.List;
 public class Plainte extends PanacheEntity {
 
     public Plainte(
-        Long id,
+        //Long id,
         String envoyeur,
         String telephone,
         String email,
@@ -32,7 +32,7 @@ public class Plainte extends PanacheEntity {
         String date,
         String province
     ){
-        this.id = id;
+        //this.id = id;
         this.envoyeur = envoyeur;
         this.telephone = telephone;
         this.email = email;
@@ -46,7 +46,7 @@ public class Plainte extends PanacheEntity {
         this.province = province;
     }
     
-    public Long id;
+    //public Long id;
     public String envoyeur;
     public String telephone;
     public String email;

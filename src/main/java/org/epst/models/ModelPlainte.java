@@ -53,7 +53,7 @@ public class ModelPlainte {
             */
             while (encore) {
                 Plainte = new Plainte(
-                    résultats.getLong(1),
+                    //résultats.getLong(1),
                     résultats.getString(2),
                     résultats.getString(3),
                     résultats.getString(4),
@@ -100,7 +100,7 @@ public class ModelPlainte {
             while (encore) {
                 System.out.println("Du à: "+résultats.getLong(1));
                 Plainte = new Plainte(
-                        résultats.getLong(1),
+                        //résultats.getLong(1),
                         résultats.getString(2),
                         résultats.getString(3),
                         résultats.getString(4),
@@ -152,7 +152,7 @@ public class ModelPlainte {
                 */
                 liste.add(
                     new Plainte(
-                        résultats.getLong(1),
+                        //résultats.getLong(1),
                         résultats.getString(2),
                         résultats.getString(3),
                         résultats.getString(4),
@@ -177,7 +177,7 @@ public class ModelPlainte {
         };
         //
         liste.forEach((e)->{
-            System.out.print(e.getId() + " ___ " + e.getDate() + 
+            System.out.print(e.getEmail() + " ___ " + e.getDate() +
                 "______" + e.getEmail() + "____" + e.getTelephone() + "__");
         });
 
@@ -213,7 +213,7 @@ public class ModelPlainte {
                 */
                 liste.add(
                     new Plainte(
-                        résultats.getLong(1),
+                        //résultats.getLong(1),
                         résultats.getString(2),
                         résultats.getString(3),
                         résultats.getString(4),
@@ -238,7 +238,7 @@ public class ModelPlainte {
         };
         //
         liste.forEach((e)->{
-            System.out.print(e.getId() + " ___ " + e.getDate() + 
+            System.out.print(e.getEmail() + " ___ " + e.getDate() +
                 "______" + e.getEmail() + "____" + e.getTelephone() + "__");
         });
 
@@ -405,7 +405,7 @@ public class ModelPlainte {
         System.out.println("8***"+Plainte.getPiecejointe_id());
         System.out.println("9***"+Plainte.getDate());
         System.out.println("10***"+Plainte.getProvince());
-        System.out.println("11***"+Plainte.getId());
+        System.out.println("11***"+Plainte.id);
         
         try{
             String sql = "UPDATE depot_plainte SET "+
@@ -419,7 +419,7 @@ public class ModelPlainte {
             "piecejointe_id = '"+Plainte.getPiecejointe_id()+"', "+
             "reference = '"+Plainte.getReference()+"', "+
             "date = '"+Plainte.getDate()+"', "+
-            "province = '"+Plainte.getProvince()+"' WHERE id = '"+Plainte.getId()+"'";
+            "province = '"+Plainte.getProvince()+"' WHERE id = '"+Plainte.getEmail()+"'";
             //"UPDATE plainte SET date = ?, telephone = ?, email = ?, province = ?, id_tiquet = ?, message = ?, statut = ?, piecejointe_id = ?, reference = ? WHERE id = ?";
             //
             Statement stmt = con.createStatement();

@@ -154,8 +154,11 @@ public class PiecejointeControlleur {
         //
         //StringBuilder message = new StringBuilder();
         //
-        client = new MailjetClient("6f319c7eabca73a75926580bf1291102",
-                "7f4ef3362f04f20e9fcbbdaf5fea596e", new ClientOptions("v3.1"));
+        client = new MailjetClient(
+                "6f319c7eabca73a75926580bf1291102",
+                "7f4ef3362f04f20e9fcbbdaf5fea596e",
+                new ClientOptions("v3.1")
+        );
         request = new MailjetRequest(Emailv31.resource)
                 .property(Emailv31.MESSAGES, new JSONArray()
                         .put(new JSONObject()
@@ -166,7 +169,7 @@ public class PiecejointeControlleur {
                                         .put(new JSONObject()
                                                 .put("Email", "numeriquedgc@gmail.com")
                                                 .put("Name", "Pierre Museghe")))
-                                .put(Emailv31.Message.SUBJECT, "Violence basé sur le genre")
+                                .put(Emailv31.Message.SUBJECT, "Violence basée sur le genre")
                                 .put(Emailv31.Message.TEXTPART, "Contenu:\n"+message)
                                 .put(Emailv31.Message.HTMLPART, "<h3>Voici le lien du fichier<br><h4>\""+message+"\"</h4><br><a href=\"https://epst.herokuapp.com/piecejointe/"+from+"\">Lire la piece jointe</a>!</h3>")));
         response = client.post(request);
