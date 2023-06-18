@@ -60,7 +60,7 @@ public class ModelPlainte {
                     résultats.getString(5),
                     résultats.getString(6),
                     résultats.getString(7),
-                    résultats.getString(8),
+                    résultats.getInt(8),
                     résultats.getString(9),
                     résultats.getString(10),
                     résultats.getString(11),
@@ -107,7 +107,7 @@ public class ModelPlainte {
                         résultats.getString(5),
                         résultats.getString(6),
                         résultats.getString(7),
-                        résultats.getString(8),
+                        résultats.getInt(8),
                         résultats.getString(9),
                         résultats.getString(10),
                         résultats.getString(11),
@@ -159,7 +159,7 @@ public class ModelPlainte {
                         résultats.getString(5),
                         résultats.getString(6),
                         résultats.getString(7),
-                        résultats.getString(8),
+                        résultats.getInt(8),
                         résultats.getString(9),
                         résultats.getString(10),
                         résultats.getString(11),
@@ -220,7 +220,7 @@ public class ModelPlainte {
                         résultats.getString(5),
                         résultats.getString(6),
                         résultats.getString(7),
-                        résultats.getString(8),
+                        résultats.getInt(8),
                         résultats.getString(9),
                         résultats.getString(10),
                         résultats.getString(11),
@@ -303,7 +303,7 @@ public class ModelPlainte {
             statement.setString(5, plainte.getDestinateur());
             statement.setString(6, plainte.getId_tiquet());
             statement.setString(7, plainte.getMessage());
-            statement.setString(8, plainte.getId_statut());
+            statement.setInt(8, plainte.getId_statut());
             statement.setString(9, ""+piecejointe_id);
             statement.setString(10, plainte.getReference());
             statement.setString(11, plainte.getDate());

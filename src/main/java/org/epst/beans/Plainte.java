@@ -26,7 +26,7 @@ public class Plainte extends PanacheEntity {
         String destinateur,
         String id_tiquet,
         String message,
-        String id_statut,
+        int id_statut,
         String piecejointe_id,
         String reference,
         String date,
@@ -53,10 +53,11 @@ public class Plainte extends PanacheEntity {
     public String destinateur;
     public String id_tiquet;
     public String message;
-    public String id_statut;
+    public int id_statut;
     public String piecejointe_id;
     public String reference;
     public String date;
     public String province;
+    public Long test;
 
 }
