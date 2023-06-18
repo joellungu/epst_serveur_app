@@ -29,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
+import javax.transaction.*;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -46,6 +47,8 @@ public class PiecejointeControlleur {
     @Inject
     PalmaresMetier palmaresMetier;
     //
+    @Inject
+    TransactionManager tm;
     
     @Path("/all/{piecejointe_id}")
     @GET()
@@ -82,7 +85,9 @@ public class PiecejointeControlleur {
 
     @Path("/{piecejointe}")
     @POST()
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Transactional
+    //@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response savetPlainte(PieceJointe pieceJointe) {
         pieceJointe.persist();
@@ -91,9 +96,17 @@ public class PiecejointeControlleur {
             Thread th = new Thread() {
                 public void run() {
                     //
+
+                    //@Inject UserTransaction transaction;
+                    //
                     System.out.println("Id: "+pieceJointe.piecejointe_id);
                     //
-                    Plainte u = modelPlainte.getPlainteById(pieceJointe.piecejointe_id);
+                    try {
+                        tm.begin();
+                            //
+                            //Plainte u = modelPlainte.getPlainteById(pieceJointe.piecejointe_id);
+                            Plainte u = Plainte.findById(pieceJointe.piecejointe_id);
+                        tm.commit();
                     //
                     System.out.println("Message: "+u.getMessage());
                     //
@@ -111,6 +124,17 @@ public class PiecejointeControlleur {
                         //
                     }else{
                         System.out.println("La condition est faut!");
+                    }
+                    } catch (NotSupportedException e) {
+                        throw new RuntimeException(e);
+                    } catch (SystemException e) {
+                        throw new RuntimeException(e);
+                    } catch (HeuristicRollbackException e) {
+                        throw new RuntimeException(e);
+                    } catch (HeuristicMixedException e) {
+                        throw new RuntimeException(e);
+                    } catch (RollbackException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             };

@@ -77,7 +77,7 @@ public class ModelPlainte {
         return Plainte;
     }
     //
-    public Plainte getPlainteById(Long id){
+    public Plainte getPlainteByIds(Long id){
         Plainte Plainte = new Plainte();
         String requete = "SELECT * FROM depot_plainte where piecejointe_id = '"+id+"'";
         //
