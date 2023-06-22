@@ -44,8 +44,8 @@ public class PiecejointeControlleur {
     
     private static final ObjectMapper mapper = new ObjectMapper();
     ModelPlainte modelPlainte = new ModelPlainte();
-    @Inject
-    PalmaresMetier palmaresMetier;
+    //@Inject
+    //PalmaresMetier palmaresMetier;
     //
     @Inject
     TransactionManager tm;
@@ -63,26 +63,32 @@ public class PiecejointeControlleur {
     @Path("/{piecejointe_id}")
     @GET()
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] getPiecejointe(@PathParam("piecejointe_id") String piecejointe_id) {
+    public Response getPiecejointe(@PathParam("piecejointe_id") String piecejointe_id) {
         //
-        String[] l = piecejointe_id.split(".");
-        Long id = Long.parseLong(l[0]);
-        PieceJointe pieceJointe =  PieceJointe.findById(id);
-        byte[] piece = pieceJointe.donne;
-        //
-        //modelPlainte.getPieceJointe(id);
-        //listeU.forEach((u)->{
-        //  System.out.println("Element nom: "+u.nom);
-        //});
-        //
-        //Todo todo = new Todo();
-        //todo.setSummary("Application JSON Todo Summary");
-        //todo.setDescription("Application JSON Todo Description");
-        //
-        //Todo todo2 = new Todo();
-        //todo2.setSummary("Application JSON ");
-        //todo2.setDescription("Application JSON ");
-        return piece;
+        try {
+            String[] l = piecejointe_id.split("\\.");
+            System.out.println(l[0]+" valeur:  "+piecejointe_id);
+            Long id = Long.parseLong(l[0]);//
+            PieceJointe pieceJointe = PieceJointe.findById(id);
+            //byte[] piece = pieceJointe.donne;
+            //
+            //modelPlainte.getPieceJointe(id);
+            //listeU.forEach((u)->{
+            //  System.out.println("Element nom: "+u.nom);
+            //});
+            //
+            //Todo todo = new Todo();
+            //todo.setSummary("Application JSON Todo Summary");
+            //todo.setDescription("Application JSON Todo Description");
+            //
+            //Todo todo2 = new Todo();
+            //todo2.setSummary("Application JSON ");
+            //todo2.setDescription("Application JSON ");
+            return Response.ok(pieceJointe.donne).build();
+        }catch (Exception ex){
+            System.out.println("Erreur du à: "+ex.getMessage());
+            return Response.serverError().build();
+        }
     }
 
 
@@ -257,7 +263,7 @@ public class PiecejointeControlleur {
             p.setNote(col14);
             p.setAnneescolaire(col15);
             //
-            palmaresMetier.saveDemande(p);
+            //palmaresMetier.saveDemande(p);
             //
             System.out.println("col1: "+record.toString()+"");
             System.out.println("conte: "+c+"");
