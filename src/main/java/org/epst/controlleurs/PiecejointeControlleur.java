@@ -83,13 +83,20 @@ public class PiecejointeControlleur {
     }
 
 
-    @Path("/{piecejointe}")
+    @Path("/{piecejointe_id}/{type}")
     @POST()
     @Transactional
     //@Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response savetPlainte(PieceJointe pieceJointe) {
+    public Response savetPlainte(@PathParam("piecejointe_id") long piecejointe_id,
+                                 @PathParam("type") String type,
+                                 byte[] fichier) {
+        PieceJointe pieceJointe = new PieceJointe();
+        pieceJointe.type = type;
+        pieceJointe.piecejointe_id = piecejointe_id;
+        pieceJointe.donne = fichier;
+        //
         pieceJointe.persist();
         //
         //
