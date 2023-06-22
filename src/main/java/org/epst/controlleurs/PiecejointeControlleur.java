@@ -87,7 +87,7 @@ public class PiecejointeControlleur {
             return Response.ok(pieceJointe.donne).build();
         }catch (Exception ex){
             System.out.println("Erreur du à: "+ex.getMessage());
-            return Response.serverError().build();
+            return Response.status(405,"Erreur du à: "+ex.getMessage()).build();
         }
     }
 
