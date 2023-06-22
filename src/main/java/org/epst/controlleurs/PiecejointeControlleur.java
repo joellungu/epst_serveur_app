@@ -67,7 +67,10 @@ public class PiecejointeControlleur {
         //
         String[] l = piecejointe_id.split(".");
         Long id = Long.parseLong(l[0]);
-        byte[] piece = modelPlainte.getPieceJointe(id);
+        PieceJointe pieceJointe =  PieceJointe.findById(id);
+        byte[] piece = pieceJointe.donne;
+        //
+        //modelPlainte.getPieceJointe(id);
         //listeU.forEach((u)->{
         //  System.out.println("Element nom: "+u.nom);
         //});
@@ -184,7 +187,8 @@ public class PiecejointeControlleur {
         MailjetResponse response;
         //
         //StringBuilder message = new StringBuilder();
-        //
+        //c5e23aacf7242cf0146e3357ce692ad2///
+        //b84f5686e1cd527690705747afd878e8
         client = new MailjetClient(
                 "6f319c7eabca73a75926580bf1291102",
                 "7f4ef3362f04f20e9fcbbdaf5fea596e",
