@@ -2,9 +2,11 @@ package org.epst.models.palmares;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 
 @Entity
+@Cacheable
 public class Palmares extends PanacheEntity {
     String nomprovince ;
     String codeprovince ;
@@ -16,11 +18,20 @@ public class Palmares extends PanacheEntity {
     String codeecole ;
     int ordreecole ;
     int codegestion ;
+    int pourcentage ;
     String codecandidat ;
     String nomcandidat ;
     String sexe ;
     String note ;
     String anneescolaire;
+
+    public int getPourcentage() {
+        return pourcentage;
+    }
+
+    public void setPourcentage(int pourcentage) {
+        this.pourcentage = pourcentage;
+    }
 
     public String getNomprovince() {
         return nomprovince;

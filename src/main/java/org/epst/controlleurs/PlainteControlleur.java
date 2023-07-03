@@ -4,6 +4,7 @@ package org.epst.controlleurs;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
@@ -58,7 +59,9 @@ public class PlainteControlleur {
         System.out.println("Le id_statut: "+statut);
         List<Plainte> listeU = new LinkedList<>();
         try{
-            listeU = Plainte.list("id_statut",statut);
+            listeU = Plainte.listAll();
+            listeU = listeU.stream().filter((r)-> r.id_statut == statut ).collect(Collectors.toList());
+            //("id_statut",statut);
             listeU.forEach((e)->{System.out.println("le id vaut: "+e.id);});
         }catch (Exception ex){
             System.out.println("Erreur du à: "+ex.getMessage());
@@ -66,6 +69,27 @@ public class PlainteControlleur {
 
         return listeU;//Arrays.asList(todo,todo2);
     }
+
+    @Path("/all")
+    @GET()
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Plainte> getAllPlaintess() {
+        //
+        //System.out.println("Le id_statut: "+statut);
+        List<Plainte> listeU = new LinkedList<>();
+        try{
+            listeU = Plainte.listAll();
+            //listeU = listeU.stream().filter((r)-> r.id_statut == statut ).collect(Collectors.toList());
+            //("id_statut",statut);
+            //listeU.forEach((e)->{System.out.println("le id vaut: "+e.id);});
+        }catch (Exception ex){
+            System.out.println("Erreur du à: "+ex.getMessage());
+        }
+
+        return listeU;//Arrays.asList(todo,todo2);
+    }
+
+
 
     @Path("/reference/{reference}")
     @GET()

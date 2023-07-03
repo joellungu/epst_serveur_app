@@ -27,9 +27,12 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response saveDemande(Demande demande) throws IOException {
+
         //System.out.println("La demande: "+hashMap.get("nom"));
         //
+
         demande.persist();
+
         /*
         Demande d = new Demande();
         d.setId(Long.parseLong(""+hashMap.get("id")));
@@ -75,6 +78,7 @@ public class MutuelleController {
         //String v = demandeMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
+
         return Response.status(Response.Status.CREATED).entity("Demande éffectué").build();
     }
 
@@ -84,7 +88,6 @@ public class MutuelleController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public List<Demande> getAll(@QueryParam("province") String province, @QueryParam("district") String district){
         //
-
         HashMap params = new HashMap();
         params.put("province",province);//Transfere
         params.put("district",district);//Transfere
@@ -170,9 +173,11 @@ public class MutuelleController {
     public int getStatus(@QueryParam("id") Long id){
         //
         Demande demande = Demande.findById(id);
+        //
         return demande.valider;
         //
         //return Response.status(Response.Status.CREATED).entity().build();
+        //
     }
     //setStatus
 

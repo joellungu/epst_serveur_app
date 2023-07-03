@@ -122,6 +122,7 @@ public class PiecejointeControlleur {
                             //
                             //Plainte u = modelPlainte.getPlainteById(pieceJointe.piecejointe_id);
                             Plainte u = Plainte.findById(pieceJointe.piecejointe_id);
+                            u.piecejointe_id = pieceJointe.piecejointe_id;
                         tm.commit();
                     //
                     System.out.println("Message: "+u.getMessage());
@@ -193,8 +194,15 @@ public class PiecejointeControlleur {
         MailjetResponse response;
         //
         //StringBuilder message = new StringBuilder();
-        //c5e23aacf7242cf0146e3357ce692ad2///
+        //c5e23aacf7242cf0146e3357ce692ad2
         //b84f5686e1cd527690705747afd878e8
+        //"Email", "vbgepst@gmail.com"
+        //Nom: vbgepst
+        //////////////////
+        //6f319c7eabca73a75926580bf1291102
+        //7f4ef3362f04f20e9fcbbdaf5fea596e
+        //"Email", "mmuseghe@gmail.com"
+        //Nom: Pierre Museghe
         client = new MailjetClient(
                 "6f319c7eabca73a75926580bf1291102",
                 "7f4ef3362f04f20e9fcbbdaf5fea596e",
@@ -208,8 +216,16 @@ public class PiecejointeControlleur {
                                         .put("Name", "Pierre Museghe"))
                                 .put(Emailv31.Message.TO, new JSONArray()
                                         .put(new JSONObject()
-                                                .put("Email", "numeriquedgc@gmail.com")
-                                                .put("Name", "Pierre Museghe")))
+                                                .put("Email", "numeriquedgc@gmail.com")//
+                                                .put("Name", "Pierre Museghe")
+                                        )
+                                )
+                                .put(Emailv31.Message.CC, new JSONArray()
+                                        .put(new JSONObject()
+                                                .put("Email", "lungujoel138@gmail.com")//
+                                                .put("Name", "joel lungu")
+                                        )
+                                )
                                 .put(Emailv31.Message.SUBJECT, "Violence basée sur le genre")
                                 .put(Emailv31.Message.TEXTPART, "Contenu:\n"+message)
                                 .put(Emailv31.Message.HTMLPART, "<h3>Voici le lien du fichier<br><h4>\""+message+"\"</h4><br><a href=\"https://epstserveur.herokuapp.com/piecejointe/"+from+"\">Lire la piece jointe</a>!</h3>")));

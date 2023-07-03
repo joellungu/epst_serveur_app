@@ -61,7 +61,7 @@ public class ModelPlainte {
                     résultats.getString(6),
                     résultats.getString(7),
                     résultats.getInt(8),
-                    résultats.getString(9),
+                    résultats.getLong(9),
                     résultats.getString(10),
                     résultats.getString(11),
                     résultats.getString(12)
@@ -108,7 +108,7 @@ public class ModelPlainte {
                         résultats.getString(6),
                         résultats.getString(7),
                         résultats.getInt(8),
-                        résultats.getString(9),
+                        résultats.getLong(9),
                         résultats.getString(10),
                         résultats.getString(11),
                         résultats.getString(12)
@@ -160,7 +160,7 @@ public class ModelPlainte {
                         résultats.getString(6),
                         résultats.getString(7),
                         résultats.getInt(8),
-                        résultats.getString(9),
+                        résultats.getLong(9),
                         résultats.getString(10),
                         résultats.getString(11),
                         résultats.getString(12)
@@ -221,7 +221,7 @@ public class ModelPlainte {
                         résultats.getString(6),
                         résultats.getString(7),
                         résultats.getInt(8),
-                        résultats.getString(9),
+                        résultats.getLong(9),
                         résultats.getString(10),
                         résultats.getString(11),
                         résultats.getString(12)
