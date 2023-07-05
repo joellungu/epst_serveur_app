@@ -5,7 +5,7 @@ import org.epst.models.Agent.Agent;
 import org.epst.models.palmares.Palmares;
 import org.epst.models.palmares.PalmaresMetier;
 import org.epst.models.palmares.Resultat;
-
+import javax.ws.rs.core.Response;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -52,9 +52,86 @@ public class PalmaresController {
 
     @GET()
     @Path("resultat/{anneescolaire}/{codecandidat}")
-    public Palmares getPalmares(@PathParam("anneescolaire") String anneescolaire, @PathParam("codecandidat") String codecandidat){
+    public Response getPalmares(@PathParam("anneescolaire") int anneescolaire, @PathParam("codecandidat") String codecandidat){
         //
-        return palmaresMetier.getPalmare(anneescolaire,codecandidat);
+        Resultat resultat = (Resultat) Resultat.list("annee",anneescolaire).get(0);
+        //Resultat resultat = (Resultat) Resultat.list("annee =: annee and provinceEducationnel =: provinceEducationnel ").get(0);
+        //
+        Reader targetReader = new StringReader(new String(resultat.getFichier()));
+
+        try (CSVReader reader = new CSVReader(targetReader)) {
+            List<String[]> r = reader.readAll();
+            String reponse = "";
+            boolean trouve = false;
+            Palmares p = new Palmares();
+            //
+            for (int t = 1; t < r.size(); t++){
+                String[] x = r.get(t);
+                System.out.println("valeur: "+codecandidat+" = "+x[11]+" : "+codecandidat.equals(x[11]));
+                if(codecandidat.equals(x[11])){
+                    trouve = true;
+
+                    p.setProvince(x[1]);
+                    p.setCodeprovince(x[2]);
+                    p.setOption(x[5]);
+                    p.setCodeoption(x[6]);
+                    p.setPourcentage(Integer.parseInt(x[14].replace("%", "0")));
+                    p.setSexe(x[13]);
+                    p.setNomcandidat(x[12]);
+                    p.setCodecandidat(x[11]);
+                    p.setCodeecole(x[8]);
+                    p.setNomecole(x[7]);
+                    p.setAnneescolaire(x[15]);
+                    p.setOption(x[5]);
+                    p.setNomcentre(x[3]);
+                    p.setCodecentre(x[4]);
+                    p.setCodegestion(Integer.parseInt(x[10]));
+                    p.setOrdreecole(Integer.parseInt(x[9]));
+                    //
+                    break;
+                }
+                /*
+                String arrays = Arrays.toString(x);
+                Palmares p = new Palmares();
+                p.setSexe(x[18]);
+                //p.setNomecole(x[18]);
+                p.setOption(x[15]);
+                p.setPourcentage(Integer.parseInt(x[14].replace("%", "0")));
+                p.setNomcandidat(x[13]);
+                p.setCodecandidat(x[12]);
+                p.setCodeecole(x[8]);
+                p.setNomecole(x[7]);
+                p.setAnneescolaire("2013");
+                p.setOption(x[5]);
+                p.setNomcentre(x[3]);
+                p.setCodecentre(x[4]);
+                p.setCodegestion(Integer.parseInt(x[10]));
+                p.setOrdreecole(Integer.parseInt(x[9]));
+                //
+                p.persistAndFlush();
+                */
+                //
+                /*
+                for(int i = 0; i < x.length; i++){
+                    System.out.println(i+" : "+x[i]);
+                }
+                */
+
+                //
+                System.out.println("-------------------------");
+            };
+            if (trouve){
+                return Response.ok(p).build();
+            }else{
+                return Response.serverError().build();
+            }
+            //return "Très cool";
+        }catch (Exception ex){
+            System.out.println("Erreur du à: "+ex);
+            return Response.serverError().build();
+        }
+
+        //return palmaresMetier.getPalmare(anneescolaire,codecandidat);
         //
     }
 
@@ -77,7 +154,9 @@ public class PalmaresController {
     public String savePalmares(){
 
         //
-        File fichier = new File("C:\\Users\\Pierre\\Documents\\palmares_provinces_educationnelle\\PalmOPGLOBAL2022 KINSHASA FUNA.csv");
+
+        //
+        File fichier = new File("C:\\Users\\Pierre\\Documents\\EXETATS\\PalmOPGLOBAL2022.csv");
         try {
             Resultat resultat = new Resultat();
             byte[] fileContent = Files.readAllBytes(fichier.toPath());
@@ -146,7 +225,11 @@ public class PalmaresController {
     public String testPalmares(){
 
         //
-        Resultat resultat = Resultat.findAll().firstResult();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("annee",2022);
+        params.put("provinceEducationnel","KINSHASA FUNA");
+        //
+        Resultat resultat = (Resultat) Resultat.list("annee =: annee and provinceEducationnel =: provinceEducationnel ").get(0);
         //
         Reader targetReader = new StringReader(new String(resultat.getFichier()));
 
@@ -176,10 +259,11 @@ public class PalmaresController {
                 p.persistAndFlush();
                 */
                 //
-                //
+
                 for(int i = 0; i < x.length; i++){
                     System.out.println(i+" : "+x[i]);
                 }
+
                 //
                 System.out.println("-------------------------");
             };

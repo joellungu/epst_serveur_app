@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 public class Palmares extends PanacheEntity {
     String nomprovince ;
     String codeprovince ;
+    String province ;
     String nomcentre ;
     String codecentre ;
     String option ;
@@ -151,5 +152,13 @@ public class Palmares extends PanacheEntity {
 
     public void setAnneescolaire(String anneescolaire) {
         this.anneescolaire = anneescolaire;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 }

@@ -58,6 +58,13 @@ public class MagasinControlleur {
         System.out.println("Element type: "+type);
         //
         List<Magasin> listeU = Magasin.list("type",type);
+        List<Magasin> lU = new LinkedList<>();
+        listeU.forEach((e)->{
+            //
+            e.setPiecejointe(new byte[]{});
+            lU.add(e);
+        });
+
         System.out.println("La liste vaut: "+ listeU.size());
         System.out.println("La liste vaut: "+ listeU.toString());
         //
@@ -73,7 +80,7 @@ public class MagasinControlleur {
         //Todo todo2 = new Todo();
         //todo2.setSummary("Application JSON ");
         //todo2.setDescription("Application JSON ");
-        return listeU;//Arrays.asList(todo,todo2);
+        return lU;//Arrays.asList(todo,todo2);
     }
 
     //@Path("")
