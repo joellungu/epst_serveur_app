@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
+import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -29,6 +29,7 @@ public class PaiementController {
 
     @Inject
     PaiementMetier paiementMetier;
+
     @Inject
     DeviseMetier deviseMetier;
 
@@ -37,8 +38,12 @@ public class PaiementController {
 
     public String lancer(String devise, String telephone, Double m, String reference) {
         System.out.println("la devise: $"+devise+"lE MONTANT: $"+m);
-        String dev = devise == "USD" ? "USD":"CDF";
-        double montant = deviseMetier.conversion(m,1L, devise=="USD");
+        //String dev = devise == "USD" ? "USD":"CDF";
+        //double montant = deviseMetier.conversion(m,1L, devise=="USD");
+        //
+        String dev = devise.equals("USD") ? "USD":"CDF";
+        double montant = conversion(m,1L, devise.equals("USD"));
+        //
         System.out.println("la devise: $"+devise+"lE MONTANT: $"+montant);
         String urlPost = "http://41.243.7.46:3006/flexpay/api/rest/v1/paymentService";
         //////////////////http://41.243.7.46:3006/api/rest/v1/paymentService
@@ -166,5 +171,54 @@ public class PaiementController {
         //
         return deviseMetier.saveAgent(devise);
         //
+    }
+
+    private double conversion(Double montant, Long id, Boolean de) {
+        Devise devise = Devise.findAll().firstResult();
+        double prct = (10 * montant) / 100;
+        if (de) {
+            System.out.println("En dollar: " + de);
+            return (montant + prct) ;// devise.taux;
+        } else {
+            System.out.println("En franc: " + de);
+            return (montant + prct) * devise.taux;
+        }
+    }
+
+    @Path("/devise")
+    @DELETE
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteTaux(Devise devise) {
+        //
+        Devise.deleteAll();
+        //
+    }
+
+    @Path("/devise")
+    @POST
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public double setTaux(Devise devise) {
+        //
+        devise.persist();
+        return devise.taux;
+    }
+
+    @Path("/devise")
+    @GET
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public double getTaux() {
+        //
+        try {
+            Devise devise = Devise.findAll().firstResult();
+            return devise.taux;
+        }catch (Exception ex){
+            return 0;
+        }
     }
 }

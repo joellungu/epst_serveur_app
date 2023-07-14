@@ -36,8 +36,8 @@ public interface PalmaresDao {
     @RegisterBeanMapper(Palmares.class)//
     List<Palmares> listeAll(String nomprovince, String nomecole, String codeoption, String anneescolaire);//
 
-    @SqlQuery("SELECT * FROM PALMARES where anneescolaire = ? AND codecandidat = ?")
+    @SqlQuery("SELECT * FROM Palmopglobal2022 where ANNEE_SCOLAIRE = ? AND Code_Candidat = ?")
     @RegisterBeanMapper(Palmares.class)//
-    Palmares getPalmare(String anneescolaire, String codecandidat);//
+    Palmares getPalmare(String ANNEE_SCOLAIRE, String Code_Candidat);//
 
 }

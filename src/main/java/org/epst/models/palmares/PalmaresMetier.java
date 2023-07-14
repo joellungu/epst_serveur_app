@@ -56,7 +56,7 @@ public class PalmaresMetier {
             //
 
             try{
-                v.createTable();
+                //v.createTable();
                 //v.miseAjour();
             }catch (Exception ex){
                 System.out.println("Erreur du à: "+ex);

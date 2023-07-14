@@ -41,7 +41,7 @@ public class DeviseMetier {
                 if(de){
                     return montant + prct;
                 }else{
-                    return (montant + prct) * d.montant;
+                    return (montant + prct) * d.taux;
                 }
                 //v.createTable();
             }catch (Exception ex){
