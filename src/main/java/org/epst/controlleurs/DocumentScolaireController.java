@@ -111,13 +111,14 @@ public class DocumentScolaireController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
-    @Path("one/{id}")
+    @Path("{id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Document> getOne(@PathParam("id") Long id){
+    @Transactional
+    public Document getOne(@PathParam("id") Long id){
         //
-        return Demande.findById(id);
+        return Document.findById(id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
@@ -127,23 +128,24 @@ public class DocumentScolaireController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
-        Demande demande = Demande.findById(id);
-        return demande.getPiecejointe();
+        Document document = Document.findById(id);
+        return document.getPhoto();
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
     @Path("update/{id}/{status}")
-    @GET
+    @PUT
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Transactional
-    public void setStatus(@PathParam("id") Long id,@PathParam("status") int status){
+    public void setStatus(@PathParam("id") Long id,@PathParam("status") int status, String raison){
         //
         Document document = Document.findById(id);
         if(document == null){
             return;
         }
         document.valider = status;
+        document.raison = raison;
         //documentMetier.setStatus(status,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }

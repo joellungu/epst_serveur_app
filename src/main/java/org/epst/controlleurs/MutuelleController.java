@@ -79,7 +79,7 @@ public class MutuelleController {
         //demandeMetier.saveDemande(demande);
         //
 
-        return Response.status(Response.Status.CREATED).entity("Demande éffectué").build();
+        return Response.status(Response.Status.CREATED).entity(demande).build();
     }
 
     @Path("all/demande")
@@ -89,10 +89,11 @@ public class MutuelleController {
     public List<Demande> getAll(@QueryParam("province") String province, @QueryParam("district") String district){
         //
         HashMap params = new HashMap();
-        params.put("province",province);//Transfere
-        params.put("district",district);//Transfere
+        params.put("province",province);//
+        params.put("district",district);//
+        params.put("valider",0);//
         //
-        return Demande.list("province =:province and district =:district",params);
+        return Demande.list("province =:province and district =:district and valider =:valider",params);
         //return demandeMetier.getAll(province, district);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
@@ -108,11 +109,11 @@ public class MutuelleController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
-    @Path("one/{id}")
+    @Path("{id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Demande> getOne(@PathParam("id") Long id){
+    public Demande getOne(@PathParam("id") Long id){
         //
         return Demande.findById(id);
         //return Response.status(Response.Status.CREATED).entity().build();
@@ -141,7 +142,7 @@ public class MutuelleController {
     }
 
     @Path("update/{id}/{status}")
-    @GET
+    @PUT
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Transactional

@@ -80,7 +80,7 @@ public class DemandeIdentificationController {
         //d.setPiecejointe(bytes2);
         //---------------------------------
         */
-        demandeIdentificationMetier.saveDemande(d);
+        //demandeIdentificationMetier.saveDemande(d);
         //demandeMetier.saveDemande(demande);
         //
         return Response.status(Response.Status.CREATED).entity(d).build();
@@ -108,7 +108,7 @@ public class DemandeIdentificationController {
         params.put("valider",valider);//Transfere
         params.put("typeIdentificationcode",code);
         //
-        return DemandeIdentification.list("provinceEcole =:provinceEcole and provinceEducationnel =:provinceEducationnel and valider =:valider",params);
+        return DemandeIdentification.list("provinceEcole =:provinceEcole and provinceEducationnel =:provinceEducationnel and valider =:valider and typeIdentificationcode =: typeIdentificationcode",params);
         //return demandeIdentificationMetier.getAll(province, district, valider, code);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
@@ -123,11 +123,14 @@ public class DemandeIdentificationController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
-    @Path("one/{id}")
+    @Path("{id}")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<DemandeIdentification> getOne(@PathParam("id") Long id){
+    @Transactional
+    public DemandeIdentification getDemandeId(@PathParam("id") Long id){
+        //
+        System.out.println("Le id vaut: "+id);
         //
         return DemandeIdentification.findById(id);
         //return Response.status(Response.Status.CREATED).entity().build();
@@ -145,17 +148,18 @@ public class DemandeIdentificationController {
     }
 
     @Path("update/{id}/{status}")
-    @GET
+    @PUT
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Transactional
-    public void setStatus(@PathParam("id") Long id,@PathParam("status") int status){
+    public void setStatus(@PathParam("id") Long id,@PathParam("status") int status, String raison){
         //
         DemandeIdentification demandeIdentification = DemandeIdentification.findById(id);
         if(demandeIdentification == null){
             return;
         }
         demandeIdentification.valider = status;
+        demandeIdentification.raison = raison;
         //demandeIdentificationMetier.setStatus(status,id);
         //return Response.status(Response.Status.CREATED).entity().build();
     }

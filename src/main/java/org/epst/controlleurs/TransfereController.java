@@ -44,6 +44,7 @@ public class TransfereController {
         params.put("ecoleDestinationProv",province);//Transfere
         params.put("ecoleDestinationDistric",district);//Transfere
         params.put("valider",valider);//Transfere
+        System.out.println("ecoleDestinationProv: "+province+" // ecoleDestinationDistric: "+district+" // valider: "+valider+" //");
         //
         return Transfere.list("valider =:valider and ecoleDestinationDistric =:ecoleDestinationDistric and ecoleDestinationProv =:ecoleDestinationProv",params);
         //return Response.status(Response.Status.CREATED).entity().build();
@@ -60,11 +61,12 @@ public class TransfereController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
-    @Path("one/{id}")
+    @Path("{id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Transfere> getOne(@PathParam("id") Long id){
+
+    public Transfere getOne(@PathParam("id") Long id){
         //
         return Transfere.findById(id);
         //return Response.status(Response.Status.CREATED).entity().build();
@@ -74,6 +76,7 @@ public class TransfereController {
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
         Transfere transfere = Transfere.findById(id);
@@ -82,7 +85,7 @@ public class TransfereController {
     }
 
     @Path("update/{id}/{status}")
-    @POST
+    @PUT
     //@Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
