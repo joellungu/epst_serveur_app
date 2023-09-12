@@ -100,7 +100,6 @@ public class AgentControlleur {
         if(agent1 == null){
             return Response.serverError().build();
         }
-
         //
         agent1.nom = agent.nom;
         agent1.postnom = agent.postnom;
@@ -115,7 +114,7 @@ public class AgentControlleur {
         agent1.mdp = agent.mdp;
         agent1.province = agent.province;
         agent1.district = agent.district;
-        //agent1.nom = agent.nom;
+        agent1.antenne = agent.antenne;
         //
         ObjectNode json = mapper.createObjectNode();
         //

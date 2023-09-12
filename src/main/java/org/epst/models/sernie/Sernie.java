@@ -1,0 +1,84 @@
+package org.epst.models.sernie;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import java.sql.Timestamp;
+
+
+@Entity
+public class Sernie extends PanacheEntity {
+    /*
+    public String Nom;
+    public String Postnom;
+    public String Prenom;
+    public String Sexe;
+    public String Lieu_naissance;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    public Timestamp Date_naissance;
+    public String Nationalite;
+    public String Telephone_principale;
+    public String Nom_pere;
+    public String Nom_mere;
+    public String Adresse;
+    public String DENOMINATIO_ECOLE;
+    public String Code_Ecole;
+    public byte[] photo;
+    public String ext1;
+    public String ecole;
+    public String Antenne;
+    public String niveau;
+    public String provinceEcole;
+    public String provinceEducationnel;
+    public String option;
+    public String Annee_scolaire;
+
+    public String Classe;
+    public String datedemande;
+    public int typeIdentificationcode;
+    public String typeIdentification;
+    public String Province_origine;
+    public String Territoire;
+    public String Secteur;
+    public String Groupement;
+    public String Village;
+    public String raison;
+    public int valider;
+    public String reference;
+    */
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String sexe;
+    public String nompere;
+    public String nommere;
+    public String telephone;
+    public String adresse;
+    public String Territoire;
+    public String Secteur;
+    public String Groupement;
+    public String Village;
+    public String Nationalite;
+    public String Antenne;
+    public String provinceOrigine;
+    public String lieuNaissance;
+    public String dateNaissance;
+    public String ecole;
+    public String code_ecole;
+    public String reseaux;
+    public String provinceEcole;
+    public String provinceEducationnel;
+    public String option;
+    public String Niveau;
+    public String annee;
+    public String Classe;
+    public String datedemande;
+    public byte[] photo;
+    //public String ext;
+    public String raison;
+
+    @Column(columnDefinition = "integer default 0")
+    public int valider;
+}

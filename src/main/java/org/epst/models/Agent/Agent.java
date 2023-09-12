@@ -14,6 +14,7 @@ public class Agent extends PanacheEntity {
     public String numero;
     public String email;
     public String adresse;
+    public String antenne;
     public int role;
     public String matricule;
     public String id_statut;
