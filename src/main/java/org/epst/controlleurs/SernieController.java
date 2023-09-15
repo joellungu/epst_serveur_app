@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("sernie")
@@ -216,9 +217,14 @@ public class SernieController {
         params.put("antenne",antenne);
         params.put("valider",0);
 
+        List<Sernie> listeF = new LinkedList<>();
         List<Sernie> liste = Sernie.list("provinceEducationnel =: provinceEducationnel and provinceEcole =: provinceEcole and valider =: valider and antenne =: antenne",params);
 
-        return Response.ok(liste).build();
+        liste.forEach((e)->{
+            e.photo = new byte[0];
+            listeF.add(e);
+        });
+        return Response.ok(listeF).build();
     }
 
     @Path("statusdem")
