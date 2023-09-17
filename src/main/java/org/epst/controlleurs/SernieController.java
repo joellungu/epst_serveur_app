@@ -165,12 +165,12 @@ public class SernieController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
-    @Path("allecolesernie")
+    @Path("synchroniser")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response getAllEcoleSernie(){
+    public Response getEcoleSernieSynchronise(){
         //C:\Users\Pierre\Documents\EPST-APP\REPERTOIRE DES ECOLES SELON SERNIE1.csv
         //
         EcoleSernie.deleteAll();
@@ -197,6 +197,19 @@ public class SernieController {
         {
             e.printStackTrace();
         }
+        return Response.ok(EcoleSernie.listAll()).build();
+        //return Response.status(Response.Status.CREATED).entity().build();
+    }
+
+    @Path("allecolesernie")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response getAllEcoleSernie(){
+        //C:\Users\Pierre\Documents\EPST-APP\REPERTOIRE DES ECOLES SELON SERNIE1.csv
+        //
+
         return Response.ok(EcoleSernie.listAll()).build();
         //return Response.status(Response.Status.CREATED).entity().build();
     }
