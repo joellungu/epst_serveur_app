@@ -117,7 +117,7 @@ public class SernieController {
         sernie1.annee = sernie.annee;
         sernie1.Classe = sernie.Classe;
         sernie1.datedemande = sernie.datedemande;
-        sernie1.photo = sernie.photo;
+        //sernie1.photo = sernie.photo;
         //sernie1.ext = sernie.ext;
         sernie1.valider = sernie.valider;
 
@@ -165,7 +165,7 @@ public class SernieController {
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
+    //@Transactional
     public DemandeIdentification getDemandeId(@PathParam("id") Long id){
         //
         System.out.println("Le id vaut: "+id);
