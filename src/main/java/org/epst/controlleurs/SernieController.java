@@ -1,6 +1,7 @@
 package org.epst.controlleurs;
 
 
+import com.opencsv.CSVReader;
 import org.epst.models.Agent.Agent;
 import org.epst.models.document_scolaire.identification.DemandeIdentification;
 import org.epst.models.sernie.EcoleSernie;
@@ -10,10 +11,12 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 @Path("sernie")
 public class SernieController {
@@ -166,12 +169,37 @@ public class SernieController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response getAllEcoleSernie(){
+        //C:\Users\Pierre\Documents\EPST-APP\REPERTOIRE DES ECOLES SELON SERNIE1.csv
         //
+        EcoleSernie.deleteAll();
+        //
+        String line = "";
+        String splitBy = ",";
+        try
+        {
+            List<String[]> listeEcoles = readAllLines(java.nio.file.Path.of("REPERTOIRE DES ECOLES SELON SERNIE1.csv"));
+            listeEcoles.forEach((e)->{
+                try{
+                    String[] ecole = e[0].split(";");
+                    System.out.println(ecole[0]+" : "+ecole[1]);
+                    EcoleSernie ecoleSernie = new EcoleSernie();
+                    ecoleSernie.code_ecole = ecole[1];
+                    ecoleSernie.denomination_ecole = ecole[0];
+                    ecoleSernie.persist();
+                }catch (Exception ex){
+                    System.out.println(ex+" err ");
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return Response.ok(EcoleSernie.listAll()).build();
         //return Response.status(Response.Status.CREATED).entity().build();
     }
-
 
     @Path("{id}")
     @GET
@@ -260,6 +288,14 @@ public class SernieController {
         return sernie.photo;
         //getAll
         //return Response.status(Response.Status.CREATED).entity().build();
+    }
+
+    public List<String[]> readAllLines(java.nio.file.Path filePath) throws Exception {
+        try (Reader reader = Files.newBufferedReader(filePath)) {
+            try (CSVReader csvReader = new CSVReader(reader)) {
+                return csvReader.readAll();
+            }
+        }
     }
 
 }
