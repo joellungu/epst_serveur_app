@@ -233,8 +233,8 @@ public class SernieController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
-        DemandeIdentification demandeIdentification = DemandeIdentification.findById(id);
-        return demandeIdentification.getPhoto();
+        Sernie sernie = Sernie.findById(id);
+        return sernie.photo;
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
