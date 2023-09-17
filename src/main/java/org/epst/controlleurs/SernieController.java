@@ -3,6 +3,7 @@ package org.epst.controlleurs;
 
 import org.epst.models.Agent.Agent;
 import org.epst.models.document_scolaire.identification.DemandeIdentification;
+import org.epst.models.sernie.EcoleSernie;
 import org.epst.models.sernie.Sernie;
 
 import javax.transaction.Transactional;
@@ -167,7 +168,7 @@ public class SernieController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllEcoleSernie(){
         //
-        return DemandeIdentification.list("matricule",matricule);
+        return Response.ok(EcoleSernie.listAll()).build();
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
