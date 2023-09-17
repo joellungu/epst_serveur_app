@@ -161,6 +161,17 @@ public class SernieController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
+    @Path("allecolesernie")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllEcoleSernie(){
+        //
+        return DemandeIdentification.list("matricule",matricule);
+        //return Response.status(Response.Status.CREATED).entity().build();
+    }
+
+
     @Path("{id}")
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
