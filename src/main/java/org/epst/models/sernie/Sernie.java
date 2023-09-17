@@ -62,6 +62,7 @@ public class Sernie extends PanacheEntity {
     public String Village;
     public String Nationalite;
     public String Antenne;
+    public String code_antenne;
     public String provinceOrigine;
     public String lieuNaissance;
     public String dateNaissance;
