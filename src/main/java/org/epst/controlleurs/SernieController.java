@@ -123,6 +123,7 @@ public class SernieController {
         sernie1.datedemande = sernie.datedemande;
         //sernie1.photo = sernie.photo;
         //sernie1.ext = sernie.ext;
+        sernie1.raison = sernie.raison;
         sernie1.valider = sernie.valider;
 
         return Response.status(Response.Status.CREATED).entity("ok").build();
@@ -234,6 +235,8 @@ public class SernieController {
     public byte[] getPiecejointe(@PathParam("id") Long id){
         //
         Sernie sernie = Sernie.findById(id);
+        System.out.println("le nom: "+sernie.nom);
+        System.out.println("le photo: "+sernie.photo.length);
         return sernie.photo;
         //return Response.status(Response.Status.CREATED).entity().build();
     }
@@ -259,7 +262,7 @@ public class SernieController {
     @GET
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Transactional
+    //@Transactional
     public Response getAllBy(@PathParam("province") String province,
                              @PathParam("provinceeducationnel") String provinceeducationnel,
                              @PathParam("antenne") String antenne){
@@ -273,10 +276,20 @@ public class SernieController {
         List<Sernie> listeF = new LinkedList<>();
         List<Sernie> liste = Sernie.list("provinceEducationnel =: provinceEducationnel and provinceEcole =: provinceEcole and valider =: valider and antenne =: antenne",params);
 
+        for(Sernie sernie : liste){
+            //
+            sernie.photo = new byte[0];
+            //
+            listeF.add(sernie);
+        }
+
+        /*
         liste.forEach((e)->{
             e.photo = new byte[0];
             listeF.add(e);
         });
+        */
+
         return Response.ok(listeF).build();
     }
 
@@ -291,17 +304,20 @@ public class SernieController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
+    /*
     @Path("piecejointe/{id}")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] getPhoto(@PathParam("id") Long id){
+        System.out.println("le id: "+id);
         Sernie sernie = Sernie.findById(id);
         //
+        System.out.println("le id: "+sernie.photo.length);
         return sernie.photo;
         //getAll
         //return Response.status(Response.Status.CREATED).entity().build();
     }
+    */
 
     public List<String[]> readAllLines(java.nio.file.Path filePath) throws Exception {
         try (Reader reader = Files.newBufferedReader(filePath)) {
