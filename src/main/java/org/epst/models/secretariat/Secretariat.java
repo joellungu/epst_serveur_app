@@ -22,7 +22,7 @@ public class Secretariat extends PanacheEntity {
     public byte[] maps;
     //
     @ElementCollection
-    public List<HashMap<String,Object>> departement;
+    public List<Departement> departement;
     public HashMap<String,Object> arretes;
 
     @Column(columnDefinition = "TEXT")

@@ -5,6 +5,7 @@ import org.epst.models.secretariat.Secretariat;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ import java.util.List;
 public class SecretariatController {
 
     @GET
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
     public Response getSecretariat(@PathParam("id") Long id) {
         //
@@ -70,10 +72,15 @@ public class SecretariatController {
     }
 
     @POST
+    @Consumes(MediaType.WILDCARD)
     @Transactional
     public Response postSecretariat(Secretariat secretariat) {
         //
-        secretariat.persist();
+        try {
+            secretariat.persist();
+        }catch (Exception ex){
+            System.out.println("Erreur du à: "+ex);
+        }
         //
         return Response.ok().build();
     }
@@ -86,6 +93,27 @@ public class SecretariatController {
         Secretariat.deleteById(id);
         //
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("photo/{id}/{index}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Transactional
+    public Response Secretariat(@PathParam("id") Long id, @PathParam("index") int index) {
+        //
+        Secretariat secretariat = Secretariat.findById(id);
+        byte[] photo = new byte[0];
+        //
+        int i = 0;
+        for(var departement : secretariat.departement){
+            if(i == index){
+                photo = departement.photo;
+                break;
+            }
+            i++;
+        }
+        //
+        return Response.ok(photo).build();
     }
 
 
