@@ -32,6 +32,10 @@ public class AgentControlleur {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getAgent(@PathParam("matricule") String matricule,
                                 @PathParam("mdp") String mdp){
+        //
+        System.out.println("matricule: "+matricule);
+        System.out.println("mdp: "+mdp);
+        //
         HashMap<String, Object> params = new HashMap<>();
         params.put("matricule",matricule);
         params.put("mdp",mdp);

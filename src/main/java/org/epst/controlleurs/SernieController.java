@@ -6,7 +6,6 @@ import org.epst.models.Agent.Agent;
 import org.epst.models.document_scolaire.identification.DemandeIdentification;
 import org.epst.models.sernie.EcoleSernie;
 import org.epst.models.sernie.Sernie;
-
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -155,6 +154,20 @@ public class SernieController {
         //return demandeIdentificationMetier.getAll(province, district, valider, code);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
+
+    @Path("all")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getAlls(){
+        //
+        var liste = DemandeIdentification.listAll();
+        DemandeIdentification demandeIdentification = (DemandeIdentification) liste.get(liste.size() - 1);
+        return Response.ok(demandeIdentification).build();
+        //return demandeIdentificationMetier.getAll(province, district, valider, code);
+        //return Response.status(Response.Status.CREATED).entity().build();
+    }
+
 
     @Path("all/demandebymatricule")
     @GET
