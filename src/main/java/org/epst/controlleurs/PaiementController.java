@@ -45,7 +45,8 @@ public class PaiementController {
         double montant = conversion(m,1L, devise.equals("USD"));
         //
         System.out.println("la devise: $"+devise+"lE MONTANT: $"+montant);
-        String urlPost = "http://41.243.7.46:3006/flexpay/api/rest/v1/paymentService";
+        //String urlPost = "http://41.243.7.46:3006/flexpay/api/rest/v1/paymentService";
+        String urlPost = "http://backend.flexpay.cd/api/rest/v1/paymentService";
         //////////////////http://41.243.7.46:3006/api/rest/v1/paymentService
         String body = "{\n" +
                 "  \"merchant\":\"EPSTAPP\"," +
@@ -56,10 +57,23 @@ public class PaiementController {
                 "  \"currency\":\""+dev+"\"," +
                 "  \"callbackUrl\":\"http://dgc-epst.uc.r.appspot.com\"" +
                 "}";
+        /*
+        String body = "{\n" +
+                "  \"merchant\":\"EPSTAPP\"," +
+                "  \"type\":1," +
+                "  \"reference\": \""+reference+"\"," +
+                "  \"phone\": \""+telephone+"\"," +
+                "  \"amount\": \""+montant+"\"," +
+                "  \"currency\":\""+dev+"\"," +
+                "  \"callbackUrl\":\"http://dgc-epst.uc.r.appspot.com\"" +
+                "}";
+         */
         var requete = HttpRequest.newBuilder()
                 .uri(URI.create(urlPost))
                 .header("Content-Type","application/json")
                 .header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzM3NTUyMDEwLCJzdWIiOiI4ZTE4NzJlODQwZTc5YjM5OWIxMDliMmYyNjk5YWY3YSJ9.co6sS0YEdCy3v3nja0NHvS5dYnMNmjZPJET_Ri7pB0E")
+                //.header("Authorization","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MkkydjNXQkhUUVdpTlg4ejhQVSIsInJvbGVzIjpbIk1FUkNIQU5UIl0sImlzcyI6Ii9sb2dpbiIsImV4cCI6MTczNTY4NjAwMH0.b3H5IvM1cNtQ5I3Xz3Rf3hBO_pbgFgQ5VpdKrFUI3g0")
+                //.header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzM3NTUyMDEwLCJzdWIiOiI4ZTE4NzJlODQwZTc5YjM5OWIxMDliMmYyNjk5YWY3YSJ9.co6sS0YEdCy3v3nja0NHvS5dYnMNmjZPJET_Ri7pB0E")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
         var client = HttpClient.newHttpClient();
@@ -137,14 +151,16 @@ public class PaiementController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public String lancerPaiment(Paiement paiement) {
         //
         System.out.println("Le montant: "+paiement.getAmount());
         System.out.println("Le devise: "+paiement.getCurrency());
         System.out.println("Le phone: "+paiement.getPhone());
         System.out.println("Le montant: ");
-
-        paiementMetier.savePaiement(paiement);
+        //
+        paiement.persist();
+        //paiementMetier.savePaiement(paiement);
         //AnnoyingBeep();
         //
         return lancer(paiement.getCurrency(),paiement.getPhone(),paiement.getAmount(),paiement.getReference());

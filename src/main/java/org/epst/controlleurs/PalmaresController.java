@@ -64,16 +64,22 @@ public class PalmaresController {
     public Response getPalmares(@PathParam("anneescolaire") String anneescolaire, @PathParam("codecandidat") String codecandidat){
         //
         HashMap<String, Object> params = new HashMap<>();
-        params.put("ANNEE_SCOLAIRE",anneescolaire);
-        params.put("Code_Candidat",codecandidat);
+        params.put("annescolaire",anneescolaire);
+        params.put("cdcdt",codecandidat);
         //
-        //Palmopglobal2022 resultat = (Palmopglobal2022) Palmopglobal2022.list("ANNEE_SCOLAIRE =: ANNEE_SCOLAIRE and Code_Candidat =: Code_Candidat", params).get(0);
+        List<Palmares> palmares = Palmares.find("annescolaire =: annescolaire and cdcdt =: cdcdt",params).list();
+        //
+        if(!palmares.isEmpty()){
+            return Response.ok(palmares.get(0)).build();
+        }else {
+            //
+            //Palmopglobal2022 resultat = (Palmopglobal2022) Palmopglobal2022.list("ANNEE_SCOLAIRE =: ANNEE_SCOLAIRE and Code_Candidat =: Code_Candidat", params).get(0);
 
 
-        //Resultat resultat = (Resultat) Resultat.list("annee",anneescolaire).get(0);
-        //Resultat resultat = (Resultat) Resultat.list("annee =: annee and provinceEducationnel =: provinceEducationnel ").get(0);
-        //
-        //Reader targetReader = new StringReader(new String(resultat.getFichier()));
+            //Resultat resultat = (Resultat) Resultat.list("annee",anneescolaire).get(0);
+            //Resultat resultat = (Resultat) Resultat.list("annee =: annee and provinceEducationnel =: provinceEducationnel ").get(0);
+            //
+            //Reader targetReader = new StringReader(new String(resultat.getFichier()));
         /*
         try (CSVReader reader = new CSVReader(targetReader)) {
             List<String[]> r = reader.readAll();
@@ -147,9 +153,8 @@ public class PalmaresController {
             return Response.serverError().build();
         }
         */
-
-
-        return Response.ok(getTasksBetweenDates(anneescolaire,codecandidat)).build();
+            return Response.serverError().build();
+        }
         //return Response.ok(palmaresMetier.getPalmare(anneescolaire,codecandidat)).build();
         //
     }
@@ -236,6 +241,7 @@ public class PalmaresController {
         //return "Très cool";
     }
 
+    /*
     @GET()
     @Path("test")
     @Transactional
@@ -304,6 +310,7 @@ public class PalmaresController {
         //return "Très cool";
     }
 
+    */
     //
     public HashMap getTasksBetweenDates(String annee, String codeEleve){
         //

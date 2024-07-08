@@ -1,6 +1,8 @@
 package org.epst.controlleurs;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
 import org.epst.models.Agent.Agent;
 import org.epst.models.document_scolaire.identification.DemandeIdentification;
@@ -11,7 +13,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,12 +109,14 @@ public class SernieController {
         sernie1.nommere = sernie.nommere;
         sernie1.telephone = sernie.telephone;
         sernie1.adresse = sernie.adresse;
-        sernie1.Territoire = sernie.Territoire;
-        sernie1.Secteur = sernie.Secteur;
-        sernie1.Groupement = sernie.Groupement;
-        sernie1.Village = sernie.Village;
-        sernie1.Nationalite = sernie.Nationalite;
-        sernie1.Antenne = sernie.Antenne;
+        sernie1.territoire = sernie.territoire;
+        sernie1.secteur = sernie.secteur;
+        sernie1.groupement = sernie.groupement;
+        sernie1.village = sernie.village;
+        sernie1.nationalite = sernie.nationalite;
+        sernie1.code_antenne = sernie.code_antenne;
+        sernie1.antenne = sernie.antenne;
+        sernie1.annee = sernie.annee;
         sernie1.provinceOrigine = sernie.provinceOrigine;
         sernie1.lieuNaissance = sernie.lieuNaissance;
         sernie1.dateNaissance = sernie.dateNaissance;
@@ -116,13 +126,13 @@ public class SernieController {
         sernie1.provinceEcole = sernie.provinceEcole;
         sernie1.provinceEducationnel = sernie.provinceEducationnel;
         sernie1.option = sernie.option;
-        sernie1.Niveau = sernie.Niveau;
+        sernie1.niveau = sernie.niveau;
         sernie1.annee = sernie.annee;
-        sernie1.Classe = sernie.Classe;
+        sernie1.classe = sernie.classe;
         sernie1.datedemande = sernie.datedemande;
         //sernie1.photo = sernie.photo;
         //sernie1.ext = sernie.ext;
-        sernie1.raison = sernie.raison;
+        //sernie1.raison = sernie.raison;
         sernie1.valider = sernie.valider;
 
         return Response.status(Response.Status.CREATED).entity("ok").build();
@@ -317,20 +327,50 @@ public class SernieController {
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
-    /*
-    @Path("piecejointe/{id}")
+    private static final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_1_1)
+            //.connectTimeout(Duration.ofSeconds(15))
+            .build();
+
+    @Path("testsend")
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] getPhoto(@PathParam("id") Long id){
-        System.out.println("le id: "+id);
-        Sernie sernie = Sernie.findById(id);
+    public void getPhoto(){
         //
-        System.out.println("le id: "+sernie.photo.length);
-        return sernie.photo;
-        //getAll
-        //return Response.status(Response.Status.CREATED).entity().build();
+        Sernie sernie = Sernie.findById(35622L);
+
+        //
+        ObjectMapper obj = new ObjectMapper();
+        //
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://sernie.minepst.gouv.cd/create.php"))
+                    .POST(HttpRequest.BodyPublishers.ofString(obj.writeValueAsString(sernie)))
+                    .build();
+            //
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // print response headers
+            HttpHeaders headers = response.headers();
+            System.out.println("-- :: -- " + response.body());
+            headers.map().forEach((k, v) -> System.out.println(k + ":" + v));
+
+            // print status code
+            System.out.println(response.statusCode());
+
+            // print response body
+            System.out.println(response.body());
+            //
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        //
     }
-    */
+    /**/
 
     public List<String[]> readAllLines(java.nio.file.Path filePath) throws Exception {
         try (Reader reader = Files.newBufferedReader(filePath)) {

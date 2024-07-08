@@ -216,16 +216,26 @@ public class PiecejointeControlleur {
                                         .put("Name", "Pierre Museghe"))
                                 .put(Emailv31.Message.TO, new JSONArray()
                                         .put(new JSONObject()
+                                                .put("Email", "plaintes_eashs@alloecolemgp.cd")//
+                                                .put("Name", "Gestionaire Plainte VBG EASHS")
+                                        )
+                                )
+                                .put(Emailv31.Message.CC, new JSONArray()
+                                        .put(new JSONObject()
                                                 .put("Email", "numeriquedgc@gmail.com")//
                                                 .put("Name", "Pierre Museghe")
                                         )
                                 )
+                                /*
                                 .put(Emailv31.Message.CC, new JSONArray()
                                         .put(new JSONObject()
                                                 .put("Email", "lungujoel138@gmail.com")//
                                                 .put("Name", "joel lungu")
                                         )
                                 )
+                                */
+
+                                //plaintes_eashs@alloecolemgp.cd
                                 .put(Emailv31.Message.SUBJECT, "Violence basée sur le genre")
                                 .put(Emailv31.Message.TEXTPART, "Contenu:\n"+message)
                                 .put(Emailv31.Message.HTMLPART, "<h3>Voici le lien du fichier<br><h4>\""+message+"\"</h4><br><a href=\"https://epstserveur.herokuapp.com/piecejointe/"+from+"\">Lire la piece jointe</a>!</h3>")));
@@ -263,6 +273,7 @@ public class PiecejointeControlleur {
             String col15 = "2021-2022";
             //String col16 = record.get(15);
             Palmares p = new Palmares();
+            /*
             p.setNomprovince(col1);
             p.setCodeprovince(col2);
             p.setNomcentre(col3);
@@ -278,6 +289,7 @@ public class PiecejointeControlleur {
             p.setSexe(col13);
             p.setNote(col14);
             p.setAnneescolaire(col15);
+            */
             //
             //palmaresMetier.saveDemande(p);
             //

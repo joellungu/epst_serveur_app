@@ -48,6 +48,7 @@ public class Sernie extends PanacheEntity {
     public int valider;
     public String reference;
     */
+    public String code;
     public String nom;
     public String postnom;
     public String prenom;
@@ -56,30 +57,34 @@ public class Sernie extends PanacheEntity {
     public String nommere;
     public String telephone;
     public String adresse;
-    public String Territoire;
-    public String Secteur;
-    public String Groupement;
-    public String Village;
-    public String Nationalite;
-    public String Antenne;
+    public String territoire;
+    public String secteur;
+    public String groupement;
+    public String village;
+    public String nationalite;
+    public String antenne;
     public String code_antenne;
     public String provinceOrigine;
     public String lieuNaissance;
     public String dateNaissance;
     public String ecole;
     public String code_ecole;
+    public String adressePhysiqueEcole;
     public String reseaux;
+    public String niveau;
     public String provinceEcole;
     public String provinceEducationnel;
     public String option;
-    public String Niveau;
     public String annee;
-    public String Classe;
+    public String classe;
     public String datedemande;
-    public byte[] photo;
-    //public String ext;
-    public String raison;
 
     @Column(columnDefinition = "integer default 0")
-    public int valider;
+    public String valider;
+    /**
+     *
+     */
+    public byte[] photo;
+    public String ext;
+
 }
