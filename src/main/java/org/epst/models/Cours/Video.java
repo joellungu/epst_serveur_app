@@ -1,10 +1,5 @@
 package org.epst.models.Cours;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-
-import javax.persistence.Entity;
-import java.io.InputStream;
-
 //@Entity
 public class Video {
 

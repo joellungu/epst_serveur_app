@@ -11,22 +11,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 
-@Path("coure")
+@Path("cours")
 public class CoursController {
 
-    /*
-    @Path("ajouter")
-    @POST
-    @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response ajouterClasse(Cours cours) {
-        cours.persist();
-        return Response.ok(Cours.listAll()).build();
-    }
-    */
-    /*
+
     @Path("all")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,9 +25,115 @@ public class CoursController {
     public Response all() {
         return Response.ok(Cours.listAll()).build();
     }
-    */
 
-/*
+    @Path("allcours")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response all(@QueryParam("categorie") String categorie, @QueryParam("cls") int cls) {
+        //
+        HashMap params = new HashMap();
+        params.put("categorie", categorie);
+        params.put("classe", cls);
+        //
+        List<Cours> l = Cours.listAll();
+        l.forEach((c)->{
+            System.out.println("Cours: "+c.classe);
+            System.out.println("Cours: "+c.categorie);
+        });
+        //
+        List<Cours> coursList = Cours.find("categorie =: categorie and classe =: classe", params).list();
+        //
+        coursList.forEach(cours -> {
+            cours.data = new byte[0];
+        });
+        //
+        return Response.ok(coursList).build();
+    }
+
+    //
+    @Path("notion")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response notion(
+            @QueryParam("cours") String cours,
+            @QueryParam("categorie") String categorie,
+            @QueryParam("banche") String banche,
+            //@QueryParam("type") String type,
+            @QueryParam("classe") int classe
+    ) {
+        //
+        HashMap params = new HashMap();
+        params.put("cours", cours);
+        params.put("categorie", categorie);
+        params.put("banche", banche);
+        //params.put("type", type);
+        params.put("classe", classe);
+        //
+        List<Cours> courss = Cours.find("cours =: cours and categorie =: categorie and banche =: banche and " +
+                "classe =: classe", params).list();
+        //
+        courss.forEach((c)->{
+            c.data = new byte[0];
+        });
+        //
+        if(cours != null){
+            return Response.ok(courss).build();
+        }else{
+            return Response.status(404).build();
+        }
+        //
+
+    }
+
+
+    @Path("checkcours")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response checkcours(
+            @QueryParam("cours") String cours,
+            @QueryParam("categorie") String categorie,
+            @QueryParam("banche") String banche,
+            @QueryParam("type") String type,
+            @QueryParam("notion") String notion,
+            @QueryParam("classe") int classe
+                               ) {
+        //
+        HashMap params = new HashMap();
+        params.put("cours", cours);
+        params.put("categorie", categorie);
+        params.put("banche", banche);
+        params.put("type", type);
+        params.put("notion", notion);
+        params.put("classe", classe);
+        //
+        Cours cour = (Cours) Cours.find("cours =: cours and categorie =: categorie and banche =: banche and " +
+                "type =: type and notion =: notion and classe =: classe", params).firstResult();
+        //
+        //
+        if(cours != null){
+            return Response.ok(cour.id).build();
+        }else{
+            return Response.status(404).build();
+        }
+        //
+
+    }
+
+    @Path("coursDataPdf.pdf")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response coursData(@QueryParam("id") Long id) {
+        //
+        Cours cours = Cours.findById(id);
+        //
+        return Response.ok(cours.data).build();
+    }
+
+
     @Path("update")
     @PUT
     @Transactional
@@ -47,22 +144,46 @@ public class CoursController {
         if(c == null){
             return Response.serverError().build();
         }
-        c.setClasse(cours.getClasse());
-        c.setMatiere(c.getMatiere());
+        //c.setClasse(cours.getClasse());
+        //c.setMatiere(c.getMatiere());
         return Response.ok(c).build();
-    }*/
+    }
 
-    @Path("ajoutervideo")
+    @POST
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response ajouterCours(Cours cours) {
+        cours.persist();
+        return Response.ok(cours.id).build();
+    }
+
+    @Path("media")
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    public void ajouterVideo(Video video) {
+    public Response ajouterMedia(@QueryParam("id") Long id, byte[] data) {
+        Cours cours = Cours.findById(id);
+        if(cours != null){
+            cours.data = data;
+            cours.persist();
+        }
+        return Response.ok().build();
+    }
+
+
+
+    @DELETE
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void deleteClasse(@QueryParam("id") Long id) {
         //
+        Cours.deleteById(id);
         //video.persist();
         //
     }
-
 
     @Path("lire/{classe}/{matiere}/{notion}")
     @GET

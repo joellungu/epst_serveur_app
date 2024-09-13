@@ -1,0 +1,14 @@
+package org.epst.models;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Entity;
+
+@Entity
+public class ClasseModel extends PanacheEntity {
+    //
+    public String nom;
+    public String categorie;
+    public int cls;
+    //
+}
