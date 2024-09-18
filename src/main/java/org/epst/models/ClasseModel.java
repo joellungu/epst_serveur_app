@@ -9,6 +9,7 @@ public class ClasseModel extends PanacheEntity {
     //
     public String nom;
     public String categorie;
+    //public String typeFormation;
     public int cls;
     //
 }

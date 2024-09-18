@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 
 @Entity
 public class Cours extends PanacheEntity {
-
     public String cours;
     public String propriete;//Eleve ou les enseignants
     public String banche; // Pour la cas de Francais par ex on a Conjugaison, Grammaire etc

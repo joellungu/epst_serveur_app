@@ -30,11 +30,13 @@ public class CoursController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response all(@QueryParam("categorie") String categorie, @QueryParam("cls") int cls) {
+    public Response all(@QueryParam("categorie") String categorie, @QueryParam("cls") int cls,
+                        @QueryParam("typeFormation") String typeFormation) {
         //
         HashMap params = new HashMap();
         params.put("categorie", categorie);
         params.put("classe", cls);
+        params.put("propriete", typeFormation);
         //
         List<Cours> l = Cours.listAll();
         l.forEach((c)->{
@@ -42,7 +44,7 @@ public class CoursController {
             System.out.println("Cours: "+c.categorie);
         });
         //
-        List<Cours> coursList = Cours.find("categorie =: categorie and classe =: classe", params).list();
+        List<Cours> coursList = Cours.find("categorie =: categorie and classe =: classe and propriete =: propriete", params).list();
         //
         coursList.forEach(cours -> {
             cours.data = new byte[0];
@@ -98,7 +100,8 @@ public class CoursController {
             @QueryParam("banche") String banche,
             @QueryParam("type") String type,
             @QueryParam("notion") String notion,
-            @QueryParam("classe") int classe
+            @QueryParam("classe") int classe,
+            @QueryParam("propriete") String propriete
                                ) {
         //
         HashMap params = new HashMap();
@@ -108,6 +111,7 @@ public class CoursController {
         params.put("type", type);
         params.put("notion", notion);
         params.put("classe", classe);
+        params.put("propriete", propriete);
         //
         Cours cour = (Cours) Cours.find("cours =: cours and categorie =: categorie and banche =: banche and " +
                 "type =: type and notion =: notion and classe =: classe", params).firstResult();
