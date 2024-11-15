@@ -52,18 +52,20 @@ public class PaiementController {
         //
         System.out.println("la devise: $"+devise+"lE MONTANT: $"+montant);
         //String urlPost = "http://41.243.7.46:3006/flexpay/api/rest/v1/paymentService";
-        String urlPost = "http://backend.flexpay.cd/api/rest/v1/paymentService";
         //////////////////http://41.243.7.46:3006/api/rest/v1/paymentService
+
+        String urlPost = "https://backend.flexpay.cd/api/rest/v1/paymentService";
         String body = "{\n" +
-                "  \"merchant\":\"EPSTAPP\"," +
+                "  \"merchant\":\"Min_EDU-NC\"," +
                 "  \"type\":1," +
                 "  \"reference\": \""+reference+"\"," +
                 "  \"phone\": \""+telephone+"\"," +
-                "  \"amount\": \""+montant+"\"," +
+                "  \"amount\": \""+"1"+"\"," +
                 "  \"currency\":\""+dev+"\"," +
                 "  \"callbackUrl\":\"http://dgc-epst.uc.r.appspot.com\"" +
                 "}";
         /*
+        //montant
         String body = "{\n" +
                 "  \"merchant\":\"EPSTAPP\"," +
                 "  \"type\":1," +
@@ -77,7 +79,7 @@ public class PaiementController {
         var requete = HttpRequest.newBuilder()
                 .uri(URI.create(urlPost))
                 .header("Content-Type","application/json")
-                .header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzM3NTUyMDEwLCJzdWIiOiI4ZTE4NzJlODQwZTc5YjM5OWIxMDliMmYyNjk5YWY3YSJ9.co6sS0YEdCy3v3nja0NHvS5dYnMNmjZPJET_Ri7pB0E")
+                .header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzk0NzYxNDYzLCJzdWIiOiJlZGZiYTY0ZTYxNjM1NWMzYjdjZDJjYzZiZTA5NzMzYiJ9.1gps60CJKzY1CP8XgAEvx8ArRAfqD9v5a9PeJr4qA6c")
                 //.header("Authorization","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MkkydjNXQkhUUVdpTlg4ejhQVSIsInJvbGVzIjpbIk1FUkNIQU5UIl0sImlzcyI6Ii9sb2dpbiIsImV4cCI6MTczNTY4NjAwMH0.b3H5IvM1cNtQ5I3Xz3Rf3hBO_pbgFgQ5VpdKrFUI3g0")
                 //.header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzM3NTUyMDEwLCJzdWIiOiI4ZTE4NzJlODQwZTc5YjM5OWIxMDliMmYyNjk5YWY3YSJ9.co6sS0YEdCy3v3nja0NHvS5dYnMNmjZPJET_Ri7pB0E")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
@@ -101,7 +103,7 @@ public class PaiementController {
 
     public String checklancer(String orderNumer) {
 
-        String urlPost = "https://beta-backend.flexpay.cd/api/rest/v1/check/"+orderNumer;
+        String urlPost = "https://backend.flexpay.cd/api/rest/v1/check/orderNumer/"+orderNumer;
         //////////////////http://41.243.7.46:3006/api/rest/v1/paymentService
         /*
         // flexpay
@@ -118,7 +120,7 @@ public class PaiementController {
         var requete = HttpRequest.newBuilder()
                 .uri(URI.create(urlPost))
                 .header("Content-Type","application/json")
-                .header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzc3NTQzNDc3LCJzdWIiOiI1YzFhMWM5NjQwMGFkODBkMGVlMmU5OWY0NDlhYjYwZiJ9.fVwocevB2T-ag46QGxiCqEvBC3zyPCqpgL4vONIlj2w")
+                .header("Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzk0NzYxNDYzLCJzdWIiOiJlZGZiYTY0ZTYxNjM1NWMzYjdjZDJjYzZiZTA5NzMzYiJ9.1gps60CJKzY1CP8XgAEvx8ArRAfqD9v5a9PeJr4qA6c")
                 .GET()
                 //.POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
@@ -200,17 +202,17 @@ public class PaiementController {
     public Response lancerPaiment(Paiement paiement
                                   //HashMap paiement
     ) throws InterruptedException, JsonProcessingException, JsonProcessingException {
-        //
-
+        /*
         //System.out.println("Le montant: "+paiement.amount);
         //System.out.println("Le devise: "+paiement.callbackurl);
         //System.out.println("Le phone: "+paiement.phone);
         //System.out.println("Le montant: ");
+        */
         String reponse = "";
         Response repData = null;
         //paiement.persist();
         //AnnoyingBeep();
-        //
+
         String rep = lancer(
                 paiement.currency,
                 paiement.phone,
@@ -221,53 +223,61 @@ public class PaiementController {
         JsonNode jsonNode = obj.readTree(rep);
         for(int x = 4; x < 5; x++){
             //
-            //
-            //jsonNode
-            //rep['orderNumber']
-            JsonNode repCheck = obj.readTree(checklancer(jsonNode.get("orderNumber").asText()));
-            //repCheck["transaction"]['status']
-            if(repCheck.get("transaction").get("status").asText().equals("0") ||
-                    repCheck.get("transaction").get("status").asInt() == (0)){
-                reponse = "Paiement éffectué";
-                //commandeService.ticketList.forEach((t)-> t.persist());
-                paiement.persist();
-                repData = Response.status(200).entity(reponse).build();
+            try {
+                //
+                //jsonNode
+                //rep['orderNumber']
+                JsonNode repCheck = obj.readTree(checklancer(jsonNode.get("orderNumber").asText()));
+                //repCheck["transaction"]['status']
+                if (repCheck.get("transaction").get("status").asText().equals("0") ||
+                        repCheck.get("transaction").get("status").asInt() == (0)) {
+                    reponse = "Paiement éffectué";
+                    //commandeService.ticketList.forEach((t)-> t.persist());
+                    paiement.persist();
+                    repData = Response.status(200).entity(reponse).build();
 
+                    //break;
+                }
+
+                if (repCheck.get("transaction").get("status").asText().equals("1") ||
+                        repCheck.get("transaction").get("status").asInt() == (1)) {
+                    reponse = repCheck.get("message").asText();
+                    repData = Response.status(404).build();
+                    //break;
+                }
+
+                if (repCheck.get("transaction").get("status").asText().equals("3") ||
+                        repCheck.get("transaction").get("status").asInt() == (3)) {
+                    reponse = repCheck.get("message").asText();
+                    repData = Response.status(404).build();
+                    //break;
+                }
+
+                if (repCheck.get("transaction").get("status").asText().equals("4") ||
+                        repCheck.get("transaction").get("status").asInt() == (4)) {
+                    reponse = repCheck.get("message").asText();
+                    repData = Response.status(404).build();
+                    //break;
+                }
+
+                if (repCheck.get("transaction").get("status").asText().equals("5") ||
+                        repCheck.get("transaction").get("status").asInt() == (5)) {
+                    reponse = repCheck.get("message").asText();
+                    repData = Response.status(404).build();
+                    //break;
+                }
+
+                System.out.println("La vérification: " + repCheck.asText());
+
+                TimeUnit.SECONDS.sleep(30);
+            }catch (Exception ex){
+                System.out.println("Erreur du à "+ex.getMessage());
+                reponse = jsonNode.get("message").asText();
+                repData = Response.status(404).entity(reponse).build();
                 break;
             }
-
-            if(repCheck.get("transaction").get("status").asText().equals("1") ||
-                    repCheck.get("transaction").get("status").asInt() == (1)){
-                reponse = repCheck.get("message").asText();
-                repData = Response.status(404).build();
-                break;
-            }
-
-            if(repCheck.get("transaction").get("status").asText().equals("3") ||
-                    repCheck.get("transaction").get("status").asInt() == (3)){
-                reponse = repCheck.get("message").asText();
-                repData = Response.status(404).build();
-                break;
-            }
-
-            if(repCheck.get("transaction").get("status").asText().equals("4") ||
-                    repCheck.get("transaction").get("status").asInt() == (4)){
-                reponse = repCheck.get("message").asText();
-                repData = Response.status(404).build();
-                break;
-            }
-
-            if(repCheck.get("transaction").get("status").asText().equals("5") ||
-                    repCheck.get("transaction").get("status").asInt() == (5)){
-                reponse = repCheck.get("message").asText();
-                repData = Response.status(404).build();
-                break;
-            }
-
-            System.out.println("La vérification: "+repCheck.asText());
 
             TimeUnit.SECONDS.sleep(30);
-
         }
         return repData;
     }
