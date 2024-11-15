@@ -2,6 +2,7 @@ package org.epst.controlleurs;
 
 
 import org.epst.models.secretariat.Secretariat;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -16,8 +17,8 @@ public class SecretariatController {
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public Response getSecretariat(@PathParam("id") Long id) {
+    @Path("detail")
+    public Response getSecretariat(@QueryParam("id") Long id) {
         //
         Secretariat secretariat = Secretariat.findById(id);
         //
@@ -26,6 +27,7 @@ public class SecretariatController {
 
     @GET
     @Path("all")
+    @Transaction
     public Response allSecretariat() {
         //
         List<Secretariat> ss = Secretariat.listAll();
