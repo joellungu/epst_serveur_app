@@ -197,7 +197,7 @@ public class PaiementController {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response lancerPaiment(HashMap commandeService
+    public Response lancerPaiment(Paiement paiement
                                   //HashMap paiement
     ) throws InterruptedException, JsonProcessingException, JsonProcessingException {
         //
@@ -212,10 +212,10 @@ public class PaiementController {
         //AnnoyingBeep();
         //
         String rep = lancer(
-                (String) commandeService.get("currency"),
-                (String) commandeService.get("phone"),
-                (Double) commandeService.get("amount"),
-                (String) commandeService.get("reference")
+                paiement.currency,
+                paiement.phone,
+                paiement.amount,
+                paiement.reference
         );
         ObjectMapper obj = new ObjectMapper();
         JsonNode jsonNode = obj.readTree(rep);
@@ -230,7 +230,9 @@ public class PaiementController {
                     repCheck.get("transaction").get("status").asInt() == (0)){
                 reponse = "Paiement éffectué";
                 //commandeService.ticketList.forEach((t)-> t.persist());
+                paiement.persist();
                 repData = Response.status(200).entity(reponse).build();
+
                 break;
             }
 
