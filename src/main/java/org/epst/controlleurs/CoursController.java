@@ -111,7 +111,7 @@ public class CoursController {
         params.put("type", type);
         params.put("notion", notion);
         params.put("classe", classe);
-        params.put("propriete", propriete);
+        //params.put("propriete", propriete);
         //
         Cours cour = (Cours) Cours.find("cours =: cours and categorie =: categorie and banche =: banche and " +
                 "type =: type and notion =: notion and classe =: classe", params).firstResult();
