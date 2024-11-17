@@ -236,35 +236,35 @@ public class PaiementController {
                     paiement.persist();
                     repData = Response.status(200).entity(reponse).build();
 
-                    //break;
+                    break;
                 }
 
                 if (repCheck.get("transaction").get("status").asText().equals("1") ||
                         repCheck.get("transaction").get("status").asInt() == (1)) {
                     reponse = repCheck.get("message").asText();
                     repData = Response.status(404).build();
-                    //break;
+                    break;
                 }
 
                 if (repCheck.get("transaction").get("status").asText().equals("3") ||
                         repCheck.get("transaction").get("status").asInt() == (3)) {
                     reponse = repCheck.get("message").asText();
                     repData = Response.status(404).build();
-                    //break;
+                    break;
                 }
 
                 if (repCheck.get("transaction").get("status").asText().equals("4") ||
                         repCheck.get("transaction").get("status").asInt() == (4)) {
                     reponse = repCheck.get("message").asText();
                     repData = Response.status(404).build();
-                    //break;
+                    break;
                 }
 
                 if (repCheck.get("transaction").get("status").asText().equals("5") ||
                         repCheck.get("transaction").get("status").asInt() == (5)) {
                     reponse = repCheck.get("message").asText();
                     repData = Response.status(404).build();
-                    //break;
+                    break;
                 }
 
                 System.out.println("La vérification: " + repCheck.asText());
