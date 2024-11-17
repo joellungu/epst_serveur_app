@@ -35,6 +35,17 @@ public class AnnonceController {
         //
         annonce.persist();
         //
+        return Response.ok(annonce.id).build();
+    }
+
+    @PUT
+    @Transactional
+    public Response updateAnnonce(@QueryParam("id") Long id, byte[] image) {
+        //
+        Annonce annonce = Annonce.findById(id);
+        annonce.image = image;
+        annonce.persist();
+        //
         return Response.ok().build();
     }
     //
