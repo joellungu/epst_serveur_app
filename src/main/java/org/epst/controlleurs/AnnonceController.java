@@ -5,6 +5,7 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,16 @@ public class AnnonceController {
         return Response.ok().entity(annonceIds).build();
     }
 
+    @Path("image")
+    @GET
+    @Transactional
+    public Response getImage(@QueryParam("id") Long id) {
+        //
+        Annonce annonce = Annonce.findById(id);
+        //
+        return Response.ok().entity(annonce.image).build();
+    }
+
     //
     @POST
     @Transactional
@@ -39,6 +50,7 @@ public class AnnonceController {
     }
 
     @PUT
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @Transactional
     public Response updateAnnonce(@QueryParam("id") Long id, byte[] image) {
         //
