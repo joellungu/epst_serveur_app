@@ -128,11 +128,38 @@ public class DemandeIdentificationController {
     //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public DemandeIdentification getDemandeId(@PathParam("id") Long id){
+    public HashMap getDemandeId(@PathParam("id") Long id){
         //
         System.out.println("Le id vaut: "+id);
         //
-        return DemandeIdentification.findById(id);
+        DemandeIdentification d = DemandeIdentification.findById(id);
+        //
+        HashMap demande = new HashMap();
+        demande.put("id", d.id);
+        demande.put("nom", d.nom);
+        demande.put("postnom", d.postnom);
+        demande.put("prenom", d.prenom);
+        demande.put("sexe", d.sexe);
+        demande.put("telephone", d.telephone);
+        demande.put("adresse", d.adresse);
+        demande.put("annee", d.annee);
+        demande.put("datedemande", d.datedemande);
+        demande.put("dateNaissance", d.dateNaissance);
+        demande.put("ecole", d.ecole);
+        demande.put("ext1", d.ext1);
+        demande.put("lieuNaissance", d.lieuNaissance);
+        demande.put("nommere", d.nommere);
+        demande.put("nompere", d.nompere);
+        demande.put("option", d.option);
+        demande.put("provinceEcole", d.provinceEcole);
+        demande.put("provinceEducationnel", d.provinceEducationnel);
+        demande.put("provinceOrigine", d.provinceOrigine);
+        demande.put("typeIdentification", d.typeIdentification);
+        demande.put("typeIdentificationcode", d.typeIdentificationcode);
+        demande.put("valider", d.valider);
+        demande.put("reference", d.reference);
+        //
+        return demande;
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
