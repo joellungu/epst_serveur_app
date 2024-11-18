@@ -103,9 +103,9 @@ public class PaiementController {
 
     public String checklancer(String orderNumer) {
 
-        String urlPost = "https://backend.flexpay.cd/api/rest/v1/check/orderNumer/"+orderNumer;
+        String urlPost = "https://backend.flexpay.cd/api/rest/v1/check/"+orderNumer;
         //////////////////http://41.243.7.46:3006/api/rest/v1/paymentService
-        /*
+        /* orderNumer
         // flexpay
         String body = "{\n" +
                 "  \"merchant\":\"KACHIDI_BINARY\"," +
@@ -208,8 +208,8 @@ public class PaiementController {
         //System.out.println("Le phone: "+paiement.phone);
         //System.out.println("Le montant: ");
         */
-        String reponse = "";
-        Response repData = null;
+        String reponse = "Paiement non éffectué";
+        Response repData = Response.status(404).entity(reponse).build();
         //paiement.persist();
         //AnnoyingBeep();
 
@@ -223,15 +223,17 @@ public class PaiementController {
         JsonNode jsonNode = obj.readTree(rep);
         for(int x = 4; x < 5; x++){
             //
-            try {
+            //try {
                 //
                 //jsonNode
                 //rep['orderNumber']
                 JsonNode repCheck = obj.readTree(checklancer(jsonNode.get("orderNumber").asText()));
                 //repCheck["transaction"]['status']
+                System.out.println("Le status: "+repCheck.get("transaction").get("status").asText());
                 if (repCheck.get("transaction").get("status").asText().equals("0") ||
                         repCheck.get("transaction").get("status").asInt() == (0)) {
                     reponse = "Paiement éffectué";
+                    System.out.println("Status: "+reponse);
                     //commandeService.ticketList.forEach((t)-> t.persist());
                     paiement.persist();
                     repData = Response.status(200).entity(reponse).build();
@@ -242,43 +244,53 @@ public class PaiementController {
                 if (repCheck.get("transaction").get("status").asText().equals("1") ||
                         repCheck.get("transaction").get("status").asInt() == (1)) {
                     reponse = repCheck.get("message").asText();
-                    repData = Response.status(404).build();
+                    System.out.println("Status: "+reponse);
+                    repData = Response.status(404).entity(reponse).build();
                     break;
                 }
 
                 if (repCheck.get("transaction").get("status").asText().equals("3") ||
                         repCheck.get("transaction").get("status").asInt() == (3)) {
                     reponse = repCheck.get("message").asText();
-                    repData = Response.status(404).build();
+                    System.out.println("Status: "+reponse);
+                    repData = Response.status(404).entity(reponse).build();
                     break;
                 }
 
                 if (repCheck.get("transaction").get("status").asText().equals("4") ||
                         repCheck.get("transaction").get("status").asInt() == (4)) {
                     reponse = repCheck.get("message").asText();
-                    repData = Response.status(404).build();
+                    System.out.println("Status: "+reponse);
+                    repData = Response.status(404).entity(reponse).build();
                     break;
                 }
 
                 if (repCheck.get("transaction").get("status").asText().equals("5") ||
                         repCheck.get("transaction").get("status").asInt() == (5)) {
                     reponse = repCheck.get("message").asText();
-                    repData = Response.status(404).build();
-                    break;
+                    System.out.println("Status: "+reponse);
+                    repData = Response.status(404).entity(reponse).build();
+                    //break;
                 }
 
                 System.out.println("La vérification: " + repCheck.asText());
 
-                TimeUnit.SECONDS.sleep(30);
+                //TimeUnit.SECONDS.sleep(10);
+
+            /*
             }catch (Exception ex){
                 System.out.println("Erreur du à "+ex.getMessage());
                 reponse = jsonNode.get("message").asText();
                 repData = Response.status(404).entity(reponse).build();
                 break;
             }
+            */
 
-            TimeUnit.SECONDS.sleep(30);
+            System.out.println("En attente kk");
+
+            TimeUnit.SECONDS.sleep(10);
         }
+        System.out.println("On attends plus");
         return repData;
     }
 
@@ -352,5 +364,15 @@ public class PaiementController {
         }catch (Exception ex){
             return 0;
         }
+    }
+
+    @Path("/test")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public double getTest() throws InterruptedException {
+        //
+        TimeUnit.SECONDS.sleep(10);
+        return 0.0;
     }
 }
