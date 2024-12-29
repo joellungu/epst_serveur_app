@@ -32,6 +32,8 @@ public class Document extends PanacheEntity {
     public String datedemande;
     public int documenrDemandecode;
     public String documenrDemande;
+    public String matricule;
+    public String type;
 
     @Lob
     public String raison;
