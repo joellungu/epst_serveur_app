@@ -83,6 +83,20 @@ public class DocumentScolaireController {
         return Response.status(Response.Status.CREATED).entity(d).build();
     }
 
+    @Path("all/demandeencour")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public List<Document> getAllDemandeEnCour(@QueryParam("province") String province){
+        //
+        HashMap params = new HashMap();
+        params.put("provinceEcole",province);//Transfere
+        params.put("valider", 0);//Transfere
+        //
+        return Document.list("provinceEcole =:provinceEcole and valider =:valider",params);
+        //return documentMetier.getAll(province, district, valider);
+        //return Response.status(Response.Status.CREATED).entity().build();
+    }
     @Path("all/demande")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -100,6 +114,7 @@ public class DocumentScolaireController {
         //return documentMetier.getAll(province, district, valider);
         //return Response.status(Response.Status.CREATED).entity().build();
     }
+
 
     @Path("all/demandebymatricule")
     @GET
