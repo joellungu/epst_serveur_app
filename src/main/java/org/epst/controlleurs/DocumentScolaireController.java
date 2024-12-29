@@ -7,6 +7,7 @@ import org.epst.models.document_scolaire.identification.DemandeIdentificationMet
 import org.epst.models.mutuelle.Demande;
 
 import javax.inject.Inject;
+import javax.print.Doc;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("documentscolaire")
@@ -87,15 +89,50 @@ public class DocumentScolaireController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public List<Document> getAllDemandeEnCour(@QueryParam("province") String province){
+    @Transactional
+    public Response getAllDemandeEnCour(@QueryParam("province") String province){
         //
         HashMap params = new HashMap();
         params.put("provinceEcole",province);//Transfere
         params.put("valider", 0);//Transfere
         //
-        return Document.list("provinceEcole =:provinceEcole and valider =:valider",params);
+        List<Document> documents = Document.list("provinceEcole =:provinceEcole and valider =:valider",params);
+        //
+        List<HashMap> docs = new LinkedList<>();
+        //
+        for(Document document : documents) {
+            //
+            HashMap doc = new HashMap();
+            //
+            doc.put("id",document.id);
+            doc.put("nom",document.nom);
+            doc.put("postnom",document.postnom);
+            doc.put("prenom",document.prenom);
+            doc.put("sexe",document.sexe);
+            doc.put("nompere",document.nompere);
+            doc.put("nommere",document.nommere);
+            doc.put("adresse",document.adresse);
+            doc.put("telephone",document.telephone);
+            doc.put("dateNaissance",document.dateNaissance);
+            doc.put("datedemande",document.datedemande);
+            doc.put("documenrDemande",document.documenrDemande);
+            doc.put("documenrDemandecode",document.documenrDemandecode);
+            doc.put("ecole",document.ecole);
+            doc.put("lieuNaissance",document.lieuNaissance);
+            doc.put("matricule",document.matricule);
+            doc.put("option",document.option);
+            doc.put("provinceEcole",document.provinceEcole);
+            doc.put("provinceEducationnel",document.provinceEducationnel);
+            doc.put("raison",document.raison);
+            doc.put("type",document.type);
+            doc.put("valider",document.valider);
+            doc.put("annee",document.annee);
+            doc.put("ecole",document.ecole);
+            //
+            docs.add(doc);
+        }
         //return documentMetier.getAll(province, district, valider);
-        //return Response.status(Response.Status.CREATED).entity().build();
+        return Response.ok().entity(docs).build();
     }
     @Path("all/demande")
     @GET
