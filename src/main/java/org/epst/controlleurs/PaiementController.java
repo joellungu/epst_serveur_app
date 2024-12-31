@@ -327,7 +327,7 @@ public class PaiementController {
             return (montant + prct) ;// devise.taux;
         } else {
             System.out.println("En franc: " + de);
-            return (montant + prct) * devise.taux;
+            return (montant + prct);// * devise.taux;
         }
     }
 
