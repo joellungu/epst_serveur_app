@@ -60,7 +60,7 @@ public class PaiementController {
                 "  \"type\":1," +
                 "  \"reference\": \""+reference+"\"," +
                 "  \"phone\": \""+telephone+"\"," +
-                "  \"amount\": \""+"1"+"\"," +
+                "  \"amount\": \""+montant+"\"," +
                 "  \"currency\":\""+dev+"\"," +
                 "  \"callbackUrl\":\"http://dgc-epst.uc.r.appspot.com\"" +
                 "}";
