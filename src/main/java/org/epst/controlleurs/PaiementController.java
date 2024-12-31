@@ -306,6 +306,7 @@ public class PaiementController {
         return "";
     }
 
+    /*
     @Path("/devise")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -316,6 +317,7 @@ public class PaiementController {
         return deviseMetier.saveAgent(devise);
         //
     }
+    */
 
     private double conversion(Double montant, Long id, Boolean de) {
         Devise devise = Devise.findAll().firstResult();
