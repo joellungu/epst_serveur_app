@@ -221,7 +221,7 @@ public class PaiementController {
         );
         ObjectMapper obj = new ObjectMapper();
         JsonNode jsonNode = obj.readTree(rep);
-        for(int x = 4; x < 5; x++){
+        for(int x = 4; x < 8; x++){
             //
             //try {
                 //
