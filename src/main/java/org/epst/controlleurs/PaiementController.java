@@ -288,7 +288,7 @@ public class PaiementController {
 
             System.out.println("En attente kk");
 
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(20);
         }
         System.out.println("On attends plus");
         return repData;
