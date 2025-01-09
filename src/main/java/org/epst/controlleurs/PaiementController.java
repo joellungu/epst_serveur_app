@@ -209,7 +209,7 @@ public class PaiementController {
         //System.out.println("Le montant: ");
         */
         String reponse = "Paiement non éffectué";
-        Response repData = Response.status(404).entity(reponse).build();
+        Response repData = Response.status(405).entity(reponse).build();
         //paiement.persist();
         //AnnoyingBeep();
 
