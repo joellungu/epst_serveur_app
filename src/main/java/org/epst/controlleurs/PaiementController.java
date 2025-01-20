@@ -244,7 +244,7 @@ public class PaiementController {
                 if (repCheck.get("transaction").get("status").asText().equals("1") ||
                         repCheck.get("transaction").get("status").asInt() == (1)) {
                     reponse = repCheck.get("message").asText();
-                    System.out.println("Status: "+reponse);
+                    System.out.println("Status: 1 "+reponse);
                     repData = Response.status(404).entity(reponse).build();
                     break;
                 }
@@ -252,7 +252,7 @@ public class PaiementController {
                 if (repCheck.get("transaction").get("status").asText().equals("3") ||
                         repCheck.get("transaction").get("status").asInt() == (3)) {
                     reponse = repCheck.get("message").asText();
-                    System.out.println("Status: "+reponse);
+                    System.out.println("Status: 3 "+reponse);
                     repData = Response.status(404).entity(reponse).build();
                     break;
                 }
@@ -260,7 +260,7 @@ public class PaiementController {
                 if (repCheck.get("transaction").get("status").asText().equals("4") ||
                         repCheck.get("transaction").get("status").asInt() == (4)) {
                     reponse = repCheck.get("message").asText();
-                    System.out.println("Status: "+reponse);
+                    System.out.println("Status: 4 "+reponse);
                     repData = Response.status(404).entity(reponse).build();
                     break;
                 }
@@ -268,7 +268,7 @@ public class PaiementController {
                 if (repCheck.get("transaction").get("status").asText().equals("5") ||
                         repCheck.get("transaction").get("status").asInt() == (5)) {
                     reponse = repCheck.get("message").asText();
-                    System.out.println("Status: "+reponse);
+                    System.out.println("Status: 5 "+reponse);
                     repData = Response.status(404).entity(reponse).build();
                     //break;
                 }
