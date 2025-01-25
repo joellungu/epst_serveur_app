@@ -41,12 +41,20 @@ public class TransfereController {
                                  @QueryParam("valider") int valider){
         //
         HashMap params = new HashMap();
-        params.put("ecoleDestinationProv",province);//Transfere
-        params.put("ecoleDestinationDistric",district);//Transfere
+        //params.put("ecoleDestinationProv",province);//Transfere
+        //params.put("ecoleDestinationDistric",district);//Transfere
         params.put("valider",valider);//Transfere
         System.out.println("ecoleDestinationProv: "+province+" // ecoleDestinationDistric: "+district+" // valider: "+valider+" //");
         //
-        return Transfere.list("valider =:valider and ecoleDestinationDistric =:ecoleDestinationDistric and ecoleDestinationProv =:ecoleDestinationProv",params);
+        //and ecoleDestinationDistric =:ecoleDestinationDistric and ecoleDestinationProv =:ecoleDestinationProv
+        //
+        List<Transfere> list =  Transfere.list("valider =:valider ",params);
+        //
+        list.stream().filter((p) -> {
+            return p.ecoleDestinationProv.contains(province) && p.ecoleDestinationDistric.equals(district);
+        });
+        //
+        return list;
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
