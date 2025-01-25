@@ -182,7 +182,7 @@ public class ChatEndpoint {
                     System.out.println(ex);
                 }
             });
-          sessions.forEach((s)->{
+            sessions.forEach((s)->{
               //J'enregistre la conversation...
               //
               System.out.println("Id1: "+s.getId()+" == "+message.getClientId_()+" == "+s.getId().equals(message.getClientId_()));
@@ -196,8 +196,16 @@ public class ChatEndpoint {
               try {
                 //
                 listeConvAss.add(message.getHostId_()+":"+message.getClientId_());
-                //__________________________
-                s.getAsyncRemote().sendText(obj.writeValueAsString(message));
+                //Vérification si la conversation est finit
+                  if(message.content_.equals("Fin de la conversation") || message.getClose_()){
+                      closeConv(message.clientId_);
+                      closeConv(message.hostId_);
+                  } else {
+                      //__________________________
+                      s.getAsyncRemote().sendText(obj.writeValueAsString(message));
+                      System.out.println("Cool c'est bon!");
+                      //
+                  }
                 //
                 System.out.println("Cool c'est bon! 1");
                 //
@@ -230,24 +238,28 @@ public class ChatEndpoint {
                 }
               });
               try {
-
                   //
                   listeConvAss.add(message.getHostId_()+":"+message.getClientId_());
                   //messageBeanRepository.saveData(message);
-                    s.getAsyncRemote().sendText(obj.writeValueAsString(message));
-                    System.out.println("Cool c'est bon!");
-                    //
+                  //Vérification si la conversation est finit
+                  if(message.content_.equals("Fin de la conversation") || message.getClose_()){
+                      closeConv(message.clientId_);
+                      closeConv(message.hostId_);
+                  } else {
+                      s.getAsyncRemote().sendText(obj.writeValueAsString(message));
+                      System.out.println("Cool c'est bon!");
+                      //
+                  }
                   message.persist();
                     //messageBeanRepository.saveData(message);
               } catch (JsonProcessingException e) {
-                // 
+                //
                 e.printStackTrace();
                 //
               }
             }
           });
         }
-
          
 /*
           try {
@@ -262,6 +274,7 @@ public class ChatEndpoint {
           }
 
  */
+
     }
 
     @OnClose
@@ -298,6 +311,31 @@ public class ChatEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) {
         // Do error handling here
+        chatEndpoints.remove(this);
+        Message message = new Message();
+        message.setFrom_(users.get(session.getId()));
+        message.setContent_("Disconnected!");
+        message.persist();
+        //broadcast(message);
+        String[] l_conv = new String[2];
+        listeConvAss.forEach((e)->{
+            if(e.contains(session.getId())){
+                var t = new AtomicReferenceArray<>(e.split(":"));
+                l_conv[0] = t.get(0);
+                l_conv[1] = t.get(1);
+                System.out.println(l_conv[0]);
+                System.out.println(l_conv[1]);
+            }
+        });
+        closeConv(l_conv[0]);//
+        //
+        closeConv(l_conv[1]);//
+        //
+        users.remove(users.get(session.getId()));
+        //
+        listeUsers.forEach((r)->{if(r.get("clientId_") == session.getId()){listeUsers.remove(r);}});
+        //
+        sessions.remove(session);
     }
 
     private static void broadcast(Message message) 
