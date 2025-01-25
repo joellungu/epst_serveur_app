@@ -51,7 +51,8 @@ public class TransfereController {
         List<Transfere> list =  Transfere.list("valider =:valider ",params);
         //
         list.stream().filter((p) -> {
-            return p.ecoleDestinationProv.contains(province) && p.ecoleDestinationDistric.equals(district);
+            return p.ecoleDestinationProv.toLowerCase().contains(province.toLowerCase())
+                    && p.ecoleDestinationDistric.equalsIgnoreCase(district);
         });
         //
         return list;
