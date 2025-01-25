@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("transfere")
@@ -48,14 +49,53 @@ public class TransfereController {
         //
         //and ecoleDestinationDistric =:ecoleDestinationDistric and ecoleDestinationProv =:ecoleDestinationProv
         //
-        List<Transfere> list =  Transfere.list("valider =:valider ",params);
+        List<Transfere> list = Transfere.list("valider =:valider ",params);
+        //
+        List<Transfere> list2 = new LinkedList<>();
         //
         list.stream().filter((p) -> {
+            if(p.ecoleDestinationProv.toLowerCase().contains(province.toLowerCase())
+                    && p.ecoleDestinationDistric.equalsIgnoreCase(district)){
+                Transfere transfere = new Transfere();
+                /**
+                 *     public String ext1;
+                 *     public String datedemande;
+                 *     public String raison;
+                 *     public int valider;
+                 *     public String reference
+                 */
+                //
+                transfere.nom = p.nom;
+                transfere.postnom = p.postnom;
+                transfere.prenom = p.prenom;
+                transfere.sexe = p.sexe;
+                transfere.lieuNaissance = p.lieuNaissance;
+                transfere.dateNaissance = p.dateNaissance;
+                transfere.telephone = p.telephone;
+                transfere.nompere = p.nompere;
+                transfere.nommere = p.nommere;
+                transfere.adresse = p.adresse;
+                transfere.option_avant = p.option_avant;
+                transfere.option_apres = p.option_apres;
+                transfere.provinceOrigine = p.provinceOrigine;
+                transfere.ecoleProvenance = p.ecoleProvenance;
+                transfere.ecoleProvenanceProv = p.ecoleProvenanceProv;
+                transfere.ecoleProvenanceDistric = p.ecoleProvenanceDistric;
+                transfere.ecoleDestination = p.ecoleDestination;
+                transfere.ecoleDestinationProv = p.ecoleDestinationProv;
+                transfere.ecoleDestinationDistric = p.ecoleDestinationDistric;
+                transfere.datedemande = p.datedemande;
+                transfere.raison = p.raison;
+                transfere.valider = p.valider;
+                transfere.reference = p.reference;
+                //
+                list2.add(transfere);
+            }
             return p.ecoleDestinationProv.toLowerCase().contains(province.toLowerCase())
                     && p.ecoleDestinationDistric.equalsIgnoreCase(district);
         });
         //
-        return list;
+        return list2;
         //return Response.status(Response.Status.CREATED).entity().build();
     }
 
