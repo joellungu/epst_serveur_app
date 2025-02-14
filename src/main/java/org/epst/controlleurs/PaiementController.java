@@ -399,12 +399,14 @@ public class PaiementController {
         try {
             // Attendre que la future soit complétée par une autre requête
             String result = future.get(); // Bloque jusqu'à ce que la future soit complétée
-            return Response.ok("First request completed after: " + result).build();
+            return Response.ok(result).build();
         } catch (ExecutionException e) {
-            return Response.serverError().entity("Error: " + e.getMessage()).build();
+            //return Response.serverError().entity("Error: " + e.getMessage()).build();
+            return Response.status(404).entity(e.getMessage()).build();
         } finally {
             // Nettoyer la future après utilisation
             waitingRequests.remove(requestId);
+            //return Response.serverError().entity("Error: " + e.getMessage()).build();
         }
     }
 
