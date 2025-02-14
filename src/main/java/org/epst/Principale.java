@@ -17,9 +17,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 @Path("/educ-app")
 public class Principale {
+
+    // Stocker les CompletableFuture par un identifiant (par exemple, un ID de session ou de requête)
+    private final Map<String, CompletableFuture<String>> waitingRequests = new ConcurrentHashMap<>();
 
     Jdbi jdbi = SeConnecter.jdbi;
 
@@ -53,7 +61,7 @@ public class Principale {
                 "</head>\n" +
                 "<body>\n" +
                 "  <h1>Politique de Confidentialité pour EPST-APP / Educ-APP</h1>\n" +
-                "  <p><strong>Date d’entrée en vigueur :</strong> [Insérer la date]</p>\n" +
+                "  <p><strong>Date d’entrée en vigueur :</strong> 10-02-2025</p>\n" +
                 "  <p>Bienvenue sur <strong>EPST-APP / Educ-APP</strong>, une application développée pour offrir des services éducatifs et administratifs en République Démocratique du Congo (RDC). Cette politique de confidentialité a pour objectif de vous informer de manière claire et transparente sur la manière dont nous collectons, utilisons, protégeons et partageons vos données personnelles lors de votre utilisation de l’application.</p>\n" +
                 "\n" +
                 "  <h2>1. Introduction</h2>\n" +
@@ -247,6 +255,46 @@ public class Principale {
         }catch (Exception ex){
             System.out.println("Erreur du: "+ex);
         }
+    }
+
+    ////////////////////////////////////////////////////////////////
+    @GET
+    @Path("/start")
+    public Response startRequest() throws InterruptedException {
+        String requestId = "req-" + System.currentTimeMillis(); // Générer un ID unique pour la requête
+
+        // Créer un CompletableFuture pour cette requête
+        CompletableFuture<String> future = new CompletableFuture<>();
+        waitingRequests.put(requestId, future);
+
+        try {
+            // Attendre que la future soit complétée par une autre requête
+            String result = future.get(); // Bloque jusqu'à ce que la future soit complétée
+            return Response.ok("First request completed after: " + result).build();
+        } catch (ExecutionException e) {
+            return Response.serverError().entity("Error: " + e.getMessage()).build();
+        } finally {
+            // Nettoyer la future après utilisation
+            waitingRequests.remove(requestId);
+        }
+    }
+
+    @GET
+    @Path("/trigger")
+    public Response triggerRequest() {
+        if (waitingRequests.isEmpty()) {
+            return Response.ok("No requests are waiting.").build();
+        }
+
+        // Compléter la première future en attente (ou une spécifique selon votre logique)
+        Map.Entry<String, CompletableFuture<String>> entry = waitingRequests.entrySet().iterator().next();
+        String requestId = entry.getKey();
+        CompletableFuture<String> future = entry.getValue();
+
+        // Compléter la future pour débloquer la requête en attente
+        future.complete("Triggered by another request! " + requestId);
+
+        return Response.ok("Triggered request with ID: " + requestId).build();
     }
 
 }

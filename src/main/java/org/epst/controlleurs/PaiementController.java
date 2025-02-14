@@ -24,8 +24,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Path("/paiement")
@@ -38,6 +42,9 @@ public class PaiementController {
 
     @Inject
     DeviseMetier deviseMetier;
+
+    private final Map<String, CompletableFuture<String>> waitingRequests = new ConcurrentHashMap<>();
+
 
     public PaiementController(){}
 
@@ -62,7 +69,7 @@ public class PaiementController {
                 "  \"phone\": \""+telephone+"\"," +
                 "  \"amount\": \""+montant+"\"," +
                 "  \"currency\":\""+dev+"\"," +
-                "  \"callbackUrl\":\"http://dgc-epst.uc.r.appspot.com\"" +
+                "  \"callbackUrl\":\"https://epst-serveur-a595d15d6608.herokuapp.com/paiement/trigger\"" +
                 "}";
         /*
         //montant
@@ -376,5 +383,53 @@ public class PaiementController {
         //
         TimeUnit.SECONDS.sleep(10);
         return 0.0;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+    @GET
+    @Path("/start")
+    public Response startRequest() throws InterruptedException {
+        String requestId = lancer("CDF","243815381693",500.0,"joellungu123");
+        //"req-" + System.currentTimeMillis(); // Générer un ID unique pour la requête
+
+        // Créer un CompletableFuture pour cette requête
+        CompletableFuture<String> future = new CompletableFuture<>();
+        waitingRequests.put(requestId, future);
+
+        try {
+            // Attendre que la future soit complétée par une autre requête
+            String result = future.get(); // Bloque jusqu'à ce que la future soit complétée
+            return Response.ok("First request completed after: " + result).build();
+        } catch (ExecutionException e) {
+            return Response.serverError().entity("Error: " + e.getMessage()).build();
+        } finally {
+            // Nettoyer la future après utilisation
+            waitingRequests.remove(requestId);
+        }
+    }
+
+    @POST
+    @Path("/trigger")
+    public Response triggerRequest(String reponse) {
+        /*
+            if (waitingRequests.isEmpty()) {
+                return Response.ok("No requests are waiting.").build();
+            }
+        */
+        //
+        System.out.println("Reponse: "+reponse);
+        //
+        // Compléter la première future en attente (ou une spécifique selon votre logique)
+        Map.Entry<String, CompletableFuture<String>> entry = waitingRequests.entrySet().iterator().next();
+        //
+        String requestId = entry.getKey();
+        //
+        CompletableFuture<String> future = entry.getValue();
+        //
+        // Compléter la future pour débloquer la requête en attente
+        //
+        future.complete(reponse);
+
+        return Response.ok("Ok").build();
     }
 }
