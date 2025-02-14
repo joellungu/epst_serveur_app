@@ -1,6 +1,7 @@
 package org.epst.controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.epst.models.devise.Devise;
@@ -23,10 +24,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -394,7 +392,7 @@ public class PaiementController {
 
         // Créer un CompletableFuture pour cette requête
         CompletableFuture<String> future = new CompletableFuture<>();
-        waitingRequests.put(requestId, future);
+        waitingRequests.put("joellungu123", future);
 
         try {
             // Attendre que la future soit complétée par une autre requête
@@ -405,14 +403,14 @@ public class PaiementController {
             return Response.status(404).entity(e.getMessage()).build();
         } finally {
             // Nettoyer la future après utilisation
-            waitingRequests.remove(requestId);
+            waitingRequests.remove("joellungu123");
             //return Response.serverError().entity("Error: " + e.getMessage()).build();
         }
     }
 
     @POST
     @Path("/trigger")
-    public Response triggerRequest(String reponse) {
+    public Response triggerRequest(String reponse) throws JsonProcessingException {
         /*
             if (waitingRequests.isEmpty()) {
                 return Response.ok("No requests are waiting.").build();
@@ -421,16 +419,33 @@ public class PaiementController {
         //
         System.out.println("Reponse: "+reponse);
         //
+        HashMap hashRep = new HashMap<>();
+        //
+        ObjectMapper mapper = new ObjectMapper();
+        //
+        Map<String, Object> result = mapper.convertValue(reponse, new TypeReference<Map<String, Object>>(){});
+        //
         // Compléter la première future en attente (ou une spécifique selon votre logique)
-        Map.Entry<String, CompletableFuture<String>> entry = waitingRequests.entrySet().iterator().next();
+        Iterator iterator = waitingRequests.entrySet().iterator();
         //
-        String requestId = entry.getKey();
+        while (iterator.hasNext()){
+            //
+            Map.Entry<String, CompletableFuture<String>> entry = (Map.Entry<String, CompletableFuture<String>>) iterator.next();
+            //
+            String requestId = entry.getKey();
+            if(result.get("reference").equals(requestId)){
+                //
+                CompletableFuture<String> future = entry.getValue();
+                //
+                // Compléter la future pour débloquer la requête en attente
+                //
+                future.complete(reponse);
+            }
+            //
+        }
         //
-        CompletableFuture<String> future = entry.getValue();
-        //
-        // Compléter la future pour débloquer la requête en attente
-        //
-        future.complete(reponse);
+
+
 
         return Response.ok("Ok").build();
     }
