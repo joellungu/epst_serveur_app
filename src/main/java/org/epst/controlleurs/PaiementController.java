@@ -424,8 +424,7 @@ public class PaiementController {
         ObjectMapper mapper = new ObjectMapper();
         //
         try {
-            Map<String, String> result = mapper.convertValue(reponse, new TypeReference<Map<String, String>>() {
-            });
+            JsonNode result = mapper.readTree(reponse);
             //
             // Compléter la première future en attente (ou une spécifique selon votre logique)
             Iterator iterator = waitingRequests.entrySet().iterator();
@@ -435,7 +434,7 @@ public class PaiementController {
                 Map.Entry<String, CompletableFuture<String>> entry = (Map.Entry<String, CompletableFuture<String>>) iterator.next();
                 //
                 String requestId = entry.getKey();
-                if (result.get("reference").equals(requestId)) {
+                if (result.get("reference").toString().equals(requestId)) {
                     //
                     CompletableFuture<String> future = entry.getValue();
                     //
