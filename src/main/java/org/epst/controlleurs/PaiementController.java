@@ -207,16 +207,8 @@ public class PaiementController {
     public Response lancerPaiment(Paiement paiement
                                   //HashMap paiement
     ) throws InterruptedException, JsonProcessingException, JsonProcessingException {
-        /*
-        //System.out.println("Le montant: "+paiement.amount);
-        //System.out.println("Le devise: "+paiement.callbackurl);
-        //System.out.println("Le phone: "+paiement.phone);
-        //System.out.println("Le montant: ");
-        */
-        String reponse = "Paiement non éffectué";
-        Response repData = Response.status(405).entity(reponse).build();
-        //paiement.persist();
-        //AnnoyingBeep();
+
+        //
 
         String rep = lancer(
                 paiement.currency,
@@ -224,105 +216,26 @@ public class PaiementController {
                 paiement.amount,
                 paiement.reference
         );
-        ObjectMapper obj = new ObjectMapper();
-        JsonNode jsonNode = obj.readTree(rep);
-        for(int x = 4; x < 8; x++){
-            //
-            //try {
-                //
-                //jsonNode
-                //rep['orderNumber']
-                JsonNode repCheck = obj.readTree(checklancer(jsonNode.get("orderNumber").asText()));
-                //repCheck["transaction"]['status']
-                System.out.println("Le status: "+repCheck.get("transaction").get("status").asText());
-                if (repCheck.get("transaction").get("status").asText().equals("0") ||
-                        repCheck.get("transaction").get("status").asInt() == (0)) {
-                    reponse = "Paiement éffectué";
-                    System.out.println("Status: "+reponse);
-                    //commandeService.ticketList.forEach((t)-> t.persist());
-                    paiement.persist();
-                    repData = Response.status(200).entity(reponse).build();
+        //"req-" + System.currentTimeMillis(); // Générer un ID unique pour la requête
 
-                    break;
-                }
+        // Créer un CompletableFuture pour cette requête
+        CompletableFuture<String> future = new CompletableFuture<>();
+        waitingRequests.put(paiement.reference, future);
 
-                if (repCheck.get("transaction").get("status").asText().equals("1") ||
-                        repCheck.get("transaction").get("status").asInt() == (1)) {
-                    reponse = repCheck.get("message").asText();
-                    System.out.println("Status: 1 "+reponse);
-                    repData = Response.status(404).entity(reponse).build();
-                    break;
-                }
-
-                if (repCheck.get("transaction").get("status").asText().equals("3") ||
-                        repCheck.get("transaction").get("status").asInt() == (3)) {
-                    reponse = repCheck.get("message").asText();
-                    System.out.println("Status: 3 "+reponse);
-                    repData = Response.status(404).entity(reponse).build();
-                    break;
-                }
-
-                if (repCheck.get("transaction").get("status").asText().equals("4") ||
-                        repCheck.get("transaction").get("status").asInt() == (4)) {
-                    reponse = repCheck.get("message").asText();
-                    System.out.println("Status: 4 "+reponse);
-                    repData = Response.status(404).entity(reponse).build();
-                    break;
-                }
-
-                if (repCheck.get("transaction").get("status").asText().equals("5") ||
-                        repCheck.get("transaction").get("status").asInt() == (5)) {
-                    reponse = repCheck.get("message").asText();
-                    System.out.println("Status: 5 "+reponse);
-                    repData = Response.status(404).entity(reponse).build();
-                    //break;
-                }
-
-                System.out.println("La vérification: " + repCheck.asText());
-
-                //TimeUnit.SECONDS.sleep(10);
-
-            /*
-            }catch (Exception ex){
-                System.out.println("Erreur du à "+ex.getMessage());
-                reponse = jsonNode.get("message").asText();
-                repData = Response.status(404).entity(reponse).build();
-                break;
-            }
-            */
-
-            System.out.println("En attente kk");
-
-            TimeUnit.SECONDS.sleep(20);
+        try {
+            // Attendre que la future soit complétée par une autre requête
+            String result = future.get(); // Bloque jusqu'à ce que la future soit complétée
+            return Response.ok(result).build();
+        } catch (ExecutionException e) {
+            //return Response.serverError().entity("Error: " + e.getMessage()).build();
+            return Response.status(404).entity(e.getMessage()).build();
+        } finally {
+            // Nettoyer la future après utilisation
+            waitingRequests.remove("joellungu123");
+            //return Response.serverError().entity("Error: " + e.getMessage()).build();
         }
-        System.out.println("On attends plus");
-        return repData;
+        //return repData;
     }
-
-    @Path("/paiee")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String verificationPaiment() {
-        //
-        //AnnoyingBeep();
-        //
-        //return lancer("",1,"");
-        return "";
-    }
-
-    /*
-    @Path("/devise")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public String setDevise(Devise devise) {
-        //
-        return deviseMetier.saveAgent(devise);
-        //
-    }
-    */
 
     private double conversion(Double montant, Long id, Boolean de) {
         Devise devise = Devise.findAll().firstResult();
@@ -387,9 +300,9 @@ public class PaiementController {
     @GET
     @Path("/start")
     public Response startRequest() throws InterruptedException {
-        String requestId = lancer("CDF","243815381693",500.0,"joellungu123");
+        //String requestId = lancer("CDF","243815381693",500.0,"joellungu123");
         //"req-" + System.currentTimeMillis(); // Générer un ID unique pour la requête
-
+        /*
         // Créer un CompletableFuture pour cette requête
         CompletableFuture<String> future = new CompletableFuture<>();
         waitingRequests.put("joellungu123", future);
@@ -406,6 +319,8 @@ public class PaiementController {
             waitingRequests.remove("joellungu123");
             //return Response.serverError().entity("Error: " + e.getMessage()).build();
         }
+        */
+        return Response.serverError().entity("").build();
     }
 
     @POST
