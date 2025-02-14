@@ -410,7 +410,7 @@ public class PaiementController {
 
     @POST
     @Path("/trigger")
-    public Response triggerRequest(String reponse) throws JsonProcessingException {
+    public Response triggerRequest(String reponse) {
         /*
             if (waitingRequests.isEmpty()) {
                 return Response.ok("No requests are waiting.").build();
@@ -423,28 +423,33 @@ public class PaiementController {
         //
         ObjectMapper mapper = new ObjectMapper();
         //
-        Map<String, Object> result = mapper.convertValue(reponse, new TypeReference<Map<String, Object>>(){});
-        //
-        // Compléter la première future en attente (ou une spécifique selon votre logique)
-        Iterator iterator = waitingRequests.entrySet().iterator();
-        //
-        while (iterator.hasNext()){
+        try {
+            Map<String, String> result = mapper.convertValue(reponse, new TypeReference<Map<String, String>>() {
+            });
             //
-            Map.Entry<String, CompletableFuture<String>> entry = (Map.Entry<String, CompletableFuture<String>>) iterator.next();
+            // Compléter la première future en attente (ou une spécifique selon votre logique)
+            Iterator iterator = waitingRequests.entrySet().iterator();
             //
-            String requestId = entry.getKey();
-            if(result.get("reference").equals(requestId)){
+            while (iterator.hasNext()) {
                 //
-                CompletableFuture<String> future = entry.getValue();
+                Map.Entry<String, CompletableFuture<String>> entry = (Map.Entry<String, CompletableFuture<String>>) iterator.next();
                 //
-                // Compléter la future pour débloquer la requête en attente
+                String requestId = entry.getKey();
+                if (result.get("reference").equals(requestId)) {
+                    //
+                    CompletableFuture<String> future = entry.getValue();
+                    //
+                    // Compléter la future pour débloquer la requête en attente
+                    //
+                    future.complete(reponse);
+                }
                 //
-                future.complete(reponse);
             }
             //
+        }catch (Exception ex) {
+            System.out.println("Erreur 1: "+ ex.getMessage());
+            System.out.println("Erreur 2: "+ ex.getCause());
         }
-        //
-
 
 
         return Response.ok("Ok").build();
