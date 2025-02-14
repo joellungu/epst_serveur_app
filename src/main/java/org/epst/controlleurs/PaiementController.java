@@ -434,7 +434,8 @@ public class PaiementController {
                 Map.Entry<String, CompletableFuture<String>> entry = (Map.Entry<String, CompletableFuture<String>>) iterator.next();
                 //
                 String requestId = entry.getKey();
-                if (result.get("reference").toString().equals(requestId)) {
+                System.out.println("requestId: "+requestId);
+                if (result.get("reference").asText().equals(requestId)) {
                     //
                     CompletableFuture<String> future = entry.getValue();
                     //
@@ -448,6 +449,7 @@ public class PaiementController {
         }catch (Exception ex) {
             System.out.println("Erreur 1: "+ ex.getMessage());
             System.out.println("Erreur 2: "+ ex.getCause());
+            //future.complete(reponse);
         }
 
 
