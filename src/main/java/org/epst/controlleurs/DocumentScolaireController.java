@@ -27,7 +27,7 @@ public class DocumentScolaireController {
     @Path("enregistrement")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Transactional
     public Response saveDemande(Document d) throws IOException {
         //System.out.println("La demande: "+hashMap.get("nom"));
