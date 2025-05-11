@@ -1,5 +1,7 @@
 package org.epst;
 
+import io.vertx.core.json.JsonObject;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
@@ -10,32 +12,85 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
 
-//@ServerEndpoint("/start-websocket/{name}")
-//@ApplicationScoped
+@ServerEndpoint("/signaling/{roomId}/{clientId}")
+@ApplicationScoped
 public class StartWebSocket {
-/*
+    // Un set pour garder une trace des sessions WebSocket actives
+    Map<String, Session> sessions = new ConcurrentHashMap<>();
+    Map<String, String> broadcasters = new ConcurrentHashMap<>();
+
     @OnOpen
-    public void onOpen(Session session, @PathParam("name") String name) {
-        System.out.println("onOpen> " + name);
+    public void onOpen(Session session,
+                       @PathParam("roomId") String roomId,
+                       @PathParam("clientId") String clientId) {
+        sessions.put(clientId, session);
+        broadcastMessage(roomId, "user-connected", clientId);
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam("name") String name) {
-        System.out.println("onClose> " + name);
+    public void onClose(Session session,
+                        @PathParam("roomId") String roomId,
+                        @PathParam("clientId") String clientId) {
+        sessions.remove(clientId);
+        broadcastMessage(roomId, "user-disconnected", clientId);
     }
 
     @OnError
-    public void onError(Session session, @PathParam("name") String name, Throwable throwable) {
-        System.out.println("onError> " + name + ": " + throwable);
+    public void onError(Session session,
+                        @PathParam("roomId") String roomId,
+                        @PathParam("clientId") String clientId,
+                        Throwable throwable) {
+        sessions.remove(clientId);
+        System.err.println("Error for client " + clientId + ": " + throwable.getMessage());
     }
 
     @OnMessage
-    public void onMessage(String message, @PathParam("name") String name) {
-        System.out.println("onMessage> " + name + ": " + message);
+    public void onMessage(String message,
+                          @PathParam("roomId") String roomId,
+                          @PathParam("clientId") String clientId) {
+        JsonObject json = Json.createReader(new StringReader(message)).readObject();
+
+        String type = json.getString("type");
+        String targetClientId = json.getString("targetClientId");
+
+        switch (type) {
+            case "broadcaster":
+                broadcasters.put(roomId, clientId);
+                break;
+            case "offer":
+            case "answer":
+            case "candidate":
+                sendToClient(targetClientId, message);
+                break;
+            default:
+                System.err.println("Unknown message type: " + type);
+        }
     }
 
-*/
+    private void sendToClient(String clientId, String message) {
+        Session session = sessions.get(clientId);
+        if (session != null) {
+            session.getAsyncRemote().sendText(message);
+        }
+    }
+
+    private void broadcastMessage(String roomId, String type, String message) {
+        sessions.values().forEach(s -> {
+            s.getAsyncRemote().sendText(
+                    Json.createObjectBuilder()
+                            .add("type", type)
+                            .add("message", message)
+                            .build()
+                            .toString()
+            );
+        });
+    }
 }
