@@ -1,6 +1,6 @@
 package org.epst.beans;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

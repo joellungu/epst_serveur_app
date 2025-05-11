@@ -6,12 +6,12 @@ import org.epst.models.document_scolaire.identification.DemandeIdentification;
 import org.epst.models.document_scolaire.identification.DemandeIdentificationMetier;
 import org.epst.models.mutuelle.Demande;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.print.Doc;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.util.HashMap;

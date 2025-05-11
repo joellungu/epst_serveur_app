@@ -2,15 +2,16 @@ package org.epst;
 
 import io.vertx.core.json.JsonObject;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.websocket.EncodeException;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.json.Json;
+import jakarta.websocket.EncodeException;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
@@ -56,7 +57,7 @@ public class StartWebSocket {
     public void onMessage(String message,
                           @PathParam("roomId") String roomId,
                           @PathParam("clientId") String clientId) {
-        JsonObject json = Json.createReader(new StringReader(message)).readObject();
+        JsonObject json = (JsonObject) Json.createReader(new StringReader(message)).readObject();
 
         String type = json.getString("type");
         String targetClientId = json.getString("targetClientId");

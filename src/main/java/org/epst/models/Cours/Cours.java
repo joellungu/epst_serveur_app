@@ -1,8 +1,8 @@
 package org.epst.models.Cours;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Entity;
 
-import javax.persistence.Entity;
 
 @Entity
 public class Cours extends PanacheEntity {

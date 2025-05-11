@@ -4,7 +4,7 @@ import org.epst.models.SeConnecter;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.util.List;

@@ -1,6 +1,6 @@
 package org.epst.chat;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import lombok.Getter;
 import lombok.Setter;
 

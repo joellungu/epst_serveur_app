@@ -2,8 +2,8 @@ package org.epst.models.document;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 
 @Entity
 public class DocumentDB extends PanacheEntity {

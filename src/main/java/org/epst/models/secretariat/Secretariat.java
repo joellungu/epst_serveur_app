@@ -2,9 +2,9 @@ package org.epst.models.secretariat;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -2,7 +2,7 @@ package org.epst.models.document_scolaire;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 
 public class Palmares {

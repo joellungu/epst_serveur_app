@@ -5,11 +5,11 @@ import org.epst.models.document_scolaire.documents.DocumentMetier;
 import org.epst.models.document_scolaire.transfere.Transfere;
 import org.epst.models.document_scolaire.transfere.TransfereMetier;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;

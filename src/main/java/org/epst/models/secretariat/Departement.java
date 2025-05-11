@@ -1,7 +1,7 @@
 package org.epst.models.secretariat;
 
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Departement {

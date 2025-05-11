@@ -3,8 +3,8 @@ package org.epst.models.document_scolaire.documents;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import java.time.LocalDate;
 
 @Entity

@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Accessors(chain=true)
 //@AllArgsConstructor

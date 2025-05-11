@@ -5,8 +5,8 @@ import io.smallrye.common.annotation.NonBlocking;
 import org.epst.chat.Message;
 import org.epst.models.ModelMessage;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.PathParam;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.PathParam;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ public class MessageBeanRepository implements PanacheRepository<MessageBean> {
 
     ModelMessage modelMessage = new ModelMessage();
 
-    @NonBlocking
+    //@NonBlocking
     public void saveData(Message message){
         Thread thread = new Thread(){
             public void run(){

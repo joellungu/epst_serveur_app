@@ -3,7 +3,7 @@ package org.epst.models.sernie;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class EcoleSernie extends PanacheEntity {

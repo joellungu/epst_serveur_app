@@ -3,8 +3,8 @@ package org.epst.models.sernie;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import java.sql.Timestamp;
 
 
@@ -79,7 +79,7 @@ public class Sernie extends PanacheEntity {
     public String classe;
     public String datedemande;
 
-    @Column(columnDefinition = "integer default 0")
+    //@Column(columnDefinition = "varchar default '0'")
     public String valider;
     /**
      *

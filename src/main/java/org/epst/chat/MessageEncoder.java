@@ -1,10 +1,10 @@
 package org.epst.chat;
 
-//import javax.json.Json;
-//import javax.json.JsonArrayBuilder;
-//import javax.json.JsonObjectBuilder;
-import javax.websocket.Encoder;
-import javax.websocket.EndpointConfig;
+//import jakarta.json.Json;
+//import jakarta.json.JsonArrayBuilder;
+//import jakarta.json.JsonObjectBuilder;
+import jakarta.websocket.Encoder;
+import jakarta.websocket.EndpointConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
