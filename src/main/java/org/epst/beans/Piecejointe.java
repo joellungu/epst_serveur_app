@@ -30,5 +30,39 @@ public class Piecejointe {
     public Long piecejointe_id;
     public byte[] donne;
     public String type;
+
+    //
+    public Long getId() {
+        return id;
+    }
+
+    public Long getPiecejointe_id() {
+        return piecejointe_id;
+    }
+
+    public byte[] getDonne() {
+        return donne;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPiecejointe_id(Long piecejointe_id) {
+        this.piecejointe_id = piecejointe_id;
+    }
+
+    public void setDonne(byte[] donne) {
+        this.donne = donne;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
     
 }

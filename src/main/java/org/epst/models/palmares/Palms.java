@@ -1,13 +1,11 @@
 package org.epst.models.palmares;
 
-import org.sql2o.Sql2o;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Palms {
-    public static Sql2o sql2o;
     public static Connection connection;
 
     static{
@@ -21,8 +19,8 @@ public class Palms {
             System.out.println(e.getMessage());
         }
         //
-        sql2o = new Sql2o("jdbc:postgresql://ec2-3-234-204-26.compute-1.amazonaws.com:5432/d91bqr4fs9ag4p",
-                "eoatiupvtvpqum",
-                "ea60f987ee3d2239cc01c4b44dd28e949362252af1315c2e51a24c4f34ee123f");
+        //sql2o = new Sql2o("jdbc:postgresql://ec2-3-234-204-26.compute-1.amazonaws.com:5432/d91bqr4fs9ag4p",
+        //        "eoatiupvtvpqum",
+        //        "ea60f987ee3d2239cc01c4b44dd28e949362252af1315c2e51a24c4f34ee123f");
     }
 }

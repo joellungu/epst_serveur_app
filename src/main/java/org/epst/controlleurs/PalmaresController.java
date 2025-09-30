@@ -3,8 +3,6 @@ package org.epst.controlleurs;
 import com.opencsv.CSVReader;
 import org.epst.models.Agent.Agent;
 import org.epst.models.palmares.*;
-import org.sql2o.Sql2o;
-import org.sql2o.Connection;
 import jakarta.ws.rs.core.Response;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -16,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
-import static org.epst.models.palmares.Palms.sql2o;
 
 @Path("/actions")
 public class PalmaresController {

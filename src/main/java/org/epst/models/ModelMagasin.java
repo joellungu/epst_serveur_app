@@ -94,7 +94,7 @@ public class ModelMagasin {
         };
         return val;
     }
-    //
+
     public List<Magasin> getAllMagasin(String type){
         List<Magasin> liste = new LinkedList<>();
         System.out.println("le type vaut: "+type);//piecejointe,

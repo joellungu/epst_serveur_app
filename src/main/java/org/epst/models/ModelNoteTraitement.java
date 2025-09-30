@@ -24,6 +24,7 @@ public class ModelNoteTraitement {
         }
     }
 
+    /*
     public Long saveNote(NoteTraitementBean noteTraitementBean){
         Long t ;
         //
@@ -56,6 +57,7 @@ public class ModelNoteTraitement {
         return t;
     }
 
+    */
     private Long getId(){
         Random random = new Random();
         long random63BitLong = random.nextLong();

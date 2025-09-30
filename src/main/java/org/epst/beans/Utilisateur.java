@@ -9,9 +9,6 @@ import lombok.experimental.Accessors;
 
 //@Accessors(chain=true)
 //@AllArgsConstructor
-@Getter
-@Setter
-@NoArgsConstructor // <--- THIS is it
 //@ToString
 public class Utilisateur {
 
@@ -86,5 +83,124 @@ public class Utilisateur {
     public String mdp;
 
     public String province;
+
     public String district;
+    //
+    // Constructeur par défaut
+    public Utilisateur() {
+    }
+
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPostnom() {
+        return postnom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public String getMatricule() {
+        return matricule;
+    }
+
+    public String getId_statut() {
+        return id_statut;
+    }
+
+    public String getDate_de_naissance() {
+        return date_de_naissance;
+    }
+
+    public String getMdp() {
+        return mdp;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPostnom(String postnom) {
+        this.postnom = postnom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public void setMatricule(String matricule) {
+        this.matricule = matricule;
+    }
+
+    public void setId_statut(String id_statut) {
+        this.id_statut = id_statut;
+    }
+
+    public void setDate_de_naissance(String date_de_naissance) {
+        this.date_de_naissance = date_de_naissance;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 }
