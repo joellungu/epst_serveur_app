@@ -11,14 +11,14 @@ import jakarta.persistence.ManyToOne;
 public class Utilisateur extends PanacheEntity {
     public String nom;
     public String prenom;
-    public String email;
+    public String telephone;
     public String motDePasse;
 
     @Enumerated(EnumType.STRING)
     public Role role;
 
-    @ManyToOne
-    public Classe classe; // uniquement pour les élèves
+    //@ManyToOne
+    public String classe; // uniquement pour les élèves
 
     public enum Role {
         ADMIN, ENSEIGNANT, ELEVE

@@ -10,6 +10,6 @@ public class CoursDirect extends PanacheEntity {
     public String titre;
     public String description;
 
-    @ManyToOne
-    public Classe classe;
+    //@ManyToOne
+    //public Classe classe;
 }

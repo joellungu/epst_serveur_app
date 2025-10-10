@@ -1,7 +1,5 @@
 package org.epst.controlleurs.enseignemants;
 
-import org.epst.models.EnseignementDirect.Classe;
-
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -13,6 +11,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ClasseResource {
 
+    /*
     @GET
     public List<Classe> listAll() {
         return Classe.listAll();
@@ -47,4 +46,5 @@ public class ClasseResource {
         Classe entity = Classe.findById(id);
         if (entity != null) entity.delete();
     }
+     */
 }
