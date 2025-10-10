@@ -1,10 +1,8 @@
 package org.epst.models.palmares;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.Entity;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -17,8 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class Palmares2013 extends PanacheEntity {
-    //
+public class Palmares2011 {
     // ✅ Chemin configurable depuis application.properties
     // Cache mémoire (clé = année + code)
     private final Map<String, String[]> cache = new ConcurrentHashMap<>();
@@ -27,7 +24,7 @@ public class Palmares2013 extends PanacheEntity {
     void init() {
         System.out.println("Chargement du fichier CSV en mémoire...");
 
-        try (InputStream is = getClass().getResourceAsStream("/data/Resultat_Global_2013.csv")) {
+        try (InputStream is = getClass().getResourceAsStream("/data/Resultat_Global_2011.csv")) {
             if (is == null) {
                 throw new IllegalStateException("Fichier CSV introuvable dans resources/data !");
             }
