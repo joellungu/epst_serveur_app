@@ -1,5 +1,7 @@
 package org.epst.controlleurs;
 
+import jakarta.ws.rs.core.Link;
+import org.epst.models.ClasseModel;
 import org.epst.models.Cours.Cours;
 import org.epst.models.Cours.Video;
 
@@ -12,10 +14,75 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("cours")
 public class CoursController {
+
+    private class CoursClasse {
+        public String cours;
+        public Long idCours;
+        public Long idClasse;
+    }
+
+    @GET
+    @Path("one")
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getCoursById(@QueryParam("id") Long idClasse){
+        //
+        System.out.println("Le id: "+idClasse);
+        List<CoursClasse> coursClasses = new LinkedList<>();
+        List<Cours> cours = Cours.find("idClasse", idClasse).list();
+        //
+        if(cours == null){
+            return Response.status(405).build();
+        }
+        CoursClasse coursClasse = new CoursClasse();
+        //
+        cours.forEach((c) -> {
+            CoursClasse cc = new CoursClasse();
+            cc.cours = c.cours;
+            cc.idCours = c.id;
+            cc.idClasse = c.idClasse;
+            coursClasses.add(cc);
+        });
+        //
+        return Response.ok(coursClasses).build();
+    }
+
+    @GET
+    @Path("classe")
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getCoursById(@QueryParam("classe") String classe, @QueryParam("niveau") String niveau){
+        //
+        System.out.println("Le id: "+classe);
+        List<CoursClasse> coursClasses = new LinkedList<>();
+        HashMap params = new HashMap();
+        params.put("cls", classe);
+        params.put("categorie", niveau);
+        //
+        List<Cours> cours = Cours.find("cls =: cls and categorie =: categorie", params).list();
+        //
+        if(cours == null){
+            return Response.status(405).build();
+        }
+        CoursClasse coursClasse = new CoursClasse();
+        //
+        cours.forEach((c) -> {
+            CoursClasse cc = new CoursClasse();
+            cc.cours = c.cours;
+            cc.idCours = c.id;
+            cc.idClasse = c.idClasse;
+            coursClasses.add(cc);
+        });
+        //
+        return Response.ok(coursClasses).build();
+    }
 
 
     @Path("all")
@@ -30,21 +97,24 @@ public class CoursController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response all(@QueryParam("categorie") String categorie, @QueryParam("cls") int cls,
+    public Response all(@QueryParam("categorie") String categorie, @QueryParam("idClasse") Long idClasse,
                         @QueryParam("typeFormation") String typeFormation) {
         //
         HashMap params = new HashMap();
         params.put("categorie", categorie);
-        params.put("classe", cls);
+        params.put("idClasse", idClasse);
         params.put("propriete", typeFormation);
         //
+        System.out.println("categorie: "+categorie);
+        //
         List<Cours> l = Cours.listAll();
+        //
         l.forEach((c)->{
-            System.out.println("Cours: "+c.classe);
+            System.out.println("Cours: "+c.idClasse);
             System.out.println("Cours: "+c.categorie);
         });
         //
-        List<Cours> coursList = Cours.find("categorie =: categorie and classe =: classe and propriete =: propriete", params).list();
+        List<Cours> coursList = Cours.find("categorie =: categorie and idClasse =: idClasse and propriete =: propriete", params).list();
         //
         coursList.forEach(cours -> {
             cours.data = new byte[0];

@@ -17,6 +17,20 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ClasseModelController {
     //
     @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClasseById(@PathParam("id") Long id){
+        //
+        ClasseModel classeModel = ClasseModel.findById(id);
+        //
+        if(classeModel == null){
+            return Response.status(405).build();
+        }
+        //
+        return Response.ok(classeModel).build();
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllClasses(){
         //

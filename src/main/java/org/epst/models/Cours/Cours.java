@@ -12,9 +12,9 @@ public class Cours extends PanacheEntity {
     public String categorie;//Maternelle , Education de base et secondaire
     public int chapitre;//
     public String notion;//
-
+    public int cls;
     public String type;// Type de contenue (audio, video, pdf)
-    public int classe; // Ex 1er primaire ...
+    public Long idClasse; // Ex 1er primaire ...
 
     public byte[] data;
     //

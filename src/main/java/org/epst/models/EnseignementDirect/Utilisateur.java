@@ -18,7 +18,8 @@ public class Utilisateur extends PanacheEntity {
     public Role role;
 
     //@ManyToOne
-    public String classe; // uniquement pour les élèves
+    public String classe;
+    public String niveau;// uniquement pour les élèves
 
     public enum Role {
         ADMIN, ENSEIGNANT, ELEVE

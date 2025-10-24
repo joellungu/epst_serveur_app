@@ -90,7 +90,6 @@ public class PlainteControlleur {
     }
 
 
-
     @Path("/reference/{reference}")
     @GET()
     @Produces(MediaType.APPLICATION_JSON)
