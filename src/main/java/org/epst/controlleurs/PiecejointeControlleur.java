@@ -213,17 +213,17 @@ public class PiecejointeControlleur {
                         .put(new JSONObject()
                                 .put(Emailv31.Message.FROM, new JSONObject()
                                         .put("Email", "numeriquedgc@gmail.com")
-                                        .put("Name", "Pierre Museghe"))
+                                        .put("Name", "DGC / EDUC-NC"))
                                 .put(Emailv31.Message.TO, new JSONArray()
                                         .put(new JSONObject()
                                                 .put("Email", "mmuseghe@gmail.cd")//
-                                                .put("Name", "Gestionaire Plainte VBG EASHS")
+                                                .put("Name", "Mugi Musege")
                                         )
                                 )
                                 .put(Emailv31.Message.CC, new JSONArray()
                                         .put(new JSONObject()
                                                 .put("Email", "lungujoel138@gmail.com")//
-                                                .put("Name", "Pierre Museghe")
+                                                .put("Name", "Lungu Joel")
                                         )
                                 )
                                 /*
