@@ -149,12 +149,16 @@ public class MagasinControlleur {
     @DELETE()
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteMagasint(@PathParam("id") Long id) {
+        //
+        Magasin.deleteById(id);
+        /*
         int t = modelMagasin.supprimerMagasin(id);
         ObjectNode json = mapper.createObjectNode();
         //
         //json.put("status", "ok");
         json.put("supprimer", t);
-        return Response.status(Response.Status.CREATED).entity(json).build();
+        */
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @Path("recherche/{mot}")
