@@ -148,6 +148,7 @@ public class MagasinControlleur {
     @Path("/{id}")
     @DELETE()
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response deleteMagasint(@PathParam("id") Long id) {
         //
         try {
