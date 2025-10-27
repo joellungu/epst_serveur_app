@@ -152,19 +152,12 @@ public class MagasinControlleur {
         //
         try {
             Magasin.deleteById(id);
-            return Response.status(Response.Status.CREATED).build();
+            return Response.status(Response.Status.CREATED).entity("Data id: "+id).build();
         } catch (Exception ex) {
-
-            return Response.serverError().entity(ex.getCause()).build();
+            System.out.println("Erreur du à : "+ex.getCause());
+            System.out.println("Erreur du à : "+ex.getMessage());
+            return Response.serverError().entity(ex.getCause() + " = "+id).build();
         }
-        /*
-        int t = modelMagasin.supprimerMagasin(id);
-        ObjectNode json = mapper.createObjectNode();
-        //
-        //json.put("status", "ok");
-        json.put("supprimer", t);
-        */
-
     }
 
     @Path("recherche/{mot}")
