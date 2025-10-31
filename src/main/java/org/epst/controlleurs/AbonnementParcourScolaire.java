@@ -28,7 +28,7 @@ class AbonnementParcourScolaireResource {
 
         AbonnementParcourScolaire abonnement = (AbonnementParcourScolaire) AbonnementParcourScolaire.find("codeEleve =: codeEleve and anneeScolaire =: anneeScolaire", params).firstResult();
         if (abonnement == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(404).build();
         }
         return Response.ok(abonnement).build();
     }
