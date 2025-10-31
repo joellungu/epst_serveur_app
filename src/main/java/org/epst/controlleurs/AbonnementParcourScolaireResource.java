@@ -1,6 +1,7 @@
 package org.epst.controlleurs;
 
 import io.quarkus.panache.common.Sort;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -45,6 +46,7 @@ public class AbonnementParcourScolaireResource {
 
 
     @POST
+    @Transactional
     public Response create(AbonnementParcourScolaire abonnement) {
         if (abonnement.id != null) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -57,6 +59,7 @@ public class AbonnementParcourScolaireResource {
 
     @PUT
     @Path("/{id}")
+    @Transactional
     public Response update(@PathParam("id") Long id, AbonnementParcourScolaire updatedAbonnement) {
         AbonnementParcourScolaire existing = AbonnementParcourScolaire.findById(id);
         if (existing == null) {
@@ -74,6 +77,7 @@ public class AbonnementParcourScolaireResource {
 
     @DELETE
     @Path("/{id}")
+    @Transactional
     public Response delete(@PathParam("id") Long id) {
         boolean deleted = AbonnementParcourScolaire.deleteById(id);
         if (!deleted) {
