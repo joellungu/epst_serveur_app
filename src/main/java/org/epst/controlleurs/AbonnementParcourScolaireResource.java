@@ -12,7 +12,7 @@ import java.util.List;
 @Path("/abonnements")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class AbonnementParcourScolaireResource {
+public class AbonnementParcourScolaireResource {
 
     @GET
     public List<AbonnementParcourScolaire> listAll() {
