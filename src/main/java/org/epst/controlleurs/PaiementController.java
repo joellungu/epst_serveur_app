@@ -67,7 +67,7 @@ public class PaiementController {
                 "  \"phone\": \""+telephone+"\"," +
                 "  \"amount\": \""+montant+"\"," +
                 "  \"currency\":\""+dev+"\"," +
-                "  \"callbackUrl\":\"https://epst-serveur-a595d15d6608.herokuapp.com/paiement/trigger\"" +
+                "  \"callbackUrl\":\"https://educ-app-serveur-43d00822f87c.herokuapp.com/paiement/trigger\"" +
                 "}";
         /*
         //montant
