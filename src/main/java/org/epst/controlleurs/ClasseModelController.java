@@ -56,12 +56,20 @@ public class ClasseModelController {
             HashMap params = new HashMap();
             //params.put("cours", cm.nom.toLowerCase());
             params.put("categorie", cm.categorie.toLowerCase());
-            params.put("classe", cm.cls);
+            params.put("cls", cm.cls);
             //params.put("propriete", "Eleve");
             //cours: "+cm.nom+"
             System.out.println(" : categorie : "+cm.categorie+" : classe : "+cm.cls+" : propriete : Eleve ");
             //cours =: cours and
-            List<Cours> css = Cours.find("categorie =: categorie and classe =: classe", params).list();
+            List<Cours> csss = Cours.listAll();
+            List<Cours> css = new LinkedList<>();
+            csss.forEach(c -> {
+                if(c.cls == cm.cls && c.categorie.toLowerCase().equals(cm.categorie.toLowerCase())){
+                    css.add(c);
+                }
+                //c.data = new byte[0];
+            });
+                    //.find("categorie =: categorie and cls =: cls", params).list();
             css.forEach(c -> {
                 c.data = new byte[0];
             });

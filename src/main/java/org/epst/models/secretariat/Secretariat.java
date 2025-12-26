@@ -15,7 +15,7 @@ public class Secretariat extends PanacheEntity {
     public String denomition;
     public String sigle;
     public String adresse;
-
+    public byte[] photo;
     public String telephone;
     public String email;
     public String responsable;

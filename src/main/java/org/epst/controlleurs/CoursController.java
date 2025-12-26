@@ -13,9 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Path("cours")
 public class CoursController {
@@ -180,20 +178,33 @@ public class CoursController {
         params.put("banche", banche);
         params.put("type", type);
         params.put("notion", notion);
-        params.put("classe", classe);
+        params.put("cls", classe);
         //params.put("propriete", propriete);
         //
-        Cours cour = (Cours) Cours.find("cours =: cours and categorie =: categorie and banche =: banche and " +
-                "type =: type and notion =: notion and classe =: classe", params).firstResult();
+        System.out.println("cours =: "+cours+" and categorie =: "+categorie+" and banche =: "+banche+" and " +
+                "type =: "+type+" and notion =: "+notion+" and classe =: "+classe);
         //
-        //
-        if(cours != null){
-            return Response.ok(cour.id).build();
-        }else{
-            return Response.status(404).build();
-        }
-        //
+        List<Cours> courss = Cours.listAll();
 
+        List<Cours> co = courss.stream()
+                .filter(c -> params.get("cours") == null ||
+                        c.cours.toLowerCase().equalsIgnoreCase(params.get("cours").toString()))
+                .filter(c -> params.get("categorie") == null ||
+                        c.categorie.toLowerCase().equalsIgnoreCase(params.get("categorie").toString()))
+                .filter(c -> params.get("banche") == null ||
+                        c.banche.equalsIgnoreCase(params.get("banche").toString()))
+                .filter(c -> params.get("type") == null ||
+                        c.type.equalsIgnoreCase(params.get("type").toString()))
+                .filter(c -> params.get("notion") == null ||
+                        c.notion.equalsIgnoreCase(params.get("notion").toString()))
+                .filter(c -> params.get("cls") == null ||
+                        c.cls == (int) params.get("cls"))
+                .toList();
+        //
+        System.out.println("Data: "+co.get(0).id);
+        //
+        return Response.ok(co.get(0).id).build();
+        //
     }
 
     @Path("coursDataPdf.pdf")
@@ -273,4 +284,10 @@ public class CoursController {
             return null;
         }
     }
+
+    public String capitalize(String text) {
+        if (text == null || text.isEmpty()) return text;
+        return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
+    }
+
 }

@@ -1,6 +1,7 @@
 package org.epst.controlleurs;
 
 
+import org.epst.models.secretariat.Departement;
 import org.epst.models.secretariat.Secretariat;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
@@ -22,7 +23,36 @@ public class SecretariatController {
         //
         Secretariat secretariat = Secretariat.findById(id);
         //
-        return Response.ok(secretariat).build();
+        List<Departement> departements = secretariat.departement;
+        //
+        List<HashMap> dpts = new LinkedList<>();
+        //
+        secretariat.departement.forEach((dd)->{
+            //
+            HashMap d = new HashMap();
+            d.put("responsable", dd.responsable);
+            d.put("departement", dd.departement);
+            //
+            dpts.add(d);
+        });
+        //
+        HashMap data = new HashMap();
+        data.put("id", secretariat.id);
+        data.put("adresse", secretariat.adresse);
+        data.put("arretes", secretariat.arretes);
+        data.put("attributionMission", secretariat.attributionMission);
+        data.put("denomition", secretariat.denomition);
+        data.put("email", secretariat.email);
+        data.put("historique", secretariat.historique);
+        data.put("realisation", secretariat.realisation);
+        data.put("responsable", secretariat.responsable);
+        data.put("sigle", secretariat.sigle);
+        data.put("telephone", secretariat.telephone);
+        data.put("departement", dpts);
+        //data.put("", secretariat.telephone);
+        //data.put("", secretariat.telephone);
+        //
+        return Response.ok(data).build();
     }
 
     @GET
@@ -55,7 +85,7 @@ public class SecretariatController {
         Secretariat secretariat1 = Secretariat.findById(secretariat.id);
         //
         if(secretariat1 == null){
-            return Response.serverError().build();
+            return Response.status(405).build();
         }
         //
         secretariat1.denomition = secretariat.denomition;
@@ -65,6 +95,13 @@ public class SecretariatController {
         secretariat1.email = secretariat.email;
         secretariat1.maps = secretariat.maps;
         secretariat1.departement = secretariat.departement;
+        //
+        if(secretariat.photo != null) {
+            //
+            secretariat1.photo = secretariat.photo;
+            //
+        }
+        //
         secretariat1.arretes = secretariat.arretes;
         secretariat1.attributionMission = secretariat.attributionMission;
         secretariat1.historique = secretariat.historique;
@@ -118,6 +155,15 @@ public class SecretariatController {
         return Response.ok(photo).build();
     }
 
-
+    @GET
+    @Path("photoprofil/{id}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Transactional
+    public Response profilChef(@PathParam("id") Long id) {
+        //
+        Secretariat secretariat = Secretariat.findById(id);
+        //
+        return Response.ok(secretariat.photo).build();
+    }
 
 }
