@@ -48,7 +48,6 @@ public class SecretariatController {
         data.put("responsable", secretariat.responsable);
         data.put("sigle", secretariat.sigle);
         data.put("telephone", secretariat.telephone);
-        data.put("photo", secretariat.photo.length);
         data.put("departement", dpts);
         //data.put("", secretariat.telephone);
         //data.put("", secretariat.telephone);
