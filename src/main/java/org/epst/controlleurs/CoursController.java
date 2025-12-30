@@ -21,7 +21,7 @@ public class CoursController {
     private class CoursClasse {
         public String cours;
         public Long idCours;
-        public Long idClasse;
+        public UUID idClasse;
     }
 
     @GET
@@ -29,57 +29,11 @@ public class CoursController {
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getCoursById(@QueryParam("id") Long idClasse){
+    public Response getCoursById(@QueryParam("id") Long id){
         //
-        System.out.println("Le id: "+idClasse);
-        List<CoursClasse> coursClasses = new LinkedList<>();
-        List<Cours> cours = Cours.find("idClasse", idClasse).list();
+        Cours cours = Cours.findById(id);
         //
-        if(cours == null){
-            return Response.status(405).build();
-        }
-        CoursClasse coursClasse = new CoursClasse();
-        //
-        cours.forEach((c) -> {
-            CoursClasse cc = new CoursClasse();
-            cc.cours = c.cours;
-            cc.idCours = c.id;
-            cc.idClasse = c.idClasse;
-            coursClasses.add(cc);
-        });
-        //
-        return Response.ok(coursClasses).build();
-    }
-
-    @GET
-    @Path("classe")
-    @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getCoursById(@QueryParam("classe") String classe, @QueryParam("niveau") String niveau){
-        //
-        System.out.println("Le id: "+classe);
-        List<CoursClasse> coursClasses = new LinkedList<>();
-        HashMap params = new HashMap();
-        params.put("cls", classe);
-        params.put("categorie", niveau);
-        //
-        List<Cours> cours = Cours.find("cls =: cls and categorie =: categorie", params).list();
-        //
-        if(cours == null){
-            return Response.status(405).build();
-        }
-        CoursClasse coursClasse = new CoursClasse();
-        //
-        cours.forEach((c) -> {
-            CoursClasse cc = new CoursClasse();
-            cc.cours = c.cours;
-            cc.idCours = c.id;
-            cc.idClasse = c.idClasse;
-            coursClasses.add(cc);
-        });
-        //
-        return Response.ok(coursClasses).build();
+        return Response.ok(cours).build();
     }
 
 
@@ -95,24 +49,22 @@ public class CoursController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response all(@QueryParam("categorie") String categorie, @QueryParam("idClasse") Long idClasse,
+    public Response all(@QueryParam("idClasse") UUID idClasse,
                         @QueryParam("typeFormation") String typeFormation) {
         //
         HashMap params = new HashMap();
-        params.put("categorie", categorie);
         params.put("idClasse", idClasse);
         params.put("propriete", typeFormation);
         //
-        System.out.println("categorie: "+categorie);
         //
         List<Cours> l = Cours.listAll();
         //
         l.forEach((c)->{
             System.out.println("Cours: "+c.idClasse);
-            System.out.println("Cours: "+c.categorie);
+            System.out.println("Cours: "+c.cycle);
         });
         //
-        List<Cours> coursList = Cours.find("categorie =: categorie and idClasse =: idClasse and propriete =: propriete", params).list();
+        List<Cours> coursList = Cours.find("idClasse =: idClasse and propriete =: propriete", params).list();
         //
         coursList.forEach(cours -> {
             cours.data = new byte[0];
@@ -122,41 +74,6 @@ public class CoursController {
     }
 
     //
-    @Path("notion")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response notion(
-            @QueryParam("cours") String cours,
-            @QueryParam("categorie") String categorie,
-            @QueryParam("banche") String banche,
-            //@QueryParam("type") String type,
-            @QueryParam("classe") int classe
-    ) {
-        //
-        HashMap params = new HashMap();
-        params.put("cours", cours);
-        params.put("categorie", categorie);
-        params.put("banche", banche);
-        //params.put("type", type);
-        params.put("classe", classe);
-        //
-        List<Cours> courss = Cours.find("cours =: cours and categorie =: categorie and banche =: banche and " +
-                "classe =: classe", params).list();
-        //
-        courss.forEach((c)->{
-            c.data = new byte[0];
-        });
-        //
-        if(cours != null){
-            return Response.ok(courss).build();
-        }else{
-            return Response.status(404).build();
-        }
-        //
-
-    }
-
 
     @Path("checkcours")
     @GET
@@ -164,7 +81,7 @@ public class CoursController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response checkcours(
             @QueryParam("cours") String cours,
-            @QueryParam("categorie") String categorie,
+            @QueryParam("cycle") String cycle,
             @QueryParam("banche") String banche,
             @QueryParam("type") String type,
             @QueryParam("notion") String notion,
@@ -174,14 +91,14 @@ public class CoursController {
         //
         HashMap params = new HashMap();
         params.put("cours", cours);
-        params.put("categorie", categorie);
+        params.put("cycle", cycle);
         params.put("banche", banche);
         params.put("type", type);
         params.put("notion", notion);
         params.put("cls", classe);
         //params.put("propriete", propriete);
         //
-        System.out.println("cours =: "+cours+" and categorie =: "+categorie+" and banche =: "+banche+" and " +
+        System.out.println("cours =: "+cours+" and cycle =: "+cycle+" and banche =: "+banche+" and " +
                 "type =: "+type+" and notion =: "+notion+" and classe =: "+classe);
         //
         List<Cours> courss = Cours.listAll();
@@ -189,8 +106,8 @@ public class CoursController {
         List<Cours> co = courss.stream()
                 .filter(c -> params.get("cours") == null ||
                         c.cours.toLowerCase().equalsIgnoreCase(params.get("cours").toString()))
-                .filter(c -> params.get("categorie") == null ||
-                        c.categorie.toLowerCase().equalsIgnoreCase(params.get("categorie").toString()))
+                .filter(c -> params.get("cycle") == null ||
+                        c.cycle.toLowerCase().equalsIgnoreCase(params.get("cycle").toString()))
                 .filter(c -> params.get("banche") == null ||
                         c.banche.equalsIgnoreCase(params.get("banche").toString()))
                 .filter(c -> params.get("type") == null ||

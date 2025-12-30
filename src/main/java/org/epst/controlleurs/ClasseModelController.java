@@ -1,5 +1,6 @@
 package org.epst.controlleurs;
 
+import org.epst.models.Classe;
 import org.epst.models.ClasseModel;
 import org.epst.models.Cours.Cours;
 
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Path("classe")
+@Path("classe-model")
 public class ClasseModelController {
     //
     @GET
@@ -45,26 +46,27 @@ public class ClasseModelController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStructures(){
         //
-        List<ClasseModel> classeModels = ClasseModel.listAll();
+        List<Classe> classes = Classe.listAll();
         //
         List<List<Cours>> cours = new LinkedList<>();
         //
         //classeModels.forEach((cm)->
         //
-        for(ClasseModel cm : classeModels){
+        for(Classe cm : classes){
             //
             HashMap params = new HashMap();
             //params.put("cours", cm.nom.toLowerCase());
-            params.put("categorie", cm.categorie.toLowerCase());
-            params.put("cls", cm.cls);
+            params.put("cycle", cm.cycle.toLowerCase());
+            //params.put("cls", cm.cls);
             //params.put("propriete", "Eleve");
             //cours: "+cm.nom+"
-            System.out.println(" : categorie : "+cm.categorie+" : classe : "+cm.cls+" : propriete : Eleve ");
+            System.out.println(" : cycle : "+cm.cycle+" : propriete : Eleve ");
             //cours =: cours and
             List<Cours> csss = Cours.listAll();
             List<Cours> css = new LinkedList<>();
+            //c.cls == cm.niveau &&
             csss.forEach(c -> {
-                if(c.cls == cm.cls && c.categorie.toLowerCase().equals(cm.categorie.toLowerCase())){
+                if(c.cycle.toLowerCase().equals(cm.cycle.toLowerCase())){
                     css.add(c);
                 }
                 //c.data = new byte[0];

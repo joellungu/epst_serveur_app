@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "inspecteur_cours")
@@ -18,7 +19,7 @@ public class InspecteurCours extends PanacheEntity {
     public List<Long> cours = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
-    public List<Long> classe = new ArrayList<>();
+    public List<UUID> classe = new ArrayList<>();
 
     // Méthodes utilitaires
     public void addCours(Long coursId) {
@@ -36,7 +37,7 @@ public class InspecteurCours extends PanacheEntity {
         }
     }
 
-    public void addClasse(Long classeId) {
+    public void addClasse(UUID classeId) {
         if (this.classe == null) {
             this.classe = new ArrayList<>();
         }

@@ -10,10 +10,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.epst.models.InspecteurCours;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Path("/api/inspecteur-cours")
 @Produces(MediaType.APPLICATION_JSON)
@@ -182,7 +179,7 @@ public class InspecteurCoursResource {
     @POST
     @Path("/{id}/classe")
     @Transactional
-    public Response addClasse(@PathParam("id") Long id, @QueryParam("classeId") Long classeId) {
+    public Response addClasse(@PathParam("id") Long id, @QueryParam("classeId") UUID classeId) {
         InspecteurCours inspecteur = InspecteurCours.findById(id);
         if (inspecteur == null) {
             return Response.status(Response.Status.NOT_FOUND)
