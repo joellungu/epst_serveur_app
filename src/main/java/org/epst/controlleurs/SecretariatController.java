@@ -32,6 +32,7 @@ public class SecretariatController {
             HashMap d = new HashMap();
             d.put("responsable", dd.responsable);
             d.put("departement", dd.departement);
+            d.put("photo", dd.photo);
             //
             dpts.add(d);
         });
