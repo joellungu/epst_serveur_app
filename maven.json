@@ -1,0 +1,9 @@
+{
+  "build": {
+    "type": "maven",
+    "goal": "<string>"
+  },
+  "deploy": {
+    "goal": "<string>"
+  }
+}
