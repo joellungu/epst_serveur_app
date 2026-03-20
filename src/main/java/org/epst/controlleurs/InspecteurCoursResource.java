@@ -25,7 +25,7 @@ public class InspecteurCoursResource {
             @QueryParam("sortAsc") @DefaultValue("true") Boolean sortAsc,
             @QueryParam("idInspecteur") Long idInspecteur) {
 
-        // Construire la query string complète
+        // Construire la query string complete
         StringBuilder queryBuilder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class InspecteurCoursResource {
             params.put("idInspecteur", idInspecteur);
         }
 
-        // Ajouter le ORDER BY si nécessaire
+        // Ajouter le ORDER BY si necessaire
         if (sortBy != null && !sortBy.trim().isEmpty()) {
             String order = sortAsc ? " ASC" : " DESC";
             if (queryBuilder.length() > 0) {
@@ -77,7 +77,7 @@ public class InspecteurCoursResource {
         InspecteurCours inspecteur = InspecteurCours.findById(id);
         if (inspecteur == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", "InspecteurCours non trouvé avec l'id: " + id))
+                    .entity(Map.of("message", "InspecteurCours non trouve avec l'id: " + id))
                     .build();
         }
         return Response.ok(inspecteur).build();
@@ -103,14 +103,30 @@ public class InspecteurCoursResource {
         InspecteurCours existing = InspecteurCours.findById(id);
         if (existing == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", "InspecteurCours non trouvé avec l'id: " + id))
+                    .entity(Map.of("message", "InspecteurCours non trouve avec l'id: " + id))
                     .build();
         }
 
-        // Mise à jour des champs
-        existing.idInspecteur = inspecteurCours.idInspecteur;
-        existing.cours = inspecteurCours.cours != null ? inspecteurCours.cours : existing.cours;
-        existing.classe = inspecteurCours.classe != null ? inspecteurCours.classe : existing.classe;
+        // Mise a jour des champs
+        if (inspecteurCours.idInspecteur != null) {
+            existing.idInspecteur = inspecteurCours.idInspecteur;
+        }
+        if (inspecteurCours.cours != null && !inspecteurCours.cours.isEmpty()) {
+            if (existing.cours == null) {
+                existing.cours = new ArrayList<>();
+            }
+            LinkedHashSet<Long> merged = new LinkedHashSet<>(existing.cours);
+            merged.addAll(inspecteurCours.cours);
+            existing.cours = new ArrayList<>(merged);
+        }
+        if (inspecteurCours.classe != null && !inspecteurCours.classe.isEmpty()) {
+            if (existing.classe == null) {
+                existing.classe = new ArrayList<>();
+            }
+            LinkedHashSet<UUID> merged = new LinkedHashSet<>(existing.classe);
+            merged.addAll(inspecteurCours.classe);
+            existing.classe = new ArrayList<>(merged);
+        }
 
         return Response.ok(existing).build();
     }
@@ -122,7 +138,7 @@ public class InspecteurCoursResource {
         InspecteurCours inspecteur = InspecteurCours.findById(id);
         if (inspecteur == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", "InspecteurCours non trouvé avec l'id: " + id))
+                    .entity(Map.of("message", "InspecteurCours non trouve avec l'id: " + id))
                     .build();
         }
 
@@ -130,7 +146,7 @@ public class InspecteurCoursResource {
         return Response.noContent().build();
     }
 
-    // Opérations spécifiques
+    // Operations specifiques
 
     @GET
     @Path("/inspecteur/{idInspecteur}")
@@ -146,7 +162,7 @@ public class InspecteurCoursResource {
         InspecteurCours inspecteur = InspecteurCours.findById(id);
         if (inspecteur == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", "InspecteurCours non trouvé"))
+                    .entity(Map.of("message", "InspecteurCours non trouve"))
                     .build();
         }
 
@@ -168,7 +184,7 @@ public class InspecteurCoursResource {
         InspecteurCours inspecteur = InspecteurCours.findById(id);
         if (inspecteur == null || inspecteur.cours == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", "InspecteurCours ou cours non trouvé"))
+                    .entity(Map.of("message", "InspecteurCours ou cours non trouve"))
                     .build();
         }
 
@@ -183,7 +199,7 @@ public class InspecteurCoursResource {
         InspecteurCours inspecteur = InspecteurCours.findById(id);
         if (inspecteur == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", "InspecteurCours non trouvé"))
+                    .entity(Map.of("message", "InspecteurCours non trouve"))
                     .build();
         }
 
@@ -201,11 +217,11 @@ public class InspecteurCoursResource {
     @DELETE
     @Path("/{id}/classe/{classeId}")
     @Transactional
-    public Response removeClasse(@PathParam("id") Long id, @PathParam("classeId") Long classeId) {
+    public Response removeClasse(@PathParam("id") Long id, @PathParam("classeId") UUID classeId) {
         InspecteurCours inspecteur = InspecteurCours.findById(id);
         if (inspecteur == null || inspecteur.classe == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("message", "InspecteurCours ou classe non trouvé"))
+                    .entity(Map.of("message", "InspecteurCours ou classe non trouve"))
                     .build();
         }
 
@@ -218,7 +234,7 @@ public class InspecteurCoursResource {
     public Response search(
             @QueryParam("idInspecteur") Long idInspecteur,
             @QueryParam("coursId") Long coursId,
-            @QueryParam("classeId") Long classeId) {
+            @QueryParam("classeId") UUID classeId) {
 
         StringBuilder queryBuilder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();

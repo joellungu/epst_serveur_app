@@ -17,4 +17,11 @@ public class Classe extends PanacheEntityBase {
     public String niveau;
     public String cycle;
     public String section;
+    public String nom;
+    public String option;
+    public Integer code;
+    public String dateEnregistrement;
+    public String updatedAt;
+    public String cle;
 }
+

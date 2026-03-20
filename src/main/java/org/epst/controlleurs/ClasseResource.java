@@ -104,6 +104,12 @@ public class ClasseResource {
         classe.niveau = data.niveau;
         classe.cycle = data.cycle;
         classe.section = data.section;
+        classe.nom = data.nom;
+        classe.option = data.option;
+        classe.code = data.code;
+        classe.dateEnregistrement = data.dateEnregistrement;
+        classe.updatedAt = data.updatedAt;
+        classe.cle = data.cle;
 
         return classe;
     }
@@ -125,3 +131,6 @@ public class ClasseResource {
     }
 
 }
+
+
+

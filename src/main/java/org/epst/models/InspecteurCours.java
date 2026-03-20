@@ -21,7 +21,7 @@ public class InspecteurCours extends PanacheEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     public List<UUID> classe = new ArrayList<>();
 
-    // Méthodes utilitaires
+    // Methodes utilitaires
     public void addCours(Long coursId) {
         if (this.cours == null) {
             this.cours = new ArrayList<>();
@@ -46,7 +46,7 @@ public class InspecteurCours extends PanacheEntity {
         }
     }
 
-    public void removeClasse(Long classeId) {
+    public void removeClasse(UUID classeId) {
         if (this.classe != null) {
             this.classe.remove(classeId);
         }
