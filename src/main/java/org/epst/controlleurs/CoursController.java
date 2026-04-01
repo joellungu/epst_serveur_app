@@ -132,7 +132,30 @@ public class CoursController {
         //
         Cours cours = Cours.findById(id);
         //
-        return Response.ok(cours.data).build();
+        if (cours == null || cours.data == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        String mediaType = mapMediaType(cours.type);
+        String ext = (cours.type == null || cours.type.isEmpty()) ? "bin" : cours.type;
+        return Response.ok(cours.data, mediaType)
+                .header("Content-Disposition", "inline; filename=\"cours_" + id + "." + ext + "\"")
+                .build();
+    }
+
+    @Path("media")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response media(@QueryParam("id") Long id) {
+        Cours cours = Cours.findById(id);
+        if (cours == null || cours.data == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        String mediaType = mapMediaType(cours.type);
+        String ext = (cours.type == null || cours.type.isEmpty()) ? "bin" : cours.type;
+        return Response.ok(cours.data, mediaType)
+                .header("Content-Disposition", "inline; filename=\"cours_" + id + "." + ext + "\"")
+                .build();
     }
 
 
@@ -205,6 +228,24 @@ public class CoursController {
     public String capitalize(String text) {
         if (text == null || text.isEmpty()) return text;
         return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
+    }
+
+    private String mapMediaType(String type) {
+        if (type == null) return MediaType.APPLICATION_OCTET_STREAM;
+        String t = type.toLowerCase();
+        return switch (t) {
+            case "pdf" -> "application/pdf";
+            case "mp4" -> "video/mp4";
+            case "mov" -> "video/quicktime";
+            case "avi" -> "video/x-msvideo";
+            case "mkv" -> "video/x-matroska";
+            case "mp3" -> "audio/mpeg";
+            case "wav" -> "audio/wav";
+            case "aac" -> "audio/aac";
+            case "png" -> "image/png";
+            case "jpg", "jpeg" -> "image/jpeg";
+            default -> MediaType.APPLICATION_OCTET_STREAM;
+        };
     }
 
 }
