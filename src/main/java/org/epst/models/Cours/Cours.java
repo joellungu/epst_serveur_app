@@ -17,6 +17,12 @@ public class Cours extends PanacheEntity {
     public int cls;
     public String type;// Type de contenue (audio, video, pdf)
     public UUID idClasse; // Ex 1er primaire ...
+    public String niveau;
+    public String section;
+    public String option;
+    public String nomClasse;
+    public String lettre;
+    public String cleEcole;
 
     public byte[] data;
     //
