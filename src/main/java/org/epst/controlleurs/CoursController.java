@@ -244,6 +244,7 @@ public class CoursController {
             case "aac" -> "audio/aac";
             case "png" -> "image/png";
             case "jpg", "jpeg" -> "image/jpeg";
+            case "zip" -> "application/zip";
             default -> MediaType.APPLICATION_OCTET_STREAM;
         };
     }
