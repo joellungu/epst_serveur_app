@@ -1,4 +1,4 @@
-﻿package org.epst.controlleurs;
+package org.epst.controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
