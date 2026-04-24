@@ -1,4 +1,4 @@
-package org.epst.controlleurs;
+﻿package org.epst.controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +13,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.epst.models.Agent.Agent;
 import org.epst.models.scorm.ProgressionCoursScorm;
 
 import java.time.LocalDateTime;
@@ -121,6 +122,52 @@ public class ProgressionCoursScormResource {
         }
 
         return new ArrayList<>(resumes.values());
+    }
+
+    @GET
+    @Path("/course-details/{courseId}")
+    public List<ScormCourseTeacherDetailResponse> courseDetails(@PathParam("courseId") String courseId) {
+        if (isBlank(courseId)) {
+            throw new jakarta.ws.rs.BadRequestException("courseId est obligatoire");
+        }
+
+        List<ProgressionCoursScorm> all = ProgressionCoursScorm.find(
+                "courseId = ?1 order by synchronizedAt desc, id desc",
+                courseId
+        ).list();
+
+        Map<String, ScormCourseTeacherDetailResponse> details = new LinkedHashMap<>();
+        for (ProgressionCoursScorm progression : all) {
+            String key = progression.numeroIdentifiant + "::" + safe(progression.cle);
+            ScormCourseTeacherDetailResponse detail = details.computeIfAbsent(
+                    key,
+                    ignored -> ScormCourseTeacherDetailResponse.fromLatest(progression)
+            );
+            detail.totalSynchronisations++;
+            if (progression.nombreInteractions != null && progression.nombreInteractions > detail.nombreInteractions) {
+                detail.nombreInteractions = progression.nombreInteractions;
+            }
+        }
+
+        for (ScormCourseTeacherDetailResponse detail : details.values()) {
+            Agent agent = Agent.find("matricule", detail.numeroIdentifiant).firstResult();
+            if (agent != null) {
+                detail.agentId = agent.id;
+                detail.nom = agent.nom;
+                detail.postnom = agent.postnom;
+                detail.prenom = agent.prenom;
+                detail.nomComplet = buildNomComplet(agent);
+                detail.numero = agent.numero;
+                detail.email = agent.email;
+                detail.province = agent.province;
+                detail.district = agent.district;
+                detail.role = agent.role;
+            } else {
+                detail.nomComplet = detail.numeroIdentifiant;
+            }
+        }
+
+        return new ArrayList<>(details.values());
     }
 
     @POST
@@ -241,6 +288,30 @@ public class ProgressionCoursScormResource {
         return value == null || value.isBlank();
     }
 
+    private String safe(String value) {
+        return value == null ? "" : value;
+    }
+
+    private String buildNomComplet(Agent agent) {
+        StringBuilder builder = new StringBuilder();
+        if (agent.nom != null && !agent.nom.isBlank()) {
+            builder.append(agent.nom.trim());
+        }
+        if (agent.postnom != null && !agent.postnom.isBlank()) {
+            if (builder.length() > 0) {
+                builder.append(' ');
+            }
+            builder.append(agent.postnom.trim());
+        }
+        if (agent.prenom != null && !agent.prenom.isBlank()) {
+            if (builder.length() > 0) {
+                builder.append(' ');
+            }
+            builder.append(agent.prenom.trim());
+        }
+        return builder.length() == 0 ? agent.matricule : builder.toString();
+    }
+
     public static class SyncScormProgressionRequest {
         public String numeroIdentifiant;
         public String cle;
@@ -327,6 +398,55 @@ public class ProgressionCoursScormResource {
 
         static ScormCourseResumeResponse fromLatest(ProgressionCoursScorm progression) {
             ScormCourseResumeResponse response = new ScormCourseResumeResponse();
+            response.numeroIdentifiant = progression.numeroIdentifiant;
+            response.cle = progression.cle;
+            response.courseId = progression.courseId;
+            response.courseTitle = progression.courseTitle;
+            response.lessonStatus = progression.lessonStatus;
+            response.progressPercent = progression.progressPercent;
+            response.scoreRaw = progression.scoreRaw;
+            response.scoreMin = progression.scoreMin;
+            response.scoreMax = progression.scoreMax;
+            response.lessonLocation = progression.lessonLocation;
+            response.sessionTime = progression.sessionTime;
+            response.totalTime = progression.totalTime;
+            response.tempsPasseSecondes = progression.tempsPasseSecondes;
+            response.nombreInteractions = progression.nombreInteractions == null ? 0 : progression.nombreInteractions;
+            response.derniereSynchronisation = progression.synchronizedAt;
+            return response;
+        }
+    }
+
+    public static class ScormCourseTeacherDetailResponse {
+        public Long agentId;
+        public String numeroIdentifiant;
+        public String cle;
+        public String nom;
+        public String postnom;
+        public String prenom;
+        public String nomComplet;
+        public String numero;
+        public String email;
+        public String province;
+        public String district;
+        public Integer role;
+        public String courseId;
+        public String courseTitle;
+        public String lessonStatus;
+        public Double progressPercent;
+        public Double scoreRaw;
+        public Double scoreMin;
+        public Double scoreMax;
+        public String lessonLocation;
+        public String sessionTime;
+        public String totalTime;
+        public Long tempsPasseSecondes;
+        public Integer nombreInteractions;
+        public int totalSynchronisations;
+        public LocalDateTime derniereSynchronisation;
+
+        static ScormCourseTeacherDetailResponse fromLatest(ProgressionCoursScorm progression) {
+            ScormCourseTeacherDetailResponse response = new ScormCourseTeacherDetailResponse();
             response.numeroIdentifiant = progression.numeroIdentifiant;
             response.cle = progression.cle;
             response.courseId = progression.courseId;
