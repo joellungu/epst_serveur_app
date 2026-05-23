@@ -17,9 +17,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Path("/online/sessions")
 @Produces(MediaType.APPLICATION_JSON)
@@ -33,6 +36,7 @@ public class LiveSessionResource {
 
     public static class StartSessionRequest {
         public String classId;
+        public List<String> classIds;
         public String title;
         public String hostMatricule;
         public OnlineRole hostRole;
@@ -50,6 +54,13 @@ public class LiveSessionResource {
         public InspectorFocus inspectorFocus;
     }
 
+    public static class TeacherAccessRequest {
+        public String accessKey;
+        public String classId;
+        public String matricule;
+        public String displayName;
+    }
+
     public static class EndSessionRequest {
         public Long sessionId;
         public String endedByMatricule;
@@ -60,23 +71,26 @@ public class LiveSessionResource {
     @Path("/start")
     @Transactional
     public Response startSession(StartSessionRequest request) {
-        if (request == null || request.classId == null || request.hostMatricule == null || request.hostRole == null) {
+        if (request == null || request.hostMatricule == null || request.hostRole == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
         }
 
-        Classe resolvedClass = ClassLabelUtil.resolveClass(request.classId);
-        if (resolvedClass == null) {
+        List<Classe> resolvedClasses = resolveRequestedClasses(request);
+        if (resolvedClasses.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Class not recognized").build();
         }
-        String resolvedClassId = resolvedClass.id.toString();
+        Classe primaryClass = resolvedClasses.get(0);
+        String resolvedClassId = primaryClass.id.toString();
 
         if (isInspectorRole(request.hostRole)) {
             Agent agent = Agent.find("matricule", request.hostMatricule).firstResult();
             if (agent == null || !isInspectorRoleAllowed(agent, request.hostRole)) {
                 return Response.status(Response.Status.FORBIDDEN).entity("Inspector not recognized").build();
             }
-            if (!isInspectorAssignedToClass(agent.id, resolvedClass.id)) {
-                return Response.status(Response.Status.FORBIDDEN).entity("Inspector not assigned to class").build();
+            for (Classe resolvedClass : resolvedClasses) {
+                if (!isInspectorAssignedToClass(agent.id, resolvedClass.id)) {
+                    return Response.status(Response.Status.FORBIDDEN).entity("Inspector not assigned to class").build();
+                }
             }
         }
 
@@ -87,9 +101,10 @@ public class LiveSessionResource {
         session.hostMatricule = request.hostMatricule;
         session.startedAt = LocalDateTime.now();
         session.status = LiveSession.SessionStatus.LIVE;
+        session.accessKey = generateAccessKey();
         session.zegoRoomId = request.zegoRoomId != null
                 ? request.zegoRoomId
-                : "class-" + resolvedClassId + "-" + System.currentTimeMillis();
+                : "live-" + session.accessKey.toLowerCase(Locale.ROOT) + "-" + System.currentTimeMillis();
         session.recordingEnabled = request.recordingEnabled != null && request.recordingEnabled;
         session.maxParticipants = request.maxParticipants != null && request.maxParticipants > 0
                 ? request.maxParticipants
@@ -104,21 +119,70 @@ public class LiveSessionResource {
             session.audience = requestedAudience;
         }
 
-        long existingLive = LiveSession.count(
-                "classId = ?1 and status = ?2 and audience = ?3",
-                resolvedClassId,
-                LiveSession.SessionStatus.LIVE,
-                session.audience
-        );
-        if (existingLive > 0) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity("Class already has an active session for this audience")
-                    .build();
+        for (Classe resolvedClass : resolvedClasses) {
+            if (hasActiveSessionForClass(resolvedClass.id.toString(), session.audience)) {
+                return Response.status(Response.Status.CONFLICT)
+                        .entity("Class already has an active session for this audience")
+                        .build();
+            }
         }
 
         session.persist();
+        for (Classe resolvedClass : resolvedClasses) {
+            LiveSessionClass sessionClass = new LiveSessionClass();
+            sessionClass.sessionId = session.id;
+            sessionClass.classId = resolvedClass.id.toString();
+            sessionClass.classLabel = ClassLabelUtil.buildLabel(resolvedClass);
+            sessionClass.persist();
+        }
 
-        return Response.ok(session).build();
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("session", session);
+        response.put("accessKey", session.accessKey);
+        response.put("zegoRoomId", session.zegoRoomId);
+        response.put("classes", LiveSessionClass.list("sessionId", session.id));
+        return Response.ok(response).build();
+    }
+
+    @POST
+    @Path("/teacher/access")
+    @Transactional
+    public Response teacherAccess(TeacherAccessRequest request) {
+        if (request == null || isBlank(request.accessKey) || isBlank(request.classId)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
+        }
+
+        LiveSession session = LiveSession.find(
+                "accessKey = ?1 and status = ?2 and audience <> ?3",
+                normalizeAccessKey(request.accessKey),
+                LiveSession.SessionStatus.LIVE,
+                SessionAudience.STUDENT
+        ).firstResult();
+        if (session == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Live session not found").build();
+        }
+
+        LiveSessionClass allowedClass = findAllowedClass(session.id, request.classId);
+        if (allowedClass == null) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Class not allowed for this live").build();
+        }
+
+        if (!isBlank(request.matricule)) {
+            SessionParticipant participant = new SessionParticipant();
+            participant.sessionId = session.id;
+            participant.matricule = request.matricule;
+            participant.displayName = !isBlank(request.displayName) ? request.displayName : request.matricule;
+            participant.role = OnlineRole.TEACHER;
+            participant.persist();
+        }
+
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("sessionId", session.id);
+        response.put("accessKey", session.accessKey);
+        response.put("zegoRoomId", session.zegoRoomId);
+        response.put("classId", allowedClass.classId);
+        response.put("classLabel", allowedClass.classLabel);
+        return Response.ok(response).build();
     }
 
     @POST
@@ -240,7 +304,18 @@ public class LiveSessionResource {
         if (resolvedClass == null) {
             return Response.ok(List.of()).build();
         }
-        return Response.ok(LiveSession.list("classId", resolvedClass.id.toString())).build();
+        List<LiveSessionClass> mappings = LiveSessionClass.list("classId", resolvedClass.id.toString());
+        if (mappings.isEmpty()) {
+            return Response.ok(LiveSession.list("classId", resolvedClass.id.toString())).build();
+        }
+        List<LiveSession> sessions = new ArrayList<>();
+        for (LiveSessionClass mapping : mappings) {
+            LiveSession session = LiveSession.findById(mapping.sessionId);
+            if (session != null) {
+                sessions.add(session);
+            }
+        }
+        return Response.ok(sessions).build();
     }
 
     @GET
@@ -271,6 +346,82 @@ public class LiveSessionResource {
         participant.status = SessionParticipant.ParticipantStatus.LEFT;
         participant.leftAt = LocalDateTime.now();
         return Response.ok(participant).build();
+    }
+
+    private List<Classe> resolveRequestedClasses(StartSessionRequest request) {
+        List<String> requestedIds = new ArrayList<>();
+        if (request.classIds != null) {
+            requestedIds.addAll(request.classIds);
+        }
+        if (!isBlank(request.classId) && requestedIds.isEmpty()) {
+            requestedIds.add(request.classId);
+        }
+
+        List<Classe> classes = new ArrayList<>();
+        for (String requestedId : requestedIds) {
+            Classe resolvedClass = ClassLabelUtil.resolveClass(requestedId);
+            if (resolvedClass == null) {
+                continue;
+            }
+            boolean exists = false;
+            for (Classe classe : classes) {
+                if (classe.id.equals(resolvedClass.id)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                classes.add(resolvedClass);
+            }
+        }
+        return classes;
+    }
+
+    private boolean hasActiveSessionForClass(String classId, SessionAudience audience) {
+        List<LiveSessionClass> mappings = LiveSessionClass.list("classId", classId);
+        for (LiveSessionClass mapping : mappings) {
+            LiveSession session = LiveSession.findById(mapping.sessionId);
+            if (session != null && session.status == LiveSession.SessionStatus.LIVE && session.audience == audience) {
+                return true;
+            }
+        }
+        return LiveSession.count(
+                "classId = ?1 and status = ?2 and audience = ?3",
+                classId,
+                LiveSession.SessionStatus.LIVE,
+                audience
+        ) > 0;
+    }
+
+    private LiveSessionClass findAllowedClass(Long sessionId, String classIdOrLabel) {
+        Classe resolvedClass = ClassLabelUtil.resolveClass(classIdOrLabel);
+        String resolvedClassId = resolvedClass == null ? null : resolvedClass.id.toString();
+        List<LiveSessionClass> mappings = LiveSessionClass.list("sessionId", sessionId);
+        for (LiveSessionClass mapping : mappings) {
+            if (resolvedClassId != null && resolvedClassId.equals(mapping.classId)) {
+                return mapping;
+            }
+            if (ClassLabelUtil.matchesLoose(mapping.classLabel, classIdOrLabel)) {
+                return mapping;
+            }
+        }
+        return null;
+    }
+
+    private String generateAccessKey() {
+        String key;
+        do {
+            key = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+        } while (LiveSession.count("accessKey = ?1 and status = ?2", key, LiveSession.SessionStatus.LIVE) > 0);
+        return key;
+    }
+
+    private String normalizeAccessKey(String accessKey) {
+        return accessKey == null ? "" : accessKey.trim().toUpperCase(Locale.ROOT);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private static class VerificationResult {

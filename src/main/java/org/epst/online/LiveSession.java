@@ -20,6 +20,7 @@ public class LiveSession extends PanacheEntity {
     public String createdByMatricule;
     public String hostMatricule;
     public String zegoRoomId;
+    public String accessKey;
     public boolean recordingEnabled = false;
     public int maxParticipants = 40;
 

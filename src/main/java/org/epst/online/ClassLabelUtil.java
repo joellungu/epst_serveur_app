@@ -33,6 +33,13 @@ public final class ClassLabelUtil {
                 return c;
             }
         }
+        for (Classe c : classes) {
+            String label = buildLabel(c);
+            String normalizedLabel = normalize(label);
+            if (!normalizedLabel.isBlank() && (normalizedLabel.startsWith(target) || target.startsWith(normalizedLabel))) {
+                return c;
+            }
+        }
         return null;
     }
 
@@ -44,7 +51,16 @@ public final class ClassLabelUtil {
         if (classLabel.isBlank()) {
             return false;
         }
-        return normalize(classLabel).equals(normalize(label));
+        return matchesLoose(classLabel, label);
+    }
+
+    public static boolean matchesLoose(String expectedLabel, String candidateLabel) {
+        if (expectedLabel == null || expectedLabel.isBlank() || candidateLabel == null || candidateLabel.isBlank()) {
+            return false;
+        }
+        String expected = normalize(expectedLabel);
+        String candidate = normalize(candidateLabel);
+        return expected.equals(candidate) || expected.startsWith(candidate) || candidate.startsWith(expected);
     }
 
     public static String buildLabel(Classe classe) {
