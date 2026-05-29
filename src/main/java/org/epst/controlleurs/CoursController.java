@@ -42,7 +42,11 @@ public class CoursController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response all() {
-        return Response.ok(Cours.listAll()).build();
+        List<Cours> coursList = Cours.listAll();
+        coursList.forEach(cours -> {
+            cours.data = new byte[0];
+        });
+        return Response.ok(coursList).build();
     }
 
     @Path("allcours")
@@ -148,13 +152,14 @@ public class CoursController {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response media(@QueryParam("id") Long id) {
         Cours cours = Cours.findById(id);
-        if (cours == null || cours.data == null) {
+        if (cours == null || cours.data == null || cours.data.length == 0) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         String mediaType = mapMediaType(cours.type);
         String ext = (cours.type == null || cours.type.isEmpty()) ? "bin" : cours.type;
         return Response.ok(cours.data, mediaType)
-                .header("Content-Disposition", "inline; filename=\"cours_" + id + "." + ext + "\"")
+                .header("Content-Disposition", "attachment; filename=\"cours_" + id + "." + ext + "\"")
+                .header("Content-Length", cours.data.length)
                 .build();
     }
 

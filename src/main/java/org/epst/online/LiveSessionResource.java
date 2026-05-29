@@ -31,6 +31,9 @@ public class LiveSessionResource {
     @ConfigProperty(name = "school.server.base-url", defaultValue = "http://localhost:9090")
     String schoolServerBaseUrl;
 
+    @ConfigProperty(name = "online.live-session-expiration-hours", defaultValue = "4")
+    long liveSessionExpirationHours;
+
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -74,6 +77,7 @@ public class LiveSessionResource {
         if (request == null || request.hostMatricule == null || request.hostRole == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
         }
+        expireStaleLiveSessions();
 
         List<Classe> resolvedClasses = resolveRequestedClasses(request);
         if (resolvedClasses.isEmpty()) {
@@ -151,6 +155,7 @@ public class LiveSessionResource {
         if (request == null || isBlank(request.accessKey) || isBlank(request.classId)) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
         }
+        expireStaleLiveSessions();
 
         LiveSession session = LiveSession.find(
                 "accessKey = ?1 and status = ?2 and audience <> ?3",
@@ -192,6 +197,7 @@ public class LiveSessionResource {
         if (request == null || request.sessionId == null || request.matricule == null || request.role == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
         }
+        expireStaleLiveSessions();
 
         LiveSession session = LiveSession.findById(request.sessionId);
         if (session == null) {
@@ -391,6 +397,33 @@ public class LiveSessionResource {
                 LiveSession.SessionStatus.LIVE,
                 audience
         ) > 0;
+    }
+
+    private void expireStaleLiveSessions() {
+        if (liveSessionExpirationHours <= 0) {
+            return;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime cutoff = now.minusHours(liveSessionExpirationHours);
+        List<LiveSession> staleSessions = LiveSession.list(
+                "status = ?1 and startedAt < ?2",
+                LiveSession.SessionStatus.LIVE,
+                cutoff
+        );
+        for (LiveSession staleSession : staleSessions) {
+            staleSession.status = LiveSession.SessionStatus.ENDED;
+            staleSession.endedAt = now;
+
+            List<SessionParticipant> participants = SessionParticipant.list(
+                    "sessionId = ?1 and status = ?2",
+                    staleSession.id,
+                    SessionParticipant.ParticipantStatus.JOINED
+            );
+            for (SessionParticipant participant : participants) {
+                participant.status = SessionParticipant.ParticipantStatus.LEFT;
+                participant.leftAt = now;
+            }
+        }
     }
 
     private LiveSessionClass findAllowedClass(Long sessionId, String classIdOrLabel) {
