@@ -36,11 +36,13 @@ public class ProgressionCoursScormResource {
 
 
     @GET
+    @Transactional
     public List<ProgressionCoursScorm> getAll() {
         return ProgressionCoursScorm.listAll();
     }
 
     @GET
+    @Transactional
     @Path("/list")
     public List<ProgressionCoursScorm> list(
             @QueryParam("numeroIdentifiant") String numeroIdentifiant,
