@@ -34,7 +34,14 @@ public class ProgressionCoursScormResource {
         this.objectMapper = objectMapper;
     }
 
+
     @GET
+    public List<ProgressionCoursScorm> getAll() {
+        return ProgressionCoursScorm.listAll();
+    }
+
+    @GET
+    @Path("/list")
     public List<ProgressionCoursScorm> list(
             @QueryParam("numeroIdentifiant") String numeroIdentifiant,
             @QueryParam("cle") String cle,
