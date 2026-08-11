@@ -1,5 +1,6 @@
 package org.epst.models.Cours;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 
@@ -24,6 +25,15 @@ public class Cours extends PanacheEntity {
     public String lettre;
     public String cleEcole;
 
+    // Ancien stockage en base, conserve pour lire les medias deja enregistres.
+    @JsonIgnore
     public byte[] data;
+
+    // Nouveau stockage Bucketeer/S3 pour les medias de la bibliotheque.
+    public String mediaStorageKey;
+    public String mediaOriginalName;
+    public String mediaContentType;
+    public Long mediaSize;
+    public String mediaStorageStatus;
     //
 }
