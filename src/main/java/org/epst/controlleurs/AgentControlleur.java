@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.epst.beans.Utilisateur;
 import org.epst.models.Agent.Agent;
+import org.epst.models.LoginRequest;
 import org.epst.models.ModelUtilisateur;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,19 +33,68 @@ public class AgentControlleur {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getAgent(@PathParam("matricule") String matricule,
                                 @PathParam("mdp") String mdp){
-        //
-        System.out.println("matricule: "+matricule);
-        System.out.println("mdp: "+mdp);
-        //
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("matricule",matricule);
-        params.put("mdp",mdp);
+        return doLogin(matricule, mdp);
+    }
 
-        Agent utilisater = Agent.find("matricule =:matricule and mdp =:mdp ",params).firstResult();
-        if(utilisater == null){
-            return Response.serverError().build();
+    @Path("/login")
+    @POST()
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response login(LoginRequest request){
+        if (request == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(errorJson("Veuillez fournir votre matricule et votre mot de passe."))
+                    .build();
         }
+        return doLogin(request.matricule, request.mdp);
+    }
+
+    private Response doLogin(String matricule, String mdp) {
+        String mat = matricule == null ? "" : matricule.trim();
+        String pass = mdp == null ? "" : mdp;
+
+        if (mat.isEmpty() || pass.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(errorJson("Veuillez fournir votre matricule et votre mot de passe."))
+                    .build();
+        }
+
+        System.out.println("matricule: "+mat);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("matricule", mat);
+        params.put("mdp", pass);
+
+        Agent utilisater;
+        try {
+            utilisater = Agent.find("matricule =:matricule and mdp =:mdp ", params).firstResult();
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la connexion: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(errorJson("Erreur interne du serveur. Veuillez réessayer plus tard."))
+                    .build();
+        }
+
+        if (utilisater == null) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(errorJson("Matricule ou mot de passe incorrect."))
+                    .build();
+        }
+
+        if ("0".equals(utilisater.id_statut)) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(errorJson("Votre compte est désactivé. Veuillez contacter l'administrateur."))
+                    .build();
+        }
+
         return Response.ok(utilisater).build();
+    }
+
+    private ObjectNode errorJson(String message) {
+        ObjectNode json = mapper.createObjectNode();
+        json.put("status", "error");
+        json.put("message", message);
+        return json;
     }
 
     @Path("/{id}")
