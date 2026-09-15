@@ -15,6 +15,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.epst.models.Agent.Agent;
 import org.epst.models.scorm.ProgressionCoursScorm;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +35,11 @@ import java.util.Map;
 public class ProgressionCoursScormResource {
 
     private final ObjectMapper objectMapper;
+
+    @ConfigProperty(name = "school.server.base-url", defaultValue = "http://localhost:9090")
+    String schoolServerBaseUrl;
+
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public ProgressionCoursScormResource(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -160,6 +171,9 @@ public class ProgressionCoursScormResource {
 
         for (ScormCourseTeacherDetailResponse detail : details.values()) {
             Agent agent = Agent.find("matricule", detail.numeroIdentifiant).firstResult();
+            if (agent == null) {
+                agent = Agent.find("numero", detail.numeroIdentifiant).firstResult();
+            }
             if (agent != null) {
                 detail.agentId = agent.id;
                 detail.nom = agent.nom;
@@ -171,8 +185,25 @@ public class ProgressionCoursScormResource {
                 detail.province = agent.province;
                 detail.district = agent.district;
                 detail.role = agent.role;
+                detail.typeApprenant = "ENSEIGNANT";
             } else {
-                detail.nomComplet = detail.numeroIdentifiant;
+                // Pas un agent/enseignant : on tente un élève côté Smart-Kelasi
+                // (les IDs élèves viennent de Smart-Kelasi, pas de la table Agent).
+                JsonNode eleve = fetchEleveNode(detail.numeroIdentifiant);
+                if (eleve != null) {
+                    detail.nom = textOrNull(eleve, "nom");
+                    detail.postnom = textOrNull(eleve, "postnom");
+                    detail.prenom = textOrNull(eleve, "prenom");
+                    detail.nomComplet = buildNomComplet(
+                            detail.nom, detail.postnom, detail.prenom,
+                            detail.numeroIdentifiant);
+                    detail.classe = textOrNull(eleve, "classe");
+                    detail.cleEcole = textOrNull(eleve, "cleEcole");
+                    detail.typeApprenant = "ELEVE";
+                } else {
+                    detail.nomComplet = detail.numeroIdentifiant;
+                    detail.typeApprenant = "INCONNU";
+                }
             }
         }
 
@@ -302,23 +333,47 @@ public class ProgressionCoursScormResource {
     }
 
     private String buildNomComplet(Agent agent) {
+        return buildNomComplet(agent.nom, agent.postnom, agent.prenom, agent.matricule);
+    }
+
+    private String buildNomComplet(String nom, String postnom, String prenom, String fallback) {
         StringBuilder builder = new StringBuilder();
-        if (agent.nom != null && !agent.nom.isBlank()) {
-            builder.append(agent.nom.trim());
+        if (nom != null && !nom.isBlank()) {
+            builder.append(nom.trim());
         }
-        if (agent.postnom != null && !agent.postnom.isBlank()) {
+        if (postnom != null && !postnom.isBlank()) {
             if (builder.length() > 0) {
                 builder.append(' ');
             }
-            builder.append(agent.postnom.trim());
+            builder.append(postnom.trim());
         }
-        if (agent.prenom != null && !agent.prenom.isBlank()) {
+        if (prenom != null && !prenom.isBlank()) {
             if (builder.length() > 0) {
                 builder.append(' ');
             }
-            builder.append(agent.prenom.trim());
+            builder.append(prenom.trim());
         }
-        return builder.length() == 0 ? agent.matricule : builder.toString();
+        return builder.length() == 0 ? (fallback == null ? "" : fallback) : builder.toString();
+    }
+
+    private JsonNode fetchEleveNode(String numeroIdentifiant) {
+        if (isBlank(numeroIdentifiant)) return null;
+        try {
+            String base = schoolServerBaseUrl.endsWith("/") ? schoolServerBaseUrl : schoolServerBaseUrl + "/";
+            URI uri = URI.create(base + "eleve/verify/" + numeroIdentifiant);
+            HttpRequest httpRequest = HttpRequest.newBuilder(uri).GET().build();
+            HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) return null;
+            return objectMapper.readTree(response.body());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String textOrNull(JsonNode node, String field) {
+        if (node == null || !node.hasNonNull(field)) return null;
+        String value = node.get(field).asText();
+        return (value == null || value.isBlank() || "null".equalsIgnoreCase(value)) ? null : value.trim();
     }
 
     public static class SyncScormProgressionRequest {
@@ -439,6 +494,9 @@ public class ProgressionCoursScormResource {
         public String province;
         public String district;
         public Integer role;
+        public String classe;
+        public String cleEcole;
+        public String typeApprenant;
         public String courseId;
         public String courseTitle;
         public String lessonStatus;

@@ -119,6 +119,10 @@ public class LiveSessionResource {
             session.audience = SessionAudience.STUDENT;
         } else if (request.hostRole == OnlineRole.INSPECTOR_TEACHER) {
             session.audience = SessionAudience.TEACHER;
+        } else if (request.hostRole == OnlineRole.INSPECTOR_STREAMING) {
+            // L'inspecteur vidéo streaming (rôle 21) peut diffuser pour
+            // les élèves, les enseignants ou les deux (BOTH).
+            session.audience = requestedAudience;
         } else {
             session.audience = requestedAudience;
         }
@@ -188,6 +192,74 @@ public class LiveSessionResource {
         response.put("classId", allowedClass.classId);
         response.put("classLabel", allowedClass.classLabel);
         return Response.ok(response).build();
+    }
+
+    @POST
+    @Path("/student/access")
+    @Transactional
+    public Response studentAccess(TeacherAccessRequest request) {
+        if (request == null || isBlank(request.accessKey) || isBlank(request.classId)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
+        }
+        expireStaleLiveSessions();
+
+        // Même principe que teacher/access mais pour les élèves :
+        // on accepte les sessions STUDENT ou BOTH (audience <> TEACHER).
+        LiveSession session = LiveSession.find(
+                "accessKey = ?1 and status = ?2 and audience <> ?3",
+                normalizeAccessKey(request.accessKey),
+                LiveSession.SessionStatus.LIVE,
+                SessionAudience.TEACHER
+        ).firstResult();
+        if (session == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Live session not found").build();
+        }
+
+        LiveSessionClass allowedClass = findAllowedClass(session.id, request.classId);
+        if (allowedClass == null) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Class not allowed for this live").build();
+        }
+
+        if (!isBlank(request.matricule)) {
+            // Vérifie que l'élève existe côté Smart-Kelasi (ID élève).
+            VerificationResult verification = verifyStudent(request.matricule);
+            if (!verification.ok) {
+                return Response.status(Response.Status.FORBIDDEN).entity("Student not recognized").build();
+            }
+            SessionParticipant participant = new SessionParticipant();
+            participant.sessionId = session.id;
+            participant.matricule = request.matricule;
+            participant.displayName = !isBlank(request.displayName) ? request.displayName : request.matricule;
+            participant.role = OnlineRole.STUDENT;
+            participant.persist();
+        }
+
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("sessionId", session.id);
+        response.put("accessKey", session.accessKey);
+        response.put("zegoRoomId", session.zegoRoomId);
+        response.put("classId", allowedClass.classId);
+        response.put("classLabel", allowedClass.classLabel);
+        return Response.ok(response).build();
+    }
+
+    @GET
+    @Path("/live")
+    public Response listLiveSessions() {
+        expireStaleLiveSessions();
+        List<LiveSession> sessions = LiveSession.list(
+                "status = ?1 order by startedAt desc",
+                LiveSession.SessionStatus.LIVE);
+        return Response.ok(sessions).build();
+    }
+
+    @GET
+    @Path("/recent")
+    public Response listRecentSessions(@QueryParam("limit") Integer limit) {
+        int max = (limit == null || limit <= 0 || limit > 200) ? 100 : limit;
+        List<LiveSession> sessions = LiveSession.find(
+                "order by startedAt desc").page(0, max).list();
+        return Response.ok(sessions).build();
     }
 
     @POST
@@ -506,6 +578,10 @@ public class LiveSessionResource {
         if (role == OnlineRole.INSPECTOR_TEACHER) {
             return agent.role == 20;
         }
+        if (role == OnlineRole.INSPECTOR_STREAMING) {
+            // Rôle 21 = Inspecteur vidéo streaming (cours en ligne).
+            return agent.role == 21;
+        }
         return OnlineRoleMapper.isInspectorRole(agent.role);
     }
 
@@ -523,7 +599,8 @@ public class LiveSessionResource {
     }
 
     private boolean isInspectorRole(OnlineRole role) {
-        return role == OnlineRole.INSPECTOR || role == OnlineRole.INSPECTOR_STUDENT || role == OnlineRole.INSPECTOR_TEACHER;
+        return role == OnlineRole.INSPECTOR || role == OnlineRole.INSPECTOR_STUDENT || role == OnlineRole.INSPECTOR_TEACHER
+                || role == OnlineRole.INSPECTOR_STREAMING;
     }
 
     private boolean isAudienceAllowed(SessionAudience audience, OnlineRole role) {

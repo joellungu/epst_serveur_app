@@ -6,5 +6,6 @@ public enum OnlineRole {
     INSPECTOR,
     INSPECTOR_STUDENT,
     INSPECTOR_TEACHER,
+    INSPECTOR_STREAMING,
     ADMIN
 }

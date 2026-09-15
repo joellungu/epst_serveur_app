@@ -4,8 +4,11 @@ import java.util.Set;
 
 public final class OnlineRoleMapper {
     private static final Set<Integer> INSPECTOR_ROLES = Set.of(
-            7, 8, 9, 10, 13, 14, 15, 16, 19, 20
+            7, 8, 9, 10, 13, 14, 15, 16, 19, 20, 21
     );
+
+    /** Rôle 21 = Inspecteur vidéo streaming (cours en ligne / lives). */
+    private static final Set<Integer> STREAMING_INSPECTOR_ROLES = Set.of(21);
 
     private static final Set<Integer> ADMIN_ROLES = Set.of(
             0, 17, 18
@@ -16,6 +19,10 @@ public final class OnlineRoleMapper {
 
     public static boolean isInspectorRole(int role) {
         return INSPECTOR_ROLES.contains(role);
+    }
+
+    public static boolean isStreamingInspectorRole(int role) {
+        return STREAMING_INSPECTOR_ROLES.contains(role);
     }
 
     public static boolean isAdminRole(int role) {
