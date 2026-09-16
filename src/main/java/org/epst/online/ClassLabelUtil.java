@@ -35,8 +35,7 @@ public final class ClassLabelUtil {
         }
         for (Classe c : classes) {
             String label = buildLabel(c);
-            String normalizedLabel = normalize(label);
-            if (!normalizedLabel.isBlank() && (normalizedLabel.startsWith(target) || target.startsWith(normalizedLabel))) {
+            if (matchesLoose(label, classIdOrLabel)) {
                 return c;
             }
         }
@@ -60,7 +59,8 @@ public final class ClassLabelUtil {
         }
         String expected = normalize(expectedLabel);
         String candidate = normalize(candidateLabel);
-        return expected.equals(candidate) || expected.startsWith(candidate) || candidate.startsWith(expected);
+        return !expected.isBlank() && !candidate.isBlank() && (expected.equals(candidate)
+                || expected.startsWith(candidate + " ") || candidate.startsWith(expected + " "));
     }
 
     public static String buildLabel(Classe classe) {
@@ -101,6 +101,7 @@ public final class ClassLabelUtil {
         String normalized = Normalizer.normalize(value, Normalizer.Form.NFD);
         normalized = normalized.replaceAll("\\p{M}", "");
         normalized = normalized.toLowerCase(Locale.ROOT);
+        normalized = normalized.replaceAll("\\b(\\d+)(?:ere|er|eme|e)\\b", "$1");
         normalized = NON_ALNUM.matcher(normalized).replaceAll(" ");
         normalized = MULTI_SPACE.matcher(normalized).replaceAll(" ").trim();
         return normalized;

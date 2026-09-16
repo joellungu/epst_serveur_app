@@ -12,6 +12,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import jakarta.persistence.LockModeType;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -34,7 +38,7 @@ public class LiveSessionResource {
     @ConfigProperty(name = "online.live-session-expiration-hours", defaultValue = "4")
     long liveSessionExpirationHours;
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static class StartSessionRequest {
@@ -78,6 +82,13 @@ public class LiveSessionResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
         }
         expireStaleLiveSessions();
+
+        if (!isInspectorRole(request.hostRole)) {
+            Agent host = Agent.find("matricule", request.hostMatricule).firstResult();
+            if (request.hostRole != OnlineRole.ADMIN || host == null || !OnlineRoleMapper.isAdminRole(host.role)) {
+                return Response.status(Response.Status.FORBIDDEN).entity("Host not allowed").build();
+            }
+        }
 
         List<Classe> resolvedClasses = resolveRequestedClasses(request);
         if (resolvedClasses.isEmpty()) {
@@ -198,7 +209,7 @@ public class LiveSessionResource {
     @Path("/student/access")
     @Transactional
     public Response studentAccess(TeacherAccessRequest request) {
-        if (request == null || isBlank(request.accessKey) || isBlank(request.classId)) {
+        if (request == null || isBlank(request.accessKey) || isBlank(request.classId) || isBlank(request.matricule)) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing required fields").build();
         }
         expireStaleLiveSessions();
@@ -220,15 +231,32 @@ public class LiveSessionResource {
             return Response.status(Response.Status.FORBIDDEN).entity("Class not allowed for this live").build();
         }
 
-        if (!isBlank(request.matricule)) {
-            // Vérifie que l'élève existe côté Smart-Kelasi (ID élève).
-            VerificationResult verification = verifyStudent(request.matricule);
-            if (!verification.ok) {
-                return Response.status(Response.Status.FORBIDDEN).entity("Student not recognized").build();
+        VerificationResult verification = verifyStudent(request.matricule);
+        if (!verification.ok) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Student not recognized").build();
+        }
+        LiveSessionClass schoolClass = findAllowedClass(session.id, verification.classe);
+        if (schoolClass == null || !schoolClass.classId.equals(allowedClass.classId)) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Student not in class").build();
+        }
+        // Serialize admission so reconnects cannot consume extra seats.
+        session = LiveSession.findById(session.id, LockModeType.PESSIMISTIC_WRITE);
+        if (session.status != LiveSession.SessionStatus.LIVE) {
+            return Response.status(Response.Status.CONFLICT).entity("Session is not live").build();
+        }
+        SessionParticipant existing = SessionParticipant.find(
+                "sessionId = ?1 and matricule = ?2 and role = ?3 and status = ?4",
+                session.id, request.matricule.trim(), OnlineRole.STUDENT,
+                SessionParticipant.ParticipantStatus.JOINED).firstResult();
+        if (existing == null) {
+            long count = SessionParticipant.count("sessionId = ?1 and status = ?2", session.id,
+                    SessionParticipant.ParticipantStatus.JOINED);
+            if (count >= session.maxParticipants) {
+                return Response.status(Response.Status.CONFLICT).entity("Class is full").build();
             }
             SessionParticipant participant = new SessionParticipant();
             participant.sessionId = session.id;
-            participant.matricule = request.matricule;
+            participant.matricule = request.matricule.trim();
             participant.displayName = !isBlank(request.displayName) ? request.displayName : request.matricule;
             participant.role = OnlineRole.STUDENT;
             participant.persist();
@@ -245,6 +273,7 @@ public class LiveSessionResource {
 
     @GET
     @Path("/live")
+    @Transactional
     public Response listLiveSessions() {
         expireStaleLiveSessions();
         List<LiveSession> sessions = LiveSession.list(
@@ -359,8 +388,17 @@ public class LiveSessionResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Session not found").build();
         }
 
+        Agent actor = Agent.find("matricule", request.endedByMatricule).firstResult();
+        if (actor == null || (!OnlineRoleMapper.isAdminRole(actor.role)
+                && !request.endedByMatricule.equals(session.hostMatricule))) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Only the host or an administrator can end this live").build();
+        }
+
         session.status = LiveSession.SessionStatus.ENDED;
         session.endedAt = LocalDateTime.now();
+        SessionParticipant.update("status = ?1, leftAt = ?2 where sessionId = ?3 and status = ?4",
+                SessionParticipant.ParticipantStatus.LEFT, session.endedAt, session.id,
+                SessionParticipant.ParticipantStatus.JOINED);
 
         return Response.ok(session).build();
     }
@@ -541,17 +579,23 @@ public class LiveSessionResource {
 
     private VerificationResult verifyStudent(String numeroIdentifiant) {
         try {
-            URI uri = buildSchoolUri("eleve/verify/" + numeroIdentifiant);
-            HttpRequest request = HttpRequest.newBuilder(uri).GET().build();
+            URI uri = buildSchoolUri("eleve/verify/" + URLEncoder.encode(numeroIdentifiant.trim(), StandardCharsets.UTF_8));
+            HttpRequest request = HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(15)).GET().build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
+                if (response.statusCode() >= 500) throw new ServiceUnavailableException("School service unavailable");
                 return new VerificationResult(false, null);
             }
             JsonNode node = objectMapper.readTree(response.body());
             String classe = node.hasNonNull("classe") ? node.get("classe").asText() : null;
-            return new VerificationResult(true, classe);
-        } catch (IOException | InterruptedException e) {
-            return new VerificationResult(false, null);
+            boolean registered = node.hasNonNull("numeroIdentifiant") && node.hasNonNull("cleEcole")
+                    && !node.get("cleEcole").asText().isBlank() && !isBlank(classe);
+            return new VerificationResult(registered, classe);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ServiceUnavailableException(Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("School service unavailable").build(), e);
+        } catch (IOException e) {
+            throw new ServiceUnavailableException(Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("School service unavailable").build(), e);
         }
     }
 

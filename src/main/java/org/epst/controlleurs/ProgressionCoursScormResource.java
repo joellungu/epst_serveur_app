@@ -76,7 +76,7 @@ public class ProgressionCoursScormResource {
             params.put("courseId", courseId);
         }
 
-        query.append(" order by synchronizedAt desc, id desc");
+        query.append(" order by coalesce(clientCreatedAt, synchronizedAt) desc, id desc");
         return ProgressionCoursScorm.find(query.toString(), params).list();
     }
 
@@ -92,6 +92,7 @@ public class ProgressionCoursScormResource {
 
     @GET
     @Path("/latest")
+    @Transactional
     public List<ProgressionCoursScorm> latest(
             @QueryParam("numeroIdentifiant") String numeroIdentifiant,
             @QueryParam("cle") String cle
@@ -101,7 +102,7 @@ public class ProgressionCoursScormResource {
         }
 
         List<ProgressionCoursScorm> all = ProgressionCoursScorm.find(
-                "numeroIdentifiant = ?1 and cle = ?2 order by synchronizedAt desc, id desc",
+                "numeroIdentifiant = ?1 and cle = ?2 order by coalesce(clientCreatedAt, synchronizedAt) desc, id desc",
                 numeroIdentifiant,
                 cle
         ).list();
@@ -115,6 +116,7 @@ public class ProgressionCoursScormResource {
 
     @GET
     @Path("/resume")
+    @Transactional
     public List<ScormCourseResumeResponse> resume(
             @QueryParam("numeroIdentifiant") String numeroIdentifiant,
             @QueryParam("cle") String cle
@@ -124,7 +126,7 @@ public class ProgressionCoursScormResource {
         }
 
         List<ProgressionCoursScorm> all = ProgressionCoursScorm.find(
-                "numeroIdentifiant = ?1 and cle = ?2 order by synchronizedAt desc, id desc",
+                "numeroIdentifiant = ?1 and cle = ?2 order by coalesce(clientCreatedAt, synchronizedAt) desc, id desc",
                 numeroIdentifiant,
                 cle
         ).list();
@@ -146,13 +148,14 @@ public class ProgressionCoursScormResource {
 
     @GET
     @Path("/course-details/{courseId}")
+    @Transactional
     public List<ScormCourseTeacherDetailResponse> courseDetails(@PathParam("courseId") String courseId) {
         if (isBlank(courseId)) {
             throw new jakarta.ws.rs.BadRequestException("courseId est obligatoire");
         }
 
         List<ProgressionCoursScorm> all = ProgressionCoursScorm.find(
-                "courseId = ?1 order by synchronizedAt desc, id desc",
+                "courseId = ?1 order by coalesce(clientCreatedAt, synchronizedAt) desc, id desc",
                 courseId
         ).list();
 
