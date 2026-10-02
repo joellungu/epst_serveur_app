@@ -156,6 +156,16 @@ public class PlainteControlleur {
         plainte1.date = plainte.date;
         plainte1.province = plainte.province;
         //
+        plainte1.nom = plainte.nom;
+        plainte1.postnom = plainte.postnom;
+        plainte1.prenom = plainte.prenom;
+        plainte1.sexe = plainte.sexe;
+        plainte1.etablissement = plainte.etablissement;
+        plainte1.profil = plainte.profil;
+        plainte1.province_education = plainte.province_education;
+        plainte1.latitude = plainte.latitude;
+        plainte1.longitude = plainte.longitude;
+        //
         ObjectNode json = mapper.createObjectNode();
         //
         json.put("mettre à jour", plainte1.id);

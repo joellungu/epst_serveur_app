@@ -292,8 +292,8 @@ public class ModelPlainte {
         try{
             piecejointe_id = getId();
             //
-            String sql = "INSERT INTO depot_plainte (id, envoyeur, telephone, email, destinateur, id_tiquet, message, id_statut, piecejointe_id, reference, date, province) "+
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO depot_plainte (id, envoyeur, telephone, email, destinateur, id_tiquet, message, id_statut, piecejointe_id, reference, date, province, nom, postnom, prenom, sexe, etablissement, profil, province_education, latitude, longitude) "+
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setLong(1, getId());
@@ -308,6 +308,15 @@ public class ModelPlainte {
             statement.setString(10, plainte.getReference());
             statement.setString(11, plainte.getDate());
             statement.setString(12, plainte.getProvince());
+            statement.setString(13, plainte.getNom());
+            statement.setString(14, plainte.getPostnom());
+            statement.setString(15, plainte.getPrenom());
+            statement.setString(16, plainte.getSexe());
+            statement.setString(17, plainte.getEtablissement());
+            statement.setString(18, plainte.getProfil());
+            statement.setString(19, plainte.getProvince_education());
+            statement.setDouble(20, plainte.getLatitude());
+            statement.setDouble(21, plainte.getLongitude());
             //
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -419,7 +428,16 @@ public class ModelPlainte {
             "piecejointe_id = '"+Plainte.getPiecejointe_id()+"', "+
             "reference = '"+Plainte.getReference()+"', "+
             "date = '"+Plainte.getDate()+"', "+
-            "province = '"+Plainte.getProvince()+"' WHERE id = '"+Plainte.getEmail()+"'";
+            "province = '"+Plainte.getProvince()+"', "+
+            "nom = '"+Plainte.getNom()+"', "+
+            "postnom = '"+Plainte.getPostnom()+"', "+
+            "prenom = '"+Plainte.getPrenom()+"', "+
+            "sexe = '"+Plainte.getSexe()+"', "+
+            "etablissement = '"+Plainte.getEtablissement()+"', "+
+            "profil = '"+Plainte.getProfil()+"', "+
+            "province_education = '"+Plainte.getProvince_education()+"', "+
+            "latitude = '"+Plainte.getLatitude()+"', "+
+            "longitude = '"+Plainte.getLongitude()+"' WHERE id = '"+Plainte.getEmail()+"'";
             //"UPDATE plainte SET date = ?, telephone = ?, email = ?, province = ?, id_tiquet = ?, message = ?, statut = ?, piecejointe_id = ?, reference = ? WHERE id = ?";
             //
             Statement stmt = con.createStatement();

@@ -57,6 +57,17 @@ public class Plainte extends PanacheEntity {
     public String date;
     public String province;
     public Long test;
+    // Nouvelles informations du formulaire MGP
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String sexe;
+    public String etablissement;
+    public String profil;
+    public String province_education;
+    // Géolocalisation (récupérée avec l'accord de l'utilisateur)
+    public double latitude;
+    public double longitude;
 
     // Getters
     public String getEnvoyeur() {
@@ -146,6 +157,80 @@ public class Plainte extends PanacheEntity {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    // Getters des nouvelles informations
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPostnom() {
+        return postnom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public String getSexe() {
+        return sexe;
+    }
+
+    public String getEtablissement() {
+        return etablissement;
+    }
+
+    public String getProfil() {
+        return profil;
+    }
+
+    public String getProvince_education() {
+        return province_education;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    // Setters des nouvelles informations
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPostnom(String postnom) {
+        this.postnom = postnom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+
+    public void setEtablissement(String etablissement) {
+        this.etablissement = etablissement;
+    }
+
+    public void setProfil(String profil) {
+        this.profil = profil;
+    }
+
+    public void setProvince_education(String province_education) {
+        this.province_education = province_education;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
 }

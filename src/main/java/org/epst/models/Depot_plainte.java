@@ -20,4 +20,15 @@ public class Depot_plainte extends PanacheEntity {
     public String reference;
     public String date;
     public String province;
+    // Nouvelles informations du formulaire MGP
+    public String nom;
+    public String postnom;
+    public String prenom;
+    public String sexe;
+    public String etablissement;
+    public String profil;
+    public String province_education;
+    // Géolocalisation (récupérée avec l'accord de l'utilisateur)
+    public double latitude;
+    public double longitude;
 }
